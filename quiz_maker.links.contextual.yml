@@ -1,10 +1,11 @@
-entity.quiz.edit_form:
-  route_name: entity.quiz.edit_form
-  group: quiz
+
+entity.quiz_maker_quiz.edit_form:
+  route_name: entity.quiz_maker_quiz.edit_form
+  group: quiz_maker_quiz
   title: 'Edit'
 
-entity.quiz.delete_form:
-  route_name: entity.quiz.delete_form
-  group: quiz
+entity.quiz_maker_quiz.delete_form:
+  route_name: entity.quiz_maker_quiz.delete_form
+  group: quiz_maker_quiz
   title: 'Delete'
   weight: 10

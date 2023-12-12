@@ -3,8 +3,8 @@ status: true
 dependencies:
   module:
     - quiz_maker
-id: quiz_save_action
+id: quiz_maker_quiz_save_action
 label: 'Save quizzes'
-type: quiz
-plugin: entity:save_action:quiz
+type: quiz_maker_quiz
+plugin: entity:save_action:quiz_maker_quiz
 configuration: {  }

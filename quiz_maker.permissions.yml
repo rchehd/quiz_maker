@@ -1,12 +1,14 @@
-administer quiz types:
+
+
+administer quiz_maker_quiz types:
   title: 'Administer quiz types'
   description: 'Maintain the types of quiz entity.'
   restrict access: true
-view quiz:
+view quiz_maker_quiz:
   title: 'View quiz'
-edit quiz:
+edit quiz_maker_quiz:
   title: 'Edit quiz'
-delete quiz:
+delete quiz_maker_quiz:
   title: 'Delete quiz'
-create quiz:
+create quiz_maker_quiz:
   title: 'Create quiz'

@@ -11,12 +11,14 @@ quiz_maker.admin.structure:
   parent: quiz_maker.admin
   weight: 4
 
-entity.quiz_type.collection:
+entity.quiz_maker_quiz_type.collection:
   title: 'Quiz types'
-  parent: quiz_master.admin.structure
-  route_name: entity.quiz_type.collection
+  description: 'Manage and CRUD actions on Quiz type.'
+  parent: quiz_maker.admin.structure
+  route_name: entity.quiz_maker_quiz_type.collection
 
-entity.quiz.collection:
+entity.quiz_maker_quiz.collection:
   title: 'Quizzes'
-  route_name: entity.quiz.collection
-  parent: quiz_master.admin
+  description: 'List of quizzes.'
+  route_name: entity.quiz_maker_quiz.collection
+  parent: quiz_maker.admin

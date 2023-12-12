@@ -1,4 +1,4 @@
-quiz_maker.quiz_type.*:
+quiz_maker.quiz_maker_quiz_type.*:
   type: config_entity
   label: 'Quiz type config'
   mapping:

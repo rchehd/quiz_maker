@@ -2,10 +2,10 @@
 
 namespace Drupal\quiz_maker\Entity;
 
-use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\user\EntityOwnerTrait;
@@ -14,7 +14,7 @@ use Drupal\user\EntityOwnerTrait;
  * Defines the quiz entity class.
  *
  * @ContentEntityType(
- *   id = "quiz",
+ *   id = "quiz_maker_quiz",
  *   label = @Translation("Quiz"),
  *   label_collection = @Translation("Quizzes"),
  *   label_singular = @Translation("quiz"),
@@ -38,32 +38,41 @@ use Drupal\user\EntityOwnerTrait;
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
  *   },
- *   base_table = "quiz",
- *   data_table = "quiz_field_data",
+ *   base_table = "quiz_maker_quiz",
+ *   data_table = "quiz_maker_quiz_field_data",
+ *   revision_table = "quiz_maker_quiz_revision",
+ *   revision_data_table = "quiz_maker_quiz_field_revision",
+ *   show_revision_ui = TRUE,
  *   translatable = TRUE,
- *   admin_permission = "administer quiz types",
+ *   admin_permission = "administer quiz_maker_quiz types",
  *   entity_keys = {
  *     "id" = "id",
+ *     "revision" = "revision_id",
  *     "langcode" = "langcode",
  *     "bundle" = "bundle",
  *     "label" = "label",
  *     "uuid" = "uuid",
  *     "owner" = "uid",
  *   },
+ *   revision_metadata_keys = {
+ *     "revision_user" = "revision_uid",
+ *     "revision_created" = "revision_timestamp",
+ *     "revision_log_message" = "revision_log",
+ *   },
  *   links = {
  *     "collection" = "/admin/content/quiz",
- *     "add-form" = "/quiz/add/{quiz_type}",
+ *     "add-form" = "/quiz/add/{quiz_maker_quiz_type}",
  *     "add-page" = "/quiz/add",
- *     "canonical" = "/quiz/{quiz}",
- *     "edit-form" = "/quiz/{quiz}/edit",
- *     "delete-form" = "/quiz/{quiz}/delete",
+ *     "canonical" = "/quiz/{quiz_maker_quiz}",
+ *     "edit-form" = "/quiz/{quiz_maker_quiz}/edit",
+ *     "delete-form" = "/quiz/{quiz_maker_quiz}/delete",
  *     "delete-multiple-form" = "/admin/content/quiz/delete-multiple",
  *   },
- *   bundle_entity_type = "quiz_type",
- *   field_ui_base_route = "entity.quiz_type.edit_form",
+ *   bundle_entity_type = "quiz_maker_quiz_type",
+ *   field_ui_base_route = "entity.quiz_maker_quiz_type.edit_form",
  * )
  */
-final class Quiz extends ContentEntityBase implements QuizInterface {
+final class Quiz extends RevisionableContentEntityBase implements QuizInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
@@ -87,6 +96,7 @@ final class Quiz extends ContentEntityBase implements QuizInterface {
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['label'] = BaseFieldDefinition::create('string')
+      ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setLabel(t('Label'))
       ->setRequired(TRUE)
@@ -104,6 +114,7 @@ final class Quiz extends ContentEntityBase implements QuizInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
+      ->setRevisionable(TRUE)
       ->setLabel(t('Status'))
       ->setDefaultValue(TRUE)
       ->setSetting('on_label', 'Enabled')
@@ -126,6 +137,7 @@ final class Quiz extends ContentEntityBase implements QuizInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['description'] = BaseFieldDefinition::create('text_long')
+      ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setLabel(t('Description'))
       ->setDisplayOptions('form', [
@@ -141,6 +153,7 @@ final class Quiz extends ContentEntityBase implements QuizInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
+      ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setLabel(t('Author'))
       ->setSetting('target_type', 'user')

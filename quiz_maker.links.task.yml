@@ -1,26 +1,27 @@
-entity.quiz.view:
+
+entity.quiz_maker_quiz.view:
   title: 'View'
-  route_name: entity.quiz.canonical
-  base_route: entity.quiz.canonical
-entity.quiz.edit_form:
+  route_name: entity.quiz_maker_quiz.canonical
+  base_route: entity.quiz_maker_quiz.canonical
+entity.quiz_maker_quiz.edit_form:
   title: 'Edit'
-  route_name: entity.quiz.edit_form
-  base_route: entity.quiz.canonical
-entity.quiz.delete_form:
+  route_name: entity.quiz_maker_quiz.edit_form
+  base_route: entity.quiz_maker_quiz.canonical
+entity.quiz_maker_quiz.delete_form:
   title: 'Delete'
-  route_name: entity.quiz.delete_form
-  base_route: entity.quiz.canonical
+  route_name: entity.quiz_maker_quiz.delete_form
+  base_route: entity.quiz_maker_quiz.canonical
   weight: 10
-entity.quiz.collection:
+entity.quiz_maker_quiz.collection:
   title: 'Quizzes'
-  route_name: entity.quiz.collection
+  route_name: entity.quiz_maker_quiz.collection
   base_route: system.admin_content
   weight: 10
-entity.quiz_type.edit_form:
+entity.quiz_maker_quiz_type.edit_form:
   title: 'Edit'
-  route_name: entity.quiz_type.edit_form
-  base_route: entity.quiz_type.edit_form
-entity.quiz_type.collection:
+  route_name: entity.quiz_maker_quiz_type.edit_form
+  base_route: entity.quiz_maker_quiz_type.edit_form
+entity.quiz_maker_quiz_type.collection:
   title: 'List'
-  route_name: entity.quiz_type.collection
-  base_route: entity.quiz_type.collection
+  route_name: entity.quiz_maker_quiz_type.collection
+  base_route: entity.quiz_maker_quiz_type.collection

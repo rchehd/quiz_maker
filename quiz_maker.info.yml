@@ -2,4 +2,4 @@ name: 'Quiz Maker'
 type: module
 description: 'Provide functionality to Create engaging quizzes.'
 package: Quiz Maker
-core_version_requirement: ^10
+core_version_requirement: ^9 || ^10
