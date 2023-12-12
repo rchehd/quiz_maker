@@ -12,3 +12,30 @@ delete quiz_maker_quiz:
   title: 'Delete quiz'
 create quiz_maker_quiz:
   title: 'Create quiz'
+
+administer quiz_maker_question types:
+  title: 'Administer question types'
+  description: 'Maintain the types of question entity.'
+  restrict access: true
+view quiz_maker_question:
+  title: 'View question'
+edit quiz_maker_question:
+  title: 'Edit question'
+delete quiz_maker_question:
+  title: 'Delete question'
+create quiz_maker_question:
+  title: 'Create question'
+
+administer quiz_maker_question_answer types:
+  title: 'Administer question answer types'
+  description: 'Maintain the types of question answer entity.'
+  restrict access: true
+
+administer quiz_maker_quiz_result types:
+  title: 'Administer quiz result types'
+  description: 'Maintain the types of quiz result entity.'
+  restrict access: true
+
+administer quiz_maker_quiz_question_relationship:
+  title: 'Administer quiz question relationships'
+  restrict access: true

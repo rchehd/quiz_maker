@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\quiz_maker;
+namespace Drupal\quiz_maker\EntityAccessControlHandler;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityAccessControlHandler;

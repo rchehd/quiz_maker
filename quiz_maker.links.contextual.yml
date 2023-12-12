@@ -9,3 +9,36 @@ entity.quiz_maker_quiz.delete_form:
   group: quiz_maker_quiz
   title: 'Delete'
   weight: 10
+
+entity.quiz_maker_question.edit_form:
+  route_name: entity.quiz_maker_question.edit_form
+  group: quiz_maker_question
+  title: 'Edit'
+
+entity.quiz_maker_question.delete_form:
+  route_name: entity.quiz_maker_question.delete_form
+  group: quiz_maker_question
+  title: 'Delete'
+  weight: 10
+
+entity.quiz_maker_question_answer.edit_form:
+  route_name: entity.quiz_maker_question_answer.edit_form
+  group: quiz_maker_question_answer
+  title: 'Edit'
+
+entity.quiz_maker_question_answer.delete_form:
+  route_name: entity.quiz_maker_question_answer.delete_form
+  group: quiz_maker_question_answer
+  title: 'Delete'
+  weight: 10
+
+entity.quiz_maker_quiz_result.edit_form:
+  route_name: entity.quiz_maker_quiz_result.edit_form
+  group: quiz_maker_quiz_result
+  title: 'Edit'
+
+entity.quiz_maker_quiz_result.delete_form:
+  route_name: entity.quiz_maker_quiz_result.delete_form
+  group: quiz_maker_quiz_result
+  title: 'Delete'
+  weight: 10

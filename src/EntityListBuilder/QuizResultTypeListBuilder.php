@@ -1,17 +1,17 @@
 <?php
 
-namespace Drupal\quiz_maker;
+namespace Drupal\quiz_maker\EntityListBuilder;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 
 /**
- * Defines a class to build a listing of quiz type entities.
+ * Defines a class to build a listing of quiz result type entities.
  *
- * @see \Drupal\quiz_maker\Entity\QuizType
+ * @see \Drupal\quiz_maker\Entity\QuizResultType
  */
-final class QuizTypeListBuilder extends ConfigEntityListBuilder {
+final class QuizResultTypeListBuilder extends ConfigEntityListBuilder {
 
   /**
    * {@inheritdoc}
@@ -36,8 +36,8 @@ final class QuizTypeListBuilder extends ConfigEntityListBuilder {
     $build = parent::render();
 
     $build['table']['#empty'] = $this->t(
-      'No quiz types available. <a href=":link">Add quiz type</a>.',
-      [':link' => Url::fromRoute('entity.quiz_maker_quiz_type.add_form')->toString()],
+      'No quiz result types available. <a href=":link">Add quiz result type</a>.',
+      [':link' => Url::fromRoute('entity.quiz_maker_quiz_result_type.add_form')->toString()],
     );
 
     return $build;

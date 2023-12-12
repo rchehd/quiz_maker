@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_maker
+id: quiz_maker_quiz_result_save_action
+label: 'Save quiz results'
+type: quiz_maker_quiz_result
+plugin: entity:save_action:quiz_maker_quiz_result
+configuration: {  }

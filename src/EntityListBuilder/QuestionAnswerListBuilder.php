@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\quiz_maker;
+namespace Drupal\quiz_maker\EntityListBuilder;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 
 /**
- * Provides a list controller for the quiz entity type.
+ * Provides a list controller for the question answer entity type.
  */
-final class QuizListBuilder extends EntityListBuilder {
+final class QuestionAnswerListBuilder extends EntityListBuilder {
 
   /**
    * {@inheritdoc}
@@ -27,7 +27,7 @@ final class QuizListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity): array {
-    /** @var \Drupal\quiz_maker\QuizInterface $entity */
+    /** @var \Drupal\quiz_maker\QuestionAnswerInterface $entity */
     $row['id'] = $entity->id();
     $row['label'] = $entity->toLink();
     $row['status'] = $entity->get('status')->value ? $this->t('Enabled') : $this->t('Disabled');

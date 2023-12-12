@@ -11,3 +11,45 @@ quiz_maker_quiz.add_page:
   route_name: entity.quiz_maker_quiz.add_page
   appears_on:
     - entity.quiz_maker_quiz.collection
+
+quiz_maker_question.type_add:
+  title: 'Add question type'
+  route_name: entity.quiz_maker_question_type.add_form
+  appears_on:
+    - entity.quiz_maker_question_type.collection
+
+quiz_maker_question.add_page:
+  title: 'Add question'
+  route_name: entity.quiz_maker_question.add_page
+  appears_on:
+    - entity.quiz_maker_question.collection
+
+quiz_maker_question_answer.type_add:
+  title: 'Add question answer type'
+  route_name: entity.quiz_maker_question_answer_type.add_form
+  appears_on:
+    - entity.quiz_maker_question_answer_type.collection
+
+quiz_maker_question_answer.add_page:
+  title: 'Add question answer'
+  route_name: entity.quiz_maker_question_answer.add_page
+  appears_on:
+    - entity.quiz_maker_question_answer.collection
+
+quiz_maker_quiz_result.type_add:
+  title: 'Add quiz result type'
+  route_name: entity.quiz_maker_quiz_result_type.add_form
+  appears_on:
+    - entity.quiz_maker_quiz_result_type.collection
+
+quiz_maker_quiz_result.add_page:
+  title: 'Add quiz result'
+  route_name: entity.quiz_maker_quiz_result.add_page
+  appears_on:
+    - entity.quiz_maker_quiz_result.collection
+
+quiz_maker_quiz_question_relationship.add_form:
+  title: 'Add quiz question relationship'
+  route_name: entity.quiz_maker_quiz_question_relationship.add_form
+  appears_on:
+    - entity.quiz_maker_quiz_question_relationship.collection
