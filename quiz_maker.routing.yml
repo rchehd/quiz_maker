@@ -1,0 +1,15 @@
+quiz_maker.admin:
+  path: '/admin/quiz_maker'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Quiz Master'
+  requirements:
+    _permission: 'administer quiz'
+
+quiz_maker.admin.structure:
+  path: '/admin/quiz_maker/structure'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Structure'
+  requirements:
+    _permission: 'administer quiz'

@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_maker
+id: quiz_delete_action
+label: 'Delete quizzes'
+type: quiz
+plugin: entity:delete_action:quiz
+configuration: {  }

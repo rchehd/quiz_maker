@@ -1,0 +1,10 @@
+/**
+ * Admin toolbar icon.
+ */
+.toolbar-icon-quiz-master-admin:before {
+  -webkit-mask-image: url(../images/icon.svg) !important;
+}
+
+.toolbar-icon-quiz-master-admin.is-active:before {
+  -webkit-mask-image: url(../images/icon.svg) !important;
+}

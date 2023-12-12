@@ -1,0 +1,92 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Quiz Maker module.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function quiz_maker_theme(): array {
+  return [
+    'quiz' => ['render element' => 'elements'],
+  ];
+}
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Add Quiz CSS to all pages.
+ */
+function quiz_maker_page_attachments(&$page): void {
+  $page['#attached']['library'][] = 'quiz_maker/styles';
+}
+
+/**
+ * Prepares variables for quiz templates.
+ *
+ * Default template: quiz.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the quiz information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_quiz(array &$variables): void {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
+  switch ($method) {
+    case 'user_cancel_block_unpublish':
+      // Unpublish quizzes.
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz');
+      $quiz_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->condition('status', 1)
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($quiz_ids) as $quiz) {
+        $quiz->set('status', FALSE)->save();
+      }
+      break;
+
+    case 'user_cancel_reassign':
+      // Anonymize quizzes.
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz');
+      $quiz_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($quiz_ids) as $quiz) {
+        $quiz->setOwnerId(0)->save();
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
+ */
+function quiz_maker_user_predelete(UserInterface $account): void {
+  // Delete quizzes that belong to this account.
+  $storage = \Drupal::entityTypeManager()->getStorage('quiz');
+  $quiz_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
+    ->execute();
+  $storage->delete(
+    $storage->loadMultiple($quiz_ids)
+  );
+}

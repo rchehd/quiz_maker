@@ -1,0 +1,12 @@
+administer quiz types:
+  title: 'Administer quiz types'
+  description: 'Maintain the types of quiz entity.'
+  restrict access: true
+view quiz:
+  title: 'View quiz'
+edit quiz:
+  title: 'Edit quiz'
+delete quiz:
+  title: 'Delete quiz'
+create quiz:
+  title: 'Create quiz'

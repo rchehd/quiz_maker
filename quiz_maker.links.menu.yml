@@ -1,0 +1,22 @@
+# Admin page
+quiz_maker.admin:
+  title: Quiz Maker
+  parent: system.admin
+  route_name: quiz_maker.admin
+
+# Quiz master structure.
+quiz_maker.admin.structure:
+  title: Structure
+  route_name: quiz_maker.admin.structure
+  parent: quiz_maker.admin
+  weight: 4
+
+entity.quiz_type.collection:
+  title: 'Quiz types'
+  parent: quiz_master.admin.structure
+  route_name: entity.quiz_type.collection
+
+entity.quiz.collection:
+  title: 'Quizzes'
+  route_name: entity.quiz.collection
+  parent: quiz_master.admin
