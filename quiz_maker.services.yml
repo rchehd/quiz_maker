@@ -1,0 +1,8 @@
+services:
+  plugin.manager.quiz_maker.question:
+    class: Drupal\quiz_maker\Service\QuizMakerQuestionPluginManager
+    parent: default_plugin_manager
+
+  plugin.manager.quiz_maker.question_answer:
+    class: Drupal\quiz_maker\Service\QuizMakerQuestionAnswerPluginManager
+    parent: default_plugin_manager

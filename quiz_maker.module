@@ -23,6 +23,9 @@ function quiz_maker_page_attachments(&$page): void {
 function quiz_maker_theme(): array {
   return [
     'quiz_maker_quiz' => ['render element' => 'elements'],
+    'quiz_maker_question' => ['render element' => 'elements'],
+    'quiz_maker_question_answer' => ['render element' => 'elements'],
+    'quiz_maker_quiz_result' => ['render element' => 'elements'],
   ];
 }
 
@@ -60,6 +63,39 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
       foreach ($storage->loadMultiple($quiz_maker_quiz_ids) as $quiz_maker_quiz) {
         $quiz_maker_quiz->set('status', FALSE)->save();
       }
+
+      // Unpublish questions.
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question');
+      $quiz_maker_question_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->condition('status', 1)
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($quiz_maker_question_ids) as $quiz_maker_question) {
+        $quiz_maker_question->set('status', FALSE)->save();
+      }
+
+      // Unpublish question answers.
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question_answer');
+      $quiz_maker_question_answer_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->condition('status', 1)
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($quiz_maker_question_answer_ids) as $quiz_maker_question_answer) {
+        $quiz_maker_question_answer->set('status', FALSE)->save();
+      }
+
+      // Unpublish quiz results.
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz_result');
+      $quiz_maker_quiz_result_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->condition('status', 1)
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($quiz_maker_quiz_result_ids) as $quiz_maker_quiz_result) {
+        $quiz_maker_quiz_result->set('status', FALSE)->save();
+      }
       break;
 
     case 'user_cancel_reassign':
@@ -71,6 +107,36 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->execute();
       foreach ($storage->loadMultiple($quiz_maker_quiz_ids) as $quiz_maker_quiz) {
         $quiz_maker_quiz->setOwnerId(0)->save();
+      }
+
+      // Anonymize questions.
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question');
+      $quiz_maker_question_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($quiz_maker_question_ids) as $quiz_maker_question) {
+        $quiz_maker_question->setOwnerId(0)->save();
+      }
+
+      // Anonymize question answers.
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question_answer');
+      $quiz_maker_question_answer_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($quiz_maker_question_answer_ids) as $quiz_maker_question_answer) {
+        $quiz_maker_question_answer->setOwnerId(0)->save();
+      }
+
+      // Anonymize quiz results.
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz_result');
+      $quiz_maker_quiz_result_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($quiz_maker_quiz_result_ids) as $quiz_maker_quiz_result) {
+        $quiz_maker_quiz_result->setOwnerId(0)->save();
       }
       break;
   }
@@ -89,6 +155,7 @@ function quiz_maker_user_predelete(UserInterface $account): void {
   $storage->delete(
     $storage->loadMultiple($quiz_maker_quiz_ids)
   );
+
   // Delete old revisions.
   $quiz_maker_quiz_ids = $storage->getQuery()
     ->allRevisions()
@@ -98,18 +165,46 @@ function quiz_maker_user_predelete(UserInterface $account): void {
   foreach (array_keys($quiz_maker_quiz_ids) as $revision_id) {
     $storage->deleteRevision($revision_id);
   }
-}
 
-use Drupal\Core\Render\Element;
-use Drupal\user\UserInterface;
+  // Delete questions that belong to this account.
+  $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question');
+  $quiz_maker_question_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
+    ->execute();
+  $storage->delete(
+    $storage->loadMultiple($quiz_maker_question_ids)
+  );
 
-/**
- * Implements hook_theme().
- */
-function quiz_maker_theme(): array {
-  return [
-    'quiz_maker_question' => ['render element' => 'elements'],
-  ];
+  // Delete old revisions.
+  $quiz_maker_question_ids = $storage->getQuery()
+    ->allRevisions()
+    ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
+    ->execute();
+  foreach (array_keys($quiz_maker_question_ids) as $revision_id) {
+    $storage->deleteRevision($revision_id);
+  }
+
+  // Delete question answers that belong to this account.
+  $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question_answer');
+  $quiz_maker_question_answer_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
+    ->execute();
+  $storage->delete(
+    $storage->loadMultiple($quiz_maker_question_answer_ids)
+  );
+
+  // Delete quiz results that belong to this account.
+  $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz_result');
+  $quiz_maker_quiz_result_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
+    ->execute();
+  $storage->delete(
+    $storage->loadMultiple($quiz_maker_quiz_result_ids)
+  );
 }
 
 /**
@@ -131,74 +226,6 @@ function template_preprocess_quiz_maker_question(array &$variables): void {
 }
 
 /**
- * Implements hook_user_cancel().
- */
-function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
-  switch ($method) {
-    case 'user_cancel_block_unpublish':
-      // Unpublish questions.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question');
-      $quiz_maker_question_ids = $storage->getQuery()
-        ->condition('uid', $account->id())
-        ->condition('status', 1)
-        ->accessCheck(FALSE)
-        ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_question_ids) as $quiz_maker_question) {
-        $quiz_maker_question->set('status', FALSE)->save();
-      }
-      break;
-
-    case 'user_cancel_reassign':
-      // Anonymize questions.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question');
-      $quiz_maker_question_ids = $storage->getQuery()
-        ->condition('uid', $account->id())
-        ->accessCheck(FALSE)
-        ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_question_ids) as $quiz_maker_question) {
-        $quiz_maker_question->setOwnerId(0)->save();
-      }
-      break;
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_predelete() for user entities.
- */
-function quiz_maker_user_predelete(UserInterface $account): void {
-  // Delete questions that belong to this account.
-  $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question');
-  $quiz_maker_question_ids = $storage->getQuery()
-    ->condition('uid', $account->id())
-    ->accessCheck(FALSE)
-    ->execute();
-  $storage->delete(
-    $storage->loadMultiple($quiz_maker_question_ids)
-  );
-  // Delete old revisions.
-  $quiz_maker_question_ids = $storage->getQuery()
-    ->allRevisions()
-    ->condition('uid', $account->id())
-    ->accessCheck(FALSE)
-    ->execute();
-  foreach (array_keys($quiz_maker_question_ids) as $revision_id) {
-    $storage->deleteRevision($revision_id);
-  }
-}
-
-use Drupal\Core\Render\Element;
-use Drupal\user\UserInterface;
-
-/**
- * Implements hook_theme().
- */
-function quiz_maker_theme(): array {
-  return [
-    'quiz_maker_question_answer' => ['render element' => 'elements'],
-  ];
-}
-
-/**
  * Prepares variables for question answer templates.
  *
  * Default template: quiz-maker-question-answer.html.twig.
@@ -214,65 +241,6 @@ function template_preprocess_quiz_maker_question_answer(array &$variables): void
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
-}
-
-/**
- * Implements hook_user_cancel().
- */
-function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
-  switch ($method) {
-    case 'user_cancel_block_unpublish':
-      // Unpublish question answers.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question_answer');
-      $quiz_maker_question_answer_ids = $storage->getQuery()
-        ->condition('uid', $account->id())
-        ->condition('status', 1)
-        ->accessCheck(FALSE)
-        ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_question_answer_ids) as $quiz_maker_question_answer) {
-        $quiz_maker_question_answer->set('status', FALSE)->save();
-      }
-      break;
-
-    case 'user_cancel_reassign':
-      // Anonymize question answers.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question_answer');
-      $quiz_maker_question_answer_ids = $storage->getQuery()
-        ->condition('uid', $account->id())
-        ->accessCheck(FALSE)
-        ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_question_answer_ids) as $quiz_maker_question_answer) {
-        $quiz_maker_question_answer->setOwnerId(0)->save();
-      }
-      break;
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_predelete() for user entities.
- */
-function quiz_maker_user_predelete(UserInterface $account): void {
-  // Delete question answers that belong to this account.
-  $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question_answer');
-  $quiz_maker_question_answer_ids = $storage->getQuery()
-    ->condition('uid', $account->id())
-    ->accessCheck(FALSE)
-    ->execute();
-  $storage->delete(
-    $storage->loadMultiple($quiz_maker_question_answer_ids)
-  );
-}
-
-use Drupal\Core\Render\Element;
-use Drupal\user\UserInterface;
-
-/**
- * Implements hook_theme().
- */
-function quiz_maker_theme(): array {
-  return [
-    'quiz_maker_quiz_result' => ['render element' => 'elements'],
-  ];
 }
 
 /**
@@ -294,48 +262,18 @@ function template_preprocess_quiz_maker_quiz_result(array &$variables): void {
 }
 
 /**
- * Implements hook_user_cancel().
+ * Implements hook_entity_bundle_info_alter().
+ *
+ * Map question and answers classes to bundles.
  */
-function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
-  switch ($method) {
-    case 'user_cancel_block_unpublish':
-      // Unpublish quiz results.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz_result');
-      $quiz_maker_quiz_result_ids = $storage->getQuery()
-        ->condition('uid', $account->id())
-        ->condition('status', 1)
-        ->accessCheck(FALSE)
-        ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_quiz_result_ids) as $quiz_maker_quiz_result) {
-        $quiz_maker_quiz_result->set('status', FALSE)->save();
-      }
-      break;
-
-    case 'user_cancel_reassign':
-      // Anonymize quiz results.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz_result');
-      $quiz_maker_quiz_result_ids = $storage->getQuery()
-        ->condition('uid', $account->id())
-        ->accessCheck(FALSE)
-        ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_quiz_result_ids) as $quiz_maker_quiz_result) {
-        $quiz_maker_quiz_result->setOwnerId(0)->save();
-      }
-      break;
+function quiz_maker_entity_bundle_info_alter(array &$bundles): void {
+  /* @var $pluginManager \Drupal\quiz\Plugin\QuizQuestionPluginManager */
+  $pluginManager = Drupal::service('plugin.manager.quiz_maker.question');
+  $plugins = $pluginManager->getDefinitions();
+  foreach ($plugins as $key => $plugin) {
+    if (isset($bundles['quiz_maker_question'][$key])) {
+      $bundles['quiz_maker_question'][$key]['class'] = $plugin['class'];
+      $bundles['quiz_maker_question_answer'][$key]['class'] = $plugin['answer_class'];
+    }
   }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_predelete() for user entities.
- */
-function quiz_maker_user_predelete(UserInterface $account): void {
-  // Delete quiz results that belong to this account.
-  $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz_result');
-  $quiz_maker_quiz_result_ids = $storage->getQuery()
-    ->condition('uid', $account->id())
-    ->accessCheck(FALSE)
-    ->execute();
-  $storage->delete(
-    $storage->loadMultiple($quiz_maker_quiz_result_ids)
-  );
 }
