@@ -13,3 +13,30 @@ quiz_maker.admin.structure:
     _title: 'Structure'
   requirements:
     _permission: 'administer quiz'
+
+# Question management tab
+quiz_maker_quiz.questions:
+  path: 'quiz/{quiz_maker_quiz}/questions'
+  defaults:
+    _form: '\Drupal\quiz_maker\Form\QuizQuestionsForm'
+    _title: 'Manage questions'
+  requirements:
+    _permission: 'view quiz_maker_question'
+  options:
+    _admin_route: true
+    parameters:
+      quiz_maker_quiz:
+        type: 'entity:quiz_maker_quiz'
+
+quiz_maker_quiz.results:
+  path: 'quiz/{quiz_maker_quiz}/results'
+  defaults:
+    _controller: '\Drupal\quiz_maker\Controller\QuizMakerController::manageResults'
+    _title: 'Manage results'
+  requirements:
+    _permission: 'edit quiz_maker_quiz_result'
+  options:
+    _admin_route: true
+    parameters:
+      quiz_maker_quiz:
+        type: 'entity:quiz_maker_quiz'

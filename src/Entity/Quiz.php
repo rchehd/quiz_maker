@@ -99,7 +99,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
 
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['title'] = BaseFieldDefinition::create('string')
+    $fields['label'] = BaseFieldDefinition::create('string')
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setLabel(t('Title'))
@@ -148,6 +148,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       ->setLabel(t('Grade required to pass'));
 
     $fields['backwards_navigation'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Allowed backwards navigation'))
       ->setDefaultValue(1)
       ->setDisplayConfigurable('form', TRUE)
       ->setRevisionable(TRUE)

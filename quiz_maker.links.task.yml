@@ -1,113 +1,24 @@
-#entity.quiz_maker_quiz.view:
-#  title: 'View'
-#  route_name: entity.quiz_maker_quiz.canonical
+entity.quiz_maker_quiz.view:
+  route_name: entity.quiz_maker_quiz.canonical
+  title: View
+  base_route: entity.quiz_maker_quiz.canonical
+
+entity.quiz_maker_quiz.edit_form:
+  route_name: entity.quiz_maker_quiz.edit_form
+  title: Edit
+  base_route: entity.quiz_maker_quiz.canonical
+
+quiz_maker_quiz.questions:
+  route_name: quiz_maker_quiz.questions
+  title: Questions
+  base_route: entity.quiz_maker_quiz.canonical
+
+quiz_maker_quiz.results:
+  route_name: quiz_maker_quiz.results
+  title: Results
+  base_route: entity.quiz_maker_quiz.canonical
+
+#entity.quiz_maker_quiz.take:
+#  route_name: quiz_maker.quiz.take
+#  title: Take quiz
 #  base_route: entity.quiz_maker_quiz.canonical
-#entity.quiz_maker_quiz.edit_form:
-#  title: 'Edit'
-#  route_name: entity.quiz_maker_quiz.edit_form
-#  base_route: entity.quiz_maker_quiz.canonical
-#entity.quiz_maker_quiz.delete_form:
-#  title: 'Delete'
-#  route_name: entity.quiz_maker_quiz.delete_form
-#  base_route: entity.quiz_maker_quiz.canonical
-#  weight: 10
-#entity.quiz_maker_quiz.collection:
-#  title: 'Quizzes'
-#  route_name: entity.quiz_maker_quiz.collection
-#  base_route: system.admin_content
-#  weight: 10
-#entity.quiz_maker_quiz_type.edit_form:
-#  title: 'Edit'
-#  route_name: entity.quiz_maker_quiz_type.edit_form
-#  base_route: entity.quiz_maker_quiz_type.edit_form
-#entity.quiz_maker_quiz_type.collection:
-#  title: 'List'
-#  route_name: entity.quiz_maker_quiz_type.collection
-#  base_route: entity.quiz_maker_quiz_type.collection
-#
-#entity.quiz_maker_question.view:
-#  title: 'View'
-#  route_name: entity.quiz_maker_question.canonical
-#  base_route: entity.quiz_maker_question.canonical
-#entity.quiz_maker_question.edit_form:
-#  title: 'Edit'
-#  route_name: entity.quiz_maker_question.edit_form
-#  base_route: entity.quiz_maker_question.canonical
-#entity.quiz_maker_question.delete_form:
-#  title: 'Delete'
-#  route_name: entity.quiz_maker_question.delete_form
-#  base_route: entity.quiz_maker_question.canonical
-#  weight: 10
-#entity.quiz_maker_question.collection:
-#  title: 'Questions'
-#  route_name: entity.quiz_maker_question.collection
-#  base_route: system.admin_content
-#  weight: 10
-#entity.quiz_maker_question_type.edit_form:
-#  title: 'Edit'
-#  route_name: entity.quiz_maker_question_type.edit_form
-#  base_route: entity.quiz_maker_question_type.edit_form
-#entity.quiz_maker_question_type.collection:
-#  title: 'List'
-#  route_name: entity.quiz_maker_question_type.collection
-#  base_route: entity.quiz_maker_question_type.collection
-#
-#entity.quiz_maker_question_answer.view:
-#  title: 'View'
-#  route_name: entity.quiz_maker_question_answer.canonical
-#  base_route: entity.quiz_maker_question_answer.canonical
-#entity.quiz_maker_question_answer.edit_form:
-#  title: 'Edit'
-#  route_name: entity.quiz_maker_question_answer.edit_form
-#  base_route: entity.quiz_maker_question_answer.canonical
-#entity.quiz_maker_question_answer.delete_form:
-#  title: 'Delete'
-#  route_name: entity.quiz_maker_question_answer.delete_form
-#  base_route: entity.quiz_maker_question_answer.canonical
-#  weight: 10
-#entity.quiz_maker_question_answer.collection:
-#  title: 'Question Answers'
-#  route_name: entity.quiz_maker_question_answer.collection
-#  base_route: system.admin_content
-#  weight: 10
-#entity.quiz_maker_question_answer_type.edit_form:
-#  title: 'Edit'
-#  route_name: entity.quiz_maker_question_answer_type.edit_form
-#  base_route: entity.quiz_maker_question_answer_type.edit_form
-#entity.quiz_maker_question_answer_type.collection:
-#  title: 'List'
-#  route_name: entity.quiz_maker_question_answer_type.collection
-#  base_route: entity.quiz_maker_question_answer_type.collection
-#
-#entity.quiz_maker_quiz_result.view:
-#  title: 'View'
-#  route_name: entity.quiz_maker_quiz_result.canonical
-#  base_route: entity.quiz_maker_quiz_result.canonical
-#entity.quiz_maker_quiz_result.edit_form:
-#  title: 'Edit'
-#  route_name: entity.quiz_maker_quiz_result.edit_form
-#  base_route: entity.quiz_maker_quiz_result.canonical
-#entity.quiz_maker_quiz_result.delete_form:
-#  title: 'Delete'
-#  route_name: entity.quiz_maker_quiz_result.delete_form
-#  base_route: entity.quiz_maker_quiz_result.canonical
-#  weight: 10
-#entity.quiz_maker_quiz_result.collection:
-#  title: 'Quiz Results'
-#  route_name: entity.quiz_maker_quiz_result.collection
-#  base_route: system.admin_content
-#  weight: 10
-#entity.quiz_maker_quiz_result_type.edit_form:
-#  title: 'Edit'
-#  route_name: entity.quiz_maker_quiz_result_type.edit_form
-#  base_route: entity.quiz_maker_quiz_result_type.edit_form
-#entity.quiz_maker_quiz_result_type.collection:
-#  title: 'List'
-#  route_name: entity.quiz_maker_quiz_result_type.collection
-#  base_route: entity.quiz_maker_quiz_result_type.collection
-#
-#entity.quiz_maker_qq_relationship.collection:
-#  title: 'Quiz Question Relationships'
-#  route_name: entity.quiz_maker_qq_relationship.collection
-#  base_route: system.admin_content
-#  weight: 10

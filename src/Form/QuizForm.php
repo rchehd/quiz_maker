@@ -4,6 +4,7 @@ namespace Drupal\quiz_maker\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Form controller for the quiz entity edit forms.
@@ -37,7 +38,7 @@ final class QuizForm extends ContentEntityForm {
         throw new \LogicException('Could not save the entity.');
     }
 
-    $form_state->setRedirectUrl($this->entity->toUrl());
+    $form_state->setRedirectUrl(Url::fromRoute('entity.quiz_maker_quiz.collection'));
 
     return $result;
   }
