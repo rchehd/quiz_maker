@@ -64,13 +64,13 @@ use Drupal\user\EntityOwnerTrait;
  *     "revision_log_message" = "revision_log",
  *   },
  *   links = {
- *     "collection" = "/admin/content/quiz",
+ *     "collection" = "/admin/quiz/quizzes",
  *     "add-form" = "/quiz/add/{quiz_maker_quiz_type}",
  *     "add-page" = "/quiz/add",
  *     "canonical" = "/quiz/{quiz_maker_quiz}",
  *     "edit-form" = "/quiz/{quiz_maker_quiz}/edit",
  *     "delete-form" = "/quiz/{quiz_maker_quiz}/delete",
- *     "delete-multiple-form" = "/admin/content/quiz/delete-multiple",
+ *     "delete-multiple-form" = "/admin/quiz/quizzes/delete-multiple",
  *   },
  *   bundle_entity_type = "quiz_maker_quiz_type",
  *   field_ui_base_route = "entity.quiz_maker_quiz_type.edit_form",
@@ -232,14 +232,14 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       ->setLabel(t('Allow changing answers'));
 
     $fields['allow_change_blank'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Allow changing blank answers'))
+      ->setDescription(t('Allow users to go back and revisit questions already answered.'))
       ->setDefaultValue(0)
       ->setDisplayConfigurable('form', TRUE)
       ->setRevisionable(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
-      ])
-      ->setDescription(t('Allow users to go back and revisit questions already answered.'))
-      ->setLabel(t('Allow changing blank answers'));
+      ]);
 
     $fields['build_on_last'] = BaseFieldDefinition::create('list_string')
       ->setLabel(t('Each attempt builds on the last'))

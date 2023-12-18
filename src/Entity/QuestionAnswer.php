@@ -38,7 +38,7 @@ use Drupal\user\EntityOwnerTrait;
  *     },
  *   },
  *   base_table = "quiz_maker_question_answer",
- *   translatable = TRUE,
+ *   translatable = FALSE,
  *   admin_permission = "administer quiz_maker_question_answer types",
  *   entity_keys = {
  *     "id" = "id",

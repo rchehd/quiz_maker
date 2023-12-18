@@ -36,6 +36,6 @@ administer quiz_maker_quiz_result types:
   description: 'Maintain the types of quiz result entity.'
   restrict access: true
 
-administer quiz_maker_quiz_question_relationship:
+administer quiz_maker_qq_relationship:
   title: 'Administer quiz question relationships'
   restrict access: true

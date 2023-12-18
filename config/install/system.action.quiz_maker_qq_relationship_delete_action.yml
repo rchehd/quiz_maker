@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_maker
+id: quiz_maker_qq_relationship_delete_action
+label: 'Delete quiz question relationships'
+type: quiz_maker_qq_relationship
+plugin: entity:delete_action:quiz_maker_qq_relationship
+configuration: {  }

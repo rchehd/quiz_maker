@@ -16,7 +16,7 @@ use Drupal\user\EntityOwnerTrait;
  * Defines the quiz question relationship entity class.
  *
  * @ContentEntityType(
- *   id = "quiz_maker_quiz_question_relationship",
+ *   id = "quiz_maker_qq_relationship",
  *   label = @Translation("Quiz Question Relationship"),
  *   label_collection = @Translation("Quiz Question Relationships"),
  *   label_singular = @Translation("quiz question relationship"),
@@ -38,8 +38,8 @@ use Drupal\user\EntityOwnerTrait;
  *       "html" = "Drupal\quiz_maker\Routing\QuizQuestionRelationshipHtmlRouteProvider",
  *     },
  *   },
- *   base_table = "quiz_maker_quiz_question_relationship",
- *   admin_permission = "administer quiz_maker_quiz_question_relationship",
+ *   base_table = "quiz_maker_qq_relationship",
+ *   admin_permission = "administer quiz_maker_qq_relationship",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
@@ -49,9 +49,9 @@ use Drupal\user\EntityOwnerTrait;
  *   links = {
  *     "collection" = "/admin/content/quiz-question-relationship",
  *     "add-form" = "/quiz-question-relationship/add",
- *     "canonical" = "/quiz-question-relationship/{quiz_maker_quiz_question_relationship}",
- *     "edit-form" = "/quiz-question-relationship/{quiz_maker_quiz_question_relationship}",
- *     "delete-form" = "/quiz-question-relationship/{quiz_maker_quiz_question_relationship}/delete",
+ *     "canonical" = "/quiz-question-relationship/{quiz_maker_qq_relationship}",
+ *     "edit-form" = "/quiz-question-relationship/{quiz_maker_qq_relationship}",
+ *     "delete-form" = "/quiz-question-relationship/{quiz_maker_qq_relationship}/delete",
  *     "delete-multiple-form" = "/admin/content/quiz-question-relationship/delete-multiple",
  *   },
  * )

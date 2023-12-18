@@ -20,4 +20,17 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
    */
   public function getAnsweringForm(): array;
 
+  /**
+   * Handles form submission for the question type.
+   *
+   * @param array $form
+   *   The form elements.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return mixed
+   *   The question answer.
+   */
+  public function submitAnswer(array &$form, FormStateInterface $form_state): mixed;
+
 }

@@ -1,0 +1,208 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - quiz_maker.quiz_maker_quiz_type.standard
+  module:
+    - datetime_range
+    - field_group
+    - text
+third_party_settings:
+  field_group:
+    group_settings:
+      children:
+        - group_pass_fail_options
+        - group_taking_options
+        - group_availability_options
+      label: Settings
+      region: content
+      parent_name: ''
+      weight: 4
+      format_type: tabs
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        direction: vertical
+        width_breakpoint: 640
+    group_taking_options:
+      children:
+        - attempts
+        - time_limit
+        - allow_skipping
+        - allow_resume
+        - allow_jumping
+        - allow_change
+        - allow_change_blank
+        - build_on_last
+        - show_passed
+      label: 'Taking options'
+      region: content
+      parent_name: group_settings
+      weight: 22
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_availability_options:
+      children:
+        - mark_doubtful
+        - quiz_date_range
+        - backwards_navigation
+      label: 'Availability options'
+      region: content
+      parent_name: group_settings
+      weight: 23
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+    group_pass_fail_options:
+      children:
+        - pass_rate
+      label: 'Pass fail options'
+      region: content
+      parent_name: group_settings
+      weight: 21
+      format_type: tab
+      format_settings:
+        classes: ''
+        show_empty_fields: false
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+id: quiz_maker_quiz.standard.default
+targetEntityType: quiz_maker_quiz
+bundle: standard
+mode: default
+content:
+  allow_change:
+    type: boolean_checkbox
+    weight: 13
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  allow_change_blank:
+    type: boolean_checkbox
+    weight: 14
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  allow_jumping:
+    type: boolean_checkbox
+    weight: 12
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  allow_resume:
+    type: boolean_checkbox
+    weight: 11
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  allow_skipping:
+    type: boolean_checkbox
+    weight: 10
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  attempts:
+    type: number
+    weight: 8
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  backwards_navigation:
+    type: boolean_checkbox
+    weight: 19
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  build_on_last:
+    type: options_buttons
+    weight: 15
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  description:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  mark_doubtful:
+    type: boolean_checkbox
+    weight: 17
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  pass_rate:
+    type: number
+    weight: 4
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  quiz_date_range:
+    type: daterange_default
+    weight: 18
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  result_type:
+    type: options_select
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  show_passed:
+    type: boolean_checkbox
+    weight: 16
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: false
+    third_party_settings: {  }
+  time_limit:
+    type: number
+    weight: 9
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  uid: true

@@ -48,8 +48,8 @@ quiz_maker_quiz_result.add_page:
   appears_on:
     - entity.quiz_maker_quiz_result.collection
 
-quiz_maker_quiz_question_relationship.add_form:
+quiz_maker_qq_relationship.add_form:
   title: 'Add quiz question relationship'
-  route_name: entity.quiz_maker_quiz_question_relationship.add_form
+  route_name: entity.quiz_maker_qq_relationship.add_form
   appears_on:
-    - entity.quiz_maker_quiz_question_relationship.collection
+    - entity.quiz_maker_qq_relationship.collection

@@ -11,56 +11,60 @@ quiz_maker.admin.structure:
   parent: quiz_maker.admin
   weight: 4
 
+# Entity types collection.
 entity.quiz_maker_quiz_type.collection:
   title: 'Quiz types'
   description: 'Manage and CRUD actions on Quiz type.'
   parent: quiz_maker.admin.structure
   route_name: entity.quiz_maker_quiz_type.collection
+  weight: 0
 
+entity.quiz_maker_question_type.collection:
+  title: 'Question types'
+  description: 'Manage and CRUD actions on Question type.'
+  parent: quiz_maker.admin.structure
+  route_name: entity.quiz_maker_question_type.collection
+  weight: 1
+
+entity.quiz_maker_question_answer_type.collection:
+  title: 'Question Answer types'
+  description: 'Manage and CRUD actions on Question Answer type.'
+  parent: quiz_maker.admin.structure
+  route_name: entity.quiz_maker_question_answer_type.collection
+  weight: 2
+
+entity.quiz_maker_quiz_result_type.collection:
+  title: 'Quiz Result types'
+  description: 'Manage and CRUD actions on Quiz Result type.'
+  parent: quiz_maker.admin.structure
+  route_name: entity.quiz_maker_quiz_result_type.collection
+  weight: 3
+
+# Entities collection.
 entity.quiz_maker_quiz.collection:
   title: 'Quizzes'
   description: 'List of quizzes.'
   route_name: entity.quiz_maker_quiz.collection
   parent: quiz_maker.admin
-
-entity.quiz_maker_question_type.collection:
-  title: 'Question types'
-  description: 'Manage and CRUD actions on Question type.'
-  parent: system.admin_structure
-  route_name: entity.quiz_maker_question_type.collection
+  weight: 0
 
 entity.quiz_maker_question.collection:
   title: 'Questions'
   description: 'List of questions.'
   route_name: entity.quiz_maker_question.collection
-  parent: system.admin_content
-
-entity.quiz_maker_question_answer_type.collection:
-  title: 'Question Answer types'
-  description: 'Manage and CRUD actions on Question Answer type.'
-  parent: system.admin_structure
-  route_name: entity.quiz_maker_question_answer_type.collection
+  parent: quiz_maker.admin
+  weight: 1
 
 entity.quiz_maker_question_answer.collection:
   title: 'Question Answers'
   description: 'List of question answers.'
   route_name: entity.quiz_maker_question_answer.collection
-  parent: system.admin_content
-
-entity.quiz_maker_quiz_result_type.collection:
-  title: 'Quiz Result types'
-  description: 'Manage and CRUD actions on Quiz Result type.'
-  parent: system.admin_structure
-  route_name: entity.quiz_maker_quiz_result_type.collection
+  parent: quiz_maker.admin
+  weight: 2
 
 entity.quiz_maker_quiz_result.collection:
   title: 'Quiz Results'
   description: 'List of quiz results.'
   route_name: entity.quiz_maker_quiz_result.collection
-  parent: system.admin_content
-
-entity.quiz_maker_quiz_question_relationship.collection:
-  title: 'Quiz Question Relationships'
-  description: 'List of quiz question relationships.'
-  route_name: entity.quiz_maker_quiz_question_relationship.collection
-  parent: system.admin_content
+  parent: quiz_maker.admin
+  weight: 3

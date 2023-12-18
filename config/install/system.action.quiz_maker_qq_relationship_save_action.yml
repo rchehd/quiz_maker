@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_maker
+id: quiz_maker_qq_relationship_save_action
+label: 'Save quiz question relationships'
+type: quiz_maker_qq_relationship
+plugin: entity:save_action:quiz_maker_qq_relationship
+configuration: {  }
