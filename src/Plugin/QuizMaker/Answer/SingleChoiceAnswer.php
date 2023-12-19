@@ -8,12 +8,12 @@ use Drupal\quiz_maker\Entity\QuestionAnswer;
  * Plugin implementation of the quiz_maker_question.
  *
  * @QuizMakerQuestion(
- *   id = "single_question_answer",
+ *   id = "single_choice_answer",
  *   label = @Translation("Single question answer"),
  *   description = @Translation("Single question answer.")
  * )
  */
-final class SingleQuestionAnswer extends QuestionAnswer {
+final class SingleChoiceAnswer extends QuestionAnswer {
 
   /**
    * {@inheritDoc}

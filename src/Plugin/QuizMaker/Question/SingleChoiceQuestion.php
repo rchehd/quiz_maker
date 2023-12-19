@@ -10,16 +10,31 @@ use Drupal\quiz_maker\Entity\Question;
  * Plugin implementation of the quiz_maker_question.
  *
  * @QuizMakerQuestion(
- *   id = "single_question",
+ *   id = "single_choice_question",
  *   label = @Translation("Single question"),
  *   description = @Translation("Single question."),
  *   answer_class = "\Drupal\quiz_maker\Plugin\QuizMaker\QuestionAnswer\SingleQuestionAnswer",
- *   answer_plugin_id = "single_question_answer",
+ *   answer_plugin_id = "single_choice_answer",
  * )
  */
-class SingleQuestion extends Question {
+class SingleChoiceQuestion extends Question {
 
   use StringTranslationTrait;
+
+
+  public function getSettingsForm() {
+    $test = $this->getFieldDefinitions();
+    $question_plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question');
+    $answer_plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question_answer');
+    $plugin_definitions = $question_plugin_manager->getDefinitions();
+    $plugin_definitions2 = $answer_plugin_manager->getDefinitions();
+
+    $form = \Drupal::service('entity.form_builder')->getForm($entity);
+
+    $test2 = $answer_plugin_manager->createInstance($plugin_definitions[$this->bundle()]['answer_plugin_id']);
+
+    return $test;
+  }
 
   /**
    * {@inheritDoc}

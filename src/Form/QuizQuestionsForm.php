@@ -30,9 +30,12 @@ class QuizQuestionsForm extends FormBase {
     ]);
 
     $rows = [];
-    foreach ($questions as $question) {
-      $rows[] = $question->label();
+    if ($questions) {
+      foreach ($questions as $question) {
+        $rows[] = $question->label();
+      }
     }
+
 
     // Display questions in this quiz.
     $form['question_list'] = [

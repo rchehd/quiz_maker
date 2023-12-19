@@ -29,8 +29,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "access" = "Drupal\quiz_maker\EntityAccessControlHandler\QuestionAccessControlHandler",
  *     "form" = {
- *       "add" = "Drupal\quiz_maker\Form\QuestionForm",
- *       "edit" = "Drupal\quiz_maker\Form\QuestionForm",
+ *       "default" = "Drupal\quiz_maker\Form\QuestionForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm",
  *     },

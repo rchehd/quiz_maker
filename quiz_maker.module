@@ -273,7 +273,7 @@ function quiz_maker_entity_bundle_info_alter(array &$bundles): void {
   foreach ($plugins as $key => $plugin) {
     if (isset($bundles['quiz_maker_question'][$key])) {
       $bundles['quiz_maker_question'][$key]['class'] = $plugin['class'];
-      $bundles['quiz_maker_question_answer'][$key]['class'] = $plugin['answer_class'];
+      $bundles['quiz_maker_question_answer'][$plugin['answer_plugin_id']]['class'] = $plugin['answer_class'];
     }
   }
 }

@@ -83,6 +83,24 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
 
     $fields = parent::baseFieldDefinitions($entity_type);
 
+    $fields['label'] = BaseFieldDefinition::create('string')
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE)
+      ->setLabel(t('Label'))
+      ->setRequired(TRUE)
+      ->setSetting('max_length', 255)
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -5,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'string',
+        'weight' => -5,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Author'))
       ->setSetting('target_type', 'user')

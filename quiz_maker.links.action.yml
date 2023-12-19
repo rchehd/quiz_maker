@@ -24,6 +24,12 @@ quiz_maker_question.add_page:
   appears_on:
     - entity.quiz_maker_question.collection
 
+quiz_maker_quiz.quiz_maker_question.add:
+  route_name: entity.quiz_maker_question.add_page
+  title: Add question
+  appears_on:
+    - quiz_maker_quiz.questions
+
 quiz_maker_question_answer.type_add:
   title: 'Add question answer type'
   route_name: entity.quiz_maker_question_answer_type.add_form
