@@ -3,8 +3,10 @@ status: true
 dependencies:
   module:
     - quiz_maker
+_core:
+  default_config_hash: Bj5JK4KIWQ6uX_rl3UylRgwH5LRVJinRAs7lhh0Vk4s
 id: quiz_maker_question_delete_action
 label: 'Delete questions'
 type: quiz_maker_question
-plugin: entity:delete_action:quiz_maker_question
+plugin: 'entity:delete_action:quiz_maker_question'
 configuration: {  }

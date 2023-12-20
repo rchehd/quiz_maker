@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_maker_quiz.field_access_period
+    - quiz_maker.quiz_maker_quiz_type.standard
+  module:
+    - datetime_range
+id: quiz_maker_quiz.standard.field_access_period
+field_name: field_access_period
+entity_type: quiz_maker_quiz
+bundle: standard
+label: 'Access period'
+description: 'The date and time during which this Quiz will be available. Leave blank to always be available.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: daterange

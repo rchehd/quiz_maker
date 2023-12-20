@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: 5AfCuiHDWvknN4Tv57lg_hbpIRywpqH6tFLsC5UTUfU
+id: single_choice_answer
+label: 'Single choice answer'

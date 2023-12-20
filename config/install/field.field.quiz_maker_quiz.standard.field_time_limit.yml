@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_maker_quiz.field_time_limit
+    - quiz_maker.quiz_maker_quiz_type.standard
+id: quiz_maker_quiz.standard.field_time_limit
+field_name: field_time_limit
+entity_type: quiz_maker_quiz
+bundle: standard
+label: 'Time Limit'
+description: 'Set the maximum allowed time in seconds for this Quiz. Use 0 for no limit.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: sec
+field_type: integer

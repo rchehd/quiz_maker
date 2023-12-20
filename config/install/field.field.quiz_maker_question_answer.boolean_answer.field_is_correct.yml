@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_maker_question_answer.field_is_correct
+    - quiz_maker.quiz_maker_question_answer_type.boolean_answer
+id: quiz_maker_question_answer.boolean_answer.field_is_correct
+field_name: field_is_correct
+entity_type: quiz_maker_question_answer
+bundle: boolean_answer
+label: 'Is correct'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

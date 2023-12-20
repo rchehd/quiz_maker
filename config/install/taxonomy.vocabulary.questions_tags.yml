@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'Questions tags'
+vid: questions_tags
+description: ''
+weight: 0

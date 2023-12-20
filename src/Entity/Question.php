@@ -36,6 +36,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
+ *     "inline_form" = "Drupal\quiz_maker\Form\InlineQuestionForm",
  *   },
  *   base_table = "quiz_maker_question",
  *   data_table = "quiz_maker_question_field_data",
@@ -135,10 +136,10 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['description'] = BaseFieldDefinition::create('text_long')
+    $fields['question'] = BaseFieldDefinition::create('text_long')
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
-      ->setLabel(t('Description'))
+      ->setLabel(t('Question'))
       ->setDisplayOptions('form', [
         'type' => 'text_textarea',
         'weight' => 10,
@@ -197,5 +198,6 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
 
     return $fields;
   }
+
 
 }

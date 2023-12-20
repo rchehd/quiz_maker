@@ -1,5 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: vFqO31BXp0plA9TFq26iMwyd7bfqOMeB7-FTQ957_N8
 id: standard
 label: Standard

@@ -1,0 +1,40 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.quiz_maker_question_answer.multiple_choice_answer.field_answer
+    - field.field.quiz_maker_question_answer.multiple_choice_answer.field_is_correct
+    - quiz_maker.quiz_maker_question_answer_type.multiple_choice_answer
+  module:
+    - text
+id: quiz_maker_question_answer.multiple_choice_answer.default
+targetEntityType: quiz_maker_question_answer
+bundle: multiple_choice_answer
+mode: default
+content:
+  field_answer:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  field_is_correct:
+    type: boolean_checkbox
+    weight: 1
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  label:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  uid: true

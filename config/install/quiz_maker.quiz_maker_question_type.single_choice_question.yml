@@ -1,5 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: yC-GEZR-cNy3OWXWtlUoXsayVIhUV2Ac2vT5lyQoB90
 id: single_choice_question
 label: 'Single choice question'

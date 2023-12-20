@@ -1,0 +1,183 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.quiz_maker_quiz.standard.field_access_period
+    - field.field.quiz_maker_quiz.standard.field_allow_changing_answers
+    - field.field.quiz_maker_quiz.standard.field_allow_changing_blank
+    - field.field.quiz_maker_quiz.standard.field_allow_jumping
+    - field.field.quiz_maker_quiz.standard.field_allow_resume
+    - field.field.quiz_maker_quiz.standard.field_allow_skipping
+    - field.field.quiz_maker_quiz.standard.field_attempts
+    - field.field.quiz_maker_quiz.standard.field_backwards_navigation
+    - field.field.quiz_maker_quiz.standard.field_pass_rate
+    - field.field.quiz_maker_quiz.standard.field_questions
+    - field.field.quiz_maker_quiz.standard.field_result_type
+    - field.field.quiz_maker_quiz.standard.field_time_limit
+    - quiz_maker.quiz_maker_quiz_type.standard
+  module:
+    - datetime_range
+    - entity_reference_revisions
+    - text
+    - user
+id: quiz_maker_quiz.standard.default
+targetEntityType: quiz_maker_quiz
+bundle: standard
+mode: default
+content:
+  created:
+    type: timestamp
+    label: above
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+      tooltip:
+        date_format: long
+        custom_date_format: ''
+      time_diff:
+        enabled: false
+        future_format: '@interval hence'
+        past_format: '@interval ago'
+        granularity: 2
+        refresh: 60
+    third_party_settings: {  }
+    weight: 20
+    region: content
+  description:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
+  field_access_period:
+    type: daterange_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+      separator: '-'
+    third_party_settings: {  }
+    weight: 25
+    region: content
+  field_allow_changing_answers:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 30
+    region: content
+  field_allow_changing_blank:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 31
+    region: content
+  field_allow_jumping:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 29
+    region: content
+  field_allow_resume:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 28
+    region: content
+  field_allow_skipping:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 27
+    region: content
+  field_attempts:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 24
+    region: content
+  field_backwards_navigation:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 23
+    region: content
+  field_pass_rate:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 22
+    region: content
+  field_questions:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 21
+    region: content
+  field_result_type:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 32
+    region: content
+  field_time_limit:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 26
+    region: content
+  label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: -5
+    region: content
+  uid:
+    type: author
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 15
+    region: content
+hidden: {  }

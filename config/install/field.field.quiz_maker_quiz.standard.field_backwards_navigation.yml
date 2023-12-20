@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_maker_quiz.field_backwards_navigation
+    - quiz_maker.quiz_maker_quiz_type.standard
+id: quiz_maker_quiz.standard.field_backwards_navigation
+field_name: field_backwards_navigation
+entity_type: quiz_maker_quiz
+bundle: standard
+label: 'Backwards navigation'
+description: 'Allow users to go back and revisit questions already answered.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

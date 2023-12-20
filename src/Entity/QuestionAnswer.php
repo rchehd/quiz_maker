@@ -33,6 +33,7 @@ use Drupal\user\EntityOwnerTrait;
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm",
  *     },
+ *     "inline_form" = "Drupal\quiz_maker\Form\InlineQuestionAnswerForm",
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
@@ -122,39 +123,9 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['question_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Question'))
-      ->setSetting('target_type', 'quiz_maker_question')
-      ->setDisplayOptions('form', [
-        'type' => 'entity_reference_autocomplete',
-        'settings' => [
-          'match_operator' => 'CONTAINS',
-          'size' => 60,
-          'placeholder' => '',
-        ],
-        'weight' => 15,
-      ])
-      ->setDisplayConfigurable('form', TRUE);
-
     $fields['data'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Data'))
-      ->setDescription(t('A serialized array of question data.'));
-
-    $fields['score_for_true'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Score'))
-      ->setDescription(t('Answer score if it will be answered rightly'))
-      ->setDefaultValue(1)
-      ->setDisplayOptions('form', [
-        'type' => 'number',
-      ]);
-
-    $fields['score_for_false'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Score'))
-      ->setDescription(t('Answer score if it will be answered wrong'))
-      ->setDefaultValue(1)
-      ->setDisplayOptions('form', [
-        'type' => 'number',
-      ]);
+      ->setDescription(t('A serialized array of answer data.'));
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))

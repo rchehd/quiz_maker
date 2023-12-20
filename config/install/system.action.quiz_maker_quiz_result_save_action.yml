@@ -3,8 +3,10 @@ status: true
 dependencies:
   module:
     - quiz_maker
+_core:
+  default_config_hash: ihx-POowkYYWE45W75ykBnp_94stHqShMLyxMvsNkM4
 id: quiz_maker_quiz_result_save_action
 label: 'Save quiz results'
 type: quiz_maker_quiz_result
-plugin: entity:save_action:quiz_maker_quiz_result
+plugin: 'entity:save_action:quiz_maker_quiz_result'
 configuration: {  }

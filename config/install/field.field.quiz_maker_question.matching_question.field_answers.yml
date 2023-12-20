@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_maker_question.field_answers
+    - quiz_maker.quiz_maker_question_answer_type.matching_answer
+    - quiz_maker.quiz_maker_question_type.matching_question
+id: quiz_maker_question.matching_question.field_answers
+field_name: field_answers
+entity_type: quiz_maker_question
+bundle: matching_question
+label: Answers
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:quiz_maker_question_answer'
+  handler_settings:
+    target_bundles:
+      matching_answer: matching_answer
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

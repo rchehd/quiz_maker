@@ -15,7 +15,9 @@ final class QuestionAnswerForm extends ContentEntityForm {
    */
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
-    $form['answer'] = $this->entity->getAnswerForm();
+    /** @var \Drupal\quiz_maker\QuestionAnswerInterface $answer */
+    $answer = $this->entity;
+    $form['answer'] = $answer->buildAnswerForm();
     return $form;
   }
 

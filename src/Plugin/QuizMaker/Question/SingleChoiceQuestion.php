@@ -11,9 +11,9 @@ use Drupal\quiz_maker\Entity\Question;
  *
  * @QuizMakerQuestion(
  *   id = "single_choice_question",
- *   label = @Translation("Single question"),
- *   description = @Translation("Single question."),
- *   answer_class = "\Drupal\quiz_maker\Plugin\QuizMaker\QuestionAnswer\SingleQuestionAnswer",
+ *   label = @Translation("Single choice question"),
+ *   description = @Translation("Single choice question."),
+ *   answer_class = "\Drupal\quiz_maker\Plugin\QuizMaker\Answer\SingleChoiceAnswer",
  *   answer_plugin_id = "single_choice_answer",
  * )
  */
@@ -22,18 +22,25 @@ class SingleChoiceQuestion extends Question {
   use StringTranslationTrait;
 
 
-  public function getSettingsForm() {
+  public function buildAnswerForm(): array {
     $test = $this->getFieldDefinitions();
     $question_plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question');
     $answer_plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question_answer');
     $plugin_definitions = $question_plugin_manager->getDefinitions();
     $plugin_definitions2 = $answer_plugin_manager->getDefinitions();
 
-    $form = \Drupal::service('entity.form_builder')->getForm($entity);
+//    $form = \Drupal::service('entity.form_builder')->getForm($entity);
 
     $test2 = $answer_plugin_manager->createInstance($plugin_definitions[$this->bundle()]['answer_plugin_id']);
 
-    return $test;
+    $form['answer_text'] = [
+      '#type' => 'text_format',
+      '#title' => 'Answer',
+      '#format' => 'full_html',
+      '#allowed_formats' => ['full_html'],
+    ];
+
+    return $form;
   }
 
   /**

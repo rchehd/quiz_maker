@@ -1,0 +1,38 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz_maker_quiz.field_questions
+    - quiz_maker.quiz_maker_question_type.boolean_question
+    - quiz_maker.quiz_maker_question_type.direct_question
+    - quiz_maker.quiz_maker_question_type.matching_question
+    - quiz_maker.quiz_maker_question_type.multiple_choice_question
+    - quiz_maker.quiz_maker_question_type.single_choice_question
+    - quiz_maker.quiz_maker_quiz_type.standard
+  module:
+    - entity_reference_revisions
+id: quiz_maker_quiz.standard.field_questions
+field_name: field_questions
+entity_type: quiz_maker_quiz
+bundle: standard
+label: Questions
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:quiz_maker_question'
+  handler_settings:
+    target_bundles:
+      boolean_question: boolean_question
+      direct_question: direct_question
+      matching_question: matching_question
+      multiple_choice_question: multiple_choice_question
+      single_choice_question: single_choice_question
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: multiple_choice_question
+field_type: entity_reference_revisions
