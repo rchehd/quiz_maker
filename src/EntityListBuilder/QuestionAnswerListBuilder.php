@@ -16,7 +16,6 @@ final class QuestionAnswerListBuilder extends EntityListBuilder {
   public function buildHeader(): array {
     $header['id'] = $this->t('ID');
     $header['label'] = $this->t('Label');
-    $header['status'] = $this->t('Status');
     $header['uid'] = $this->t('Author');
     $header['created'] = $this->t('Created');
     $header['changed'] = $this->t('Updated');
@@ -30,7 +29,6 @@ final class QuestionAnswerListBuilder extends EntityListBuilder {
     /** @var \Drupal\quiz_maker\QuestionAnswerInterface $entity */
     $row['id'] = $entity->id();
     $row['label'] = $entity->toLink();
-    $row['status'] = $entity->get('status')->value ? $this->t('Enabled') : $this->t('Disabled');
     $username_options = [
       'label' => 'hidden',
       'settings' => ['link' => $entity->get('uid')->entity->isAuthenticated()],

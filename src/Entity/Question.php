@@ -33,10 +33,10 @@ use Drupal\user\EntityOwnerTrait;
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm",
  *     },
+ *     "inline_form" = "Drupal\quiz_maker\Form\InlineQuestionForm",
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
- *     "inline_form" = "Drupal\quiz_maker\Form\InlineQuestionForm",
  *   },
  *   base_table = "quiz_maker_question",
  *   data_table = "quiz_maker_question_field_data",
