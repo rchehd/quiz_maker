@@ -8,3 +8,18 @@
 .toolbar-icon-quiz-maker-admin.is-active:before {
   -webkit-mask-image: url(../images/icon.svg) !important;
 }
+
+.matching-form {
+  display: flex;
+  width: 100%;
+}
+
+.matching-form > div {
+  width: 100%;
+}
+
+.matching-form .tabledrag-changed-warning,
+.matching-form .tabledrag-changed,
+.matching-form .tabledrag-toggle-weight-wrapper {
+  display: none !important;
+}

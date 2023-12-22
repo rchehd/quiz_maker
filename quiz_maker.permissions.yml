@@ -12,6 +12,8 @@ delete quiz_maker_quiz:
   title: 'Delete quiz'
 create quiz_maker_quiz:
   title: 'Create quiz'
+take quiz_maker_quiz:
+  title: 'Take quiz'
 
 administer quiz_maker_question types:
   title: 'Administer question types'

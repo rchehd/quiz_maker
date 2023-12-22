@@ -149,4 +149,24 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
     return $fields;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function isCorrect(): bool {
+    if ($this->hasField('field_is_correct')) {
+      return $this->get('field_is_correct')->value;
+    }
+    return TRUE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getAnswer(): ?string {
+    if ($this->hasField('field_answer')) {
+      return $this->get('field_answer')->value;
+    }
+    return NULL;
+  }
+
 }

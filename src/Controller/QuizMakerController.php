@@ -65,4 +65,8 @@ final class QuizMakerController extends ControllerBase {
     return $build;
   }
 
+  public function getQuizTakeFormTitle(QuizInterface $quiz_maker_quiz) {
+    return $quiz_maker_quiz->label();
+  }
+
 }

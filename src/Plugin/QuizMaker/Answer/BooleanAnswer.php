@@ -16,40 +16,4 @@ use Drupal\quiz_maker\Entity\QuestionAnswer;
  */
 final class BooleanAnswer extends QuestionAnswer {
 
-  /**
-   * {@inheritDoc}
-   */
-  public function getAnswerForm(): array {
-    return [];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getData(): array {
-    return [];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function buildAnswerForm(): array {
-
-    $form['answer_text'] = [
-      '#type' => 'text_format',
-      '#title' => 'Answer',
-      '#format' => 'full_html',
-      '#allowed_formats' => ['full_html'],
-    ];
-
-    return $form;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function submitAnswerForm(array &$form, FormStateInterface $form_state): void {
-    $this->set('data', ['answer' => $form_state->get('c')]);
-  }
-
 }

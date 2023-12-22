@@ -198,6 +198,9 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
    * {@inheritDoc}
    */
   public function getQuestions(): array|bool {
+    if ($this->hasField('field_questions')) {
+      return $this->get('field_questions')->referencedEntities();
+    }
     return FALSE;
   }
 

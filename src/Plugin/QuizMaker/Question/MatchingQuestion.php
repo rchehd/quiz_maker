@@ -5,6 +5,7 @@ namespace Drupal\quiz_maker\Plugin\QuizMaker\Question;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
+use Drupal\quiz_maker\Plugin\QuizMaker\Answer\MatchingAnswer;
 
 /**
  * Plugin implementation of the quiz_maker_question.
@@ -21,42 +22,37 @@ class MatchingQuestion extends Question {
 
   use StringTranslationTrait;
 
-
-  public function buildAnswerForm(): array {
-    $test = $this->getFieldDefinitions();
-    $question_plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question');
-    $answer_plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question_answer');
-    $plugin_definitions = $question_plugin_manager->getDefinitions();
-    $plugin_definitions2 = $answer_plugin_manager->getDefinitions();
-
-//    $form = \Drupal::service('entity.form_builder')->getForm($entity);
-
-    $test2 = $answer_plugin_manager->createInstance($plugin_definitions[$this->bundle()]['answer_plugin_id']);
-
-    $form['answer_text'] = [
-      '#type' => 'text_format',
-      '#title' => 'Answer',
-      '#format' => 'full_html',
-      '#allowed_formats' => ['full_html'],
-    ];
-
-    return $form;
-  }
-
   /**
    * {@inheritDoc}
    */
   public function getAnsweringForm(): array {
-    $form['answer'] = [
-      '#type' => 'radios',
-      '#title' => $this->t('Select an answer'),
-      '#options' => [
-        'option_1' => $this->t('Option 1'),
-        'option_2' => $this->t('Option 2'),
-      ],
-    ];
+    $answers = $this->get('field_answers')->referencedEntities();
+    if ($answers) {
+      $answer_form = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => ['matching-form']
+        ]
+      ];
+      $answer_form['question_table'] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => ['question-table']
+        ]
+      ];
+      $answer_form['answer_table'] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => ['answer-table']
+        ]
+      ];
+      $answer_form['question_table']['form'] = $this->getMatchingTable($answers, 'getMatchingQuestion', $this->t('Question'));
+      $answer_form['answer_table']['form'] = $this->getMatchingTable($answers, 'getMatchingAnswer', $this->t('Answer'));
 
-    return $form;
+      return $answer_form;
+    }
+
+    return [];
   }
 
   /**
@@ -65,6 +61,67 @@ class MatchingQuestion extends Question {
   public function submitAnswer(array &$form, FormStateInterface $form_state): mixed {
     $test = self::get('answer_plugin_id');
     return $form_state->getValue('answer');
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function hasReferencedAnswers(): bool {
+    return TRUE;
+  }
+
+  /**
+   * Get Matching table.
+   *
+   * @param MatchingAnswer[] $answers
+   *   The Matching answers
+   * @param string $answer_function
+   *   The matching answer function: 'getMatchingQuestion' or 'getMatchingAnswer'.
+   * @param mixed $title
+   *   The table title.
+   *
+   * @return array
+   *   The table.
+   */
+  private function getMatchingTable(array $answers, string $answer_function, mixed $title): array {
+    $table = [
+      '#type' => 'table',
+      '#header' => [
+        $title,
+        $this->t('Weight'),
+      ],
+      '#tabledrag' => [
+        [
+          'action' => 'order',
+          'relationship' => 'sibling',
+          'group' => 'table-sort-weight',
+        ],
+      ]
+    ];
+
+    $i = 0;
+    foreach ($answers as $answer) {
+      $row = [
+        'label' => [
+          '#type' => 'html_tag',
+          '#tag' => 'span',
+          '#value' => $answer->{$answer_function}(),
+        ],
+        'weight' => [
+          '#type' => 'weight',
+          '#title' => $this->t('Weight for @title', ['@title' => $answer->label()]),
+          '#title_display' => 'invisible',
+          '#default_value' => $i,
+          '#attributes' => ['class' => ['table-sort-weight']],
+        ],
+        '#attributes' => [
+          'class' => ['draggable'],
+        ]
+      ];
+      $table[$answer->id()] = $row;
+      $i++;
+    }
+    return $table;
   }
 
 }

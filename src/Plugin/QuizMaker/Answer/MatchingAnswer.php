@@ -17,39 +17,23 @@ use Drupal\quiz_maker\Entity\QuestionAnswer;
 final class MatchingAnswer extends QuestionAnswer {
 
   /**
-   * {@inheritDoc}
+   * Get matching question.
+   *
+   * @return string
+   *   The matching question.
    */
-  public function getAnswerForm(): array {
-    return [];
+  public function getMatchingQuestion(): string {
+    return $this->get('field_matching_question')->value;
   }
 
   /**
-   * {@inheritDoc}
+   * Get matching answer.
+   *
+   * @return string
+   *   The matching answer.
    */
-  public function getData(): array {
-    return [];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function buildAnswerForm(): array {
-
-    $form['answer_text'] = [
-      '#type' => 'text_format',
-      '#title' => 'Answer',
-      '#format' => 'full_html',
-      '#allowed_formats' => ['full_html'],
-    ];
-
-    return $form;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function submitAnswerForm(array &$form, FormStateInterface $form_state): void {
-    $this->set('data', ['answer' => $form_state->get('c')]);
+  public function getMatchingAnswer(): string {
+    return $this->get('field_matching_answer')->value;
   }
 
 }

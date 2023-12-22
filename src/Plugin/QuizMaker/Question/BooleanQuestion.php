@@ -25,8 +25,7 @@ class BooleanQuestion extends Question {
    * {@inheritDoc}
    */
   public function getAnsweringForm(): array {
-
-    $form['answers'][] = [
+    return [
       '#type' => 'radios',
       '#title' => $this->t('Select an answer'),
       '#options' => [
@@ -34,8 +33,6 @@ class BooleanQuestion extends Question {
         'false' => $this->t('False'),
       ],
     ];
-
-    return $form;
   }
 
   /**
@@ -44,6 +41,10 @@ class BooleanQuestion extends Question {
   public function submitAnswer(array &$form, FormStateInterface $form_state): mixed {
     $test = self::get('answer_plugin_id');
     return $form_state->getValue('answer');
+  }
+
+  public function hasReferencedAnswers(): bool {
+    return FALSE;
   }
 
 }

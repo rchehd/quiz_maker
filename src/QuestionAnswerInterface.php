@@ -13,37 +13,19 @@ use Drupal\user\EntityOwnerInterface;
 interface QuestionAnswerInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
   /**
-   * Answer form.
+   * Check is answer is correct.
    *
-   * @return array
-   *   Form.
+   * @return bool
+   *   TRUE id correct, otherwise FALSE.
    */
-  public function getAnswerForm(): array;
+  public function isCorrect(): bool;
 
   /**
-   * Answer data.
+   * Return answer text if it exists.
    *
-   * @return array
-   *   The data.
+   * @return string|null
+   *   The answer text or null.
    */
-  public function getData(): array;
-
-  /**
-   * Build form for creating answer of question.
-   *
-   * @return array
-   *   The build array.
-   */
-  public function buildAnswerForm(): array;
-
-  /**
-   * Handles form submission for the question answer type.
-   *
-   * @param array $form
-   *   The form elements.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The form state.
-   */
-  public function submitAnswerForm(array &$form, FormStateInterface $form_state): void;
+  public function getAnswer(): ?string;
 
 }

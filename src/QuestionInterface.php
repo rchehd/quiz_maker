@@ -33,4 +33,29 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
    */
   public function submitAnswer(array &$form, FormStateInterface $form_state): mixed;
 
+  /**
+   * Get question text.
+   *
+   * @return ?string
+   *   The question text.
+   */
+  public function getQuestion(): ?string;
+
+  /**
+   * Check if question has referenced answers or there should be only hardcode
+   * answers build by answering form.
+   *
+   * @return bool
+   *   TRUE when has, otherwise FALSE.
+   */
+  public function hasReferencedAnswers(): bool;
+
+  /**
+   * Get question's answers if it has.
+   *
+   * @return array|bool
+   *   Array of answers if it has, otherwise FALSE.
+   */
+  public function getAnswers(): array|bool;
+
 }

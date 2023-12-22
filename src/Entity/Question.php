@@ -199,5 +199,24 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
     return $fields;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function getQuestion(): ?string {
+    if ($this->hasField('question')) {
+      return $this->get('question')->value;
+    }
+    return NULL;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getAnswers(): array|bool {
+    if ($this->hasReferencedAnswers()) {
+      return $this->get('field_answers')->referencedEntities();
+    }
+    return FALSE;
+  }
 
 }

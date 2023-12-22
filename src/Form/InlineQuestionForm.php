@@ -23,7 +23,7 @@ class InlineQuestionForm extends EntityInlineForm {
 
     $fields['status'] = [
       'type' => 'field',
-      'label' => $this->t('Active'),
+      'label' => $this->t('Status'),
       'weight' => 3,
     ];
 

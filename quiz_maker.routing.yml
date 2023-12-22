@@ -40,3 +40,17 @@ quiz_maker_quiz.results:
     parameters:
       quiz_maker_quiz:
         type: 'entity:quiz_maker_quiz'
+
+quiz_maker_quiz.take:
+  path: 'quiz/{quiz_maker_quiz}/take'
+  defaults:
+    _form: '\Drupal\quiz_maker\Form\QuizTakeForm'
+    _title_callback: '\Drupal\quiz_maker\Controller\QuizMakerController::getQuizTakeFormTitle'
+    _title: 'Manage results'
+  requirements:
+    _permission: 'take quiz_maker_quiz'
+  options:
+#    _admin_route: true
+    parameters:
+      quiz_maker_quiz:
+        type: 'entity:quiz_maker_quiz'
