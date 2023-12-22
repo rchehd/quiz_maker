@@ -7,6 +7,8 @@ dependencies:
   module:
     - text
     - user
+_core:
+  default_config_hash: SOfWzKcaI5ZxZX0WXBIeWPyu_hNzAeUiT31dr6k2_N8
 id: quiz_maker_question_answer.direct_answer.default
 targetEntityType: quiz_maker_question_answer
 bundle: direct_answer

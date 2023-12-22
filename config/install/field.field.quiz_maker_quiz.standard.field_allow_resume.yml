@@ -4,6 +4,8 @@ dependencies:
   config:
     - field.storage.quiz_maker_quiz.field_allow_resume
     - quiz_maker.quiz_maker_quiz_type.standard
+_core:
+  default_config_hash: rqP_zRd6D7lJAhNtC0mdSbSrwoQ0zPM2koOtWgwLLXQ
 id: quiz_maker_quiz.standard.field_allow_resume
 field_name: field_allow_resume
 entity_type: quiz_maker_quiz

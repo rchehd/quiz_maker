@@ -11,6 +11,8 @@ dependencies:
     - quiz_maker.quiz_maker_quiz_type.standard
   module:
     - entity_reference_revisions
+_core:
+  default_config_hash: rDYLFUniY3pcuM4Hj5BiS5aGjyVM5ERGxu4gWHnDR7Q
 id: quiz_maker_quiz.standard.field_questions
 field_name: field_questions
 entity_type: quiz_maker_quiz

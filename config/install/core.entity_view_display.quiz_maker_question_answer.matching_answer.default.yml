@@ -8,6 +8,8 @@ dependencies:
   module:
     - text
     - user
+_core:
+  default_config_hash: BLT91HHiLxW6JvIRPOVJJPl5Ve1yED-kTu_Xhry5Xyo
 id: quiz_maker_question_answer.matching_answer.default
 targetEntityType: quiz_maker_question_answer
 bundle: matching_answer

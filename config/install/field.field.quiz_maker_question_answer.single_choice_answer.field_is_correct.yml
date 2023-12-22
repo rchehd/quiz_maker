@@ -4,6 +4,8 @@ dependencies:
   config:
     - field.storage.quiz_maker_question_answer.field_is_correct
     - quiz_maker.quiz_maker_question_answer_type.single_choice_answer
+_core:
+  default_config_hash: XWt-dSJsE7Wx9P1-AMeE2HYSp0zT_3WoCVtWEUXAftY
 id: quiz_maker_question_answer.single_choice_answer.field_is_correct
 field_name: field_is_correct
 entity_type: quiz_maker_question_answer

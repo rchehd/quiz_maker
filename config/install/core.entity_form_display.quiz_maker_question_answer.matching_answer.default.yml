@@ -7,6 +7,8 @@ dependencies:
     - quiz_maker.quiz_maker_question_answer_type.matching_answer
   module:
     - text
+_core:
+  default_config_hash: HkkVjZ5wpWgHimiXbDaJT3dfJ77KB-dq7Q5vg9U5jt8
 id: quiz_maker_question_answer.matching_answer.default
 targetEntityType: quiz_maker_question_answer
 bundle: matching_answer

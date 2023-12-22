@@ -6,7 +6,7 @@ dependencies:
   module:
     - text
 _core:
-  default_config_hash: 0TYVw1GeG3yZ5Q45CcAnXQZS9PL-_qBZqGF9KRbrS0M
+  default_config_hash: xb446ANooQhU-szxTx07jxTBZfeZs6zznTCrMzd8eEo
 id: quiz_maker_quiz_result.standard.default
 targetEntityType: quiz_maker_quiz_result
 bundle: standard

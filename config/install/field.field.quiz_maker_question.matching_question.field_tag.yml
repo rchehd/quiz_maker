@@ -5,6 +5,8 @@ dependencies:
     - field.storage.quiz_maker_question.field_tag
     - quiz_maker.quiz_maker_question_type.matching_question
     - taxonomy.vocabulary.questions_tags
+_core:
+  default_config_hash: nsBgc-8002fEwICHpLC5wT1olU2JDqtoo1W9r_qwwvA
 id: quiz_maker_question.matching_question.field_tag
 field_name: field_tag
 entity_type: quiz_maker_question

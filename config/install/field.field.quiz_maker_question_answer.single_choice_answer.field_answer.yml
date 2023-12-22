@@ -7,6 +7,8 @@ dependencies:
     - quiz_maker.quiz_maker_question_answer_type.single_choice_answer
   module:
     - text
+_core:
+  default_config_hash: COjWdaI1MgdP0GYS9uxmufISiVTSAElrkG6QkY3AqXY
 id: quiz_maker_question_answer.single_choice_answer.field_answer
 field_name: field_answer
 entity_type: quiz_maker_question_answer

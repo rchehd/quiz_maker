@@ -4,6 +4,8 @@ dependencies:
   config:
     - field.storage.quiz_maker_quiz.field_allow_skipping
     - quiz_maker.quiz_maker_quiz_type.standard
+_core:
+  default_config_hash: 1__nAD8Zk9yZUPK-MSXAaE7zep6BNWoKmzX15T6IJVI
 id: quiz_maker_quiz.standard.field_allow_skipping
 field_name: field_allow_skipping
 entity_type: quiz_maker_quiz

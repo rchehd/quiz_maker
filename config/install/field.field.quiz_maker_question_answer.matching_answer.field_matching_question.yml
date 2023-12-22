@@ -7,6 +7,8 @@ dependencies:
     - quiz_maker.quiz_maker_question_answer_type.matching_answer
   module:
     - text
+_core:
+  default_config_hash: lAHlc2DV4iToX2Jk4HauXtkTytosWCxNWcuCbXVYz8E
 id: quiz_maker_question_answer.matching_answer.field_matching_question
 field_name: field_matching_question
 entity_type: quiz_maker_question_answer

@@ -4,6 +4,8 @@ dependencies:
   config:
     - field.storage.quiz_maker_quiz.field_attempts
     - quiz_maker.quiz_maker_quiz_type.standard
+_core:
+  default_config_hash: BRMgYOEdOyyJPK-vpDLYNuEMZ7gbLAMeyQ4GHhfdtqE
 id: quiz_maker_quiz.standard.field_attempts
 field_name: field_attempts
 entity_type: quiz_maker_quiz

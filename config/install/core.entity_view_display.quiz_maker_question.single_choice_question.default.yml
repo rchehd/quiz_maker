@@ -9,6 +9,8 @@ dependencies:
   module:
     - text
     - user
+_core:
+  default_config_hash: xTey-w8mOsHFcrYc-3a04jTWq7KY0uTwwYBgQbrFh9k
 id: quiz_maker_question.single_choice_question.default
 targetEntityType: quiz_maker_question
 bundle: single_choice_question

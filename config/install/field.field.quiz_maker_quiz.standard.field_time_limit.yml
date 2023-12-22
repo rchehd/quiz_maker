@@ -4,6 +4,8 @@ dependencies:
   config:
     - field.storage.quiz_maker_quiz.field_time_limit
     - quiz_maker.quiz_maker_quiz_type.standard
+_core:
+  default_config_hash: YHG95Gk_IR_rTcTJ4VUsUn9O74wLMxl_9HMa3MPFkSs
 id: quiz_maker_quiz.standard.field_time_limit
 field_name: field_time_limit
 entity_type: quiz_maker_quiz

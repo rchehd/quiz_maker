@@ -8,6 +8,8 @@ dependencies:
   module:
     - text
     - user
+_core:
+  default_config_hash: 1KpGQlWcdPZBjaihGQ2VD6PI-XtNl6hOnCKoBNc7Ozk
 id: quiz_maker_question_answer.single_choice_answer.default
 targetEntityType: quiz_maker_question_answer
 bundle: single_choice_answer

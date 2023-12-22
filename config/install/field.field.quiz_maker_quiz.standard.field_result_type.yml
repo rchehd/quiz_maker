@@ -3,8 +3,9 @@ status: true
 dependencies:
   config:
     - field.storage.quiz_maker_quiz.field_result_type
-    - quiz_maker.quiz_maker_quiz_result_type.standard
     - quiz_maker.quiz_maker_quiz_type.standard
+_core:
+  default_config_hash: WmmGFIvCc-b7RQvQ2UcjJZajavonIq88EFi2ZdAj_dU
 id: quiz_maker_quiz.standard.field_result_type
 field_name: field_result_type
 entity_type: quiz_maker_quiz

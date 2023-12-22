@@ -4,6 +4,8 @@ dependencies:
   config:
     - field.storage.quiz_maker_quiz.field_pass_rate
     - quiz_maker.quiz_maker_quiz_type.standard
+_core:
+  default_config_hash: ZVkDNVkTx3c02ySkkMklTxPrCXbB-jkOrBUNUb0syJM
 id: quiz_maker_quiz.standard.field_pass_rate
 field_name: field_pass_rate
 entity_type: quiz_maker_quiz

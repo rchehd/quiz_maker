@@ -7,6 +7,8 @@ dependencies:
     - quiz_maker.quiz_maker_question_answer_type.multiple_choice_answer
   module:
     - text
+_core:
+  default_config_hash: dHlsLn3X2VezITmATLR_fBrxodTO0DiTq83-5Mfl_1A
 id: quiz_maker_question_answer.multiple_choice_answer.field_answer
 field_name: field_answer
 entity_type: quiz_maker_question_answer

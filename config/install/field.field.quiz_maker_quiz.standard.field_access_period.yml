@@ -6,6 +6,8 @@ dependencies:
     - quiz_maker.quiz_maker_quiz_type.standard
   module:
     - datetime_range
+_core:
+  default_config_hash: ECiGWbQsBq92x4rrARXEzxeN_Gr2QVpQAsg3saM_PQQ
 id: quiz_maker_quiz.standard.field_access_period
 field_name: field_access_period
 entity_type: quiz_maker_quiz

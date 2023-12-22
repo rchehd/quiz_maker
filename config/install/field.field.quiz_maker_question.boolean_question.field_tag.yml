@@ -5,6 +5,8 @@ dependencies:
     - field.storage.quiz_maker_question.field_tag
     - quiz_maker.quiz_maker_question_type.boolean_question
     - taxonomy.vocabulary.questions_tags
+_core:
+  default_config_hash: fDNmueqLLhS1ed_HQodGovduul_KZspIhVT3h6lm7-U
 id: quiz_maker_question.boolean_question.field_tag
 field_name: field_tag
 entity_type: quiz_maker_question

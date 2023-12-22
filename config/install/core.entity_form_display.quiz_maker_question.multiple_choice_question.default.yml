@@ -9,6 +9,8 @@ dependencies:
   module:
     - inline_entity_form
     - text
+_core:
+  default_config_hash: MOiJx__RGYYU5yUglo-SRDKvI_eZ7WLJA4k20ndJT7c
 id: quiz_maker_question.multiple_choice_question.default
 targetEntityType: quiz_maker_question
 bundle: multiple_choice_question

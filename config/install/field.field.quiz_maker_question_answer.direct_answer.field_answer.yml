@@ -7,6 +7,8 @@ dependencies:
     - quiz_maker.quiz_maker_question_answer_type.direct_answer
   module:
     - text
+_core:
+  default_config_hash: LTdySohgcwv_dFm49e6FgJQNp9Rsst9dajyoDcXCdWs
 id: quiz_maker_question_answer.direct_answer.field_answer
 field_name: field_answer
 entity_type: quiz_maker_question_answer

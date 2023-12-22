@@ -20,6 +20,8 @@ dependencies:
     - entity_reference_revisions
     - text
     - user
+_core:
+  default_config_hash: 6jsXq1G8d7GIaDr8ZgGBFrn0JftbemskHIvc6fWWHEY
 id: quiz_maker_quiz.standard.default
 targetEntityType: quiz_maker_quiz
 bundle: standard

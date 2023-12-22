@@ -7,6 +7,8 @@ dependencies:
     - quiz_maker.quiz_maker_question_answer_type.boolean_answer
   module:
     - text
+_core:
+  default_config_hash: AUqGC3SdNvcb2PzdPRKilR_jgGbwjUTuYkOMJF_ND5E
 id: quiz_maker_question_answer.boolean_answer.field_answer
 field_name: field_answer
 entity_type: quiz_maker_question_answer

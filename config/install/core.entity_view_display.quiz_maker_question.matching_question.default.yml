@@ -9,6 +9,8 @@ dependencies:
   module:
     - text
     - user
+_core:
+  default_config_hash: '-YFrL5w6YXPUUVDgms4T6CuvrI-HbOPsvtOWcQ1Ci4M'
 id: quiz_maker_question.matching_question.default
 targetEntityType: quiz_maker_question
 bundle: matching_question

@@ -9,6 +9,8 @@ dependencies:
   module:
     - inline_entity_form
     - text
+_core:
+  default_config_hash: J_Zx0Ea3D64Pp61rRoUqH3x4i5R__HuE7GFgee7ya0o
 id: quiz_maker_question.matching_question.default
 targetEntityType: quiz_maker_question
 bundle: matching_question

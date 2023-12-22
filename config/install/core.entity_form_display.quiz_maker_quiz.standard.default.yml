@@ -91,7 +91,7 @@ third_party_settings:
         description: ''
         required_fields: true
 _core:
-  default_config_hash: ivI1ZMueHklnS1bmvcD0tU0C97ILL-YPqwFgqM62oAk
+  default_config_hash: _mpM2felSRb87fz63Gr3GQOGPgE2jlArGVynTqYTOCA
 id: quiz_maker_quiz.standard.default
 targetEntityType: quiz_maker_quiz
 bundle: standard

@@ -8,6 +8,8 @@ dependencies:
   module:
     - text
     - user
+_core:
+  default_config_hash: mdec0fdvEBjgocV1jo09_10lMbg5GoFHtajf_2q_dPs
 id: quiz_maker_question_answer.boolean_answer.default
 targetEntityType: quiz_maker_question_answer
 bundle: boolean_answer

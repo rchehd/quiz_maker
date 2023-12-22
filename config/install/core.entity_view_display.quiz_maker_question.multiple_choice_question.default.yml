@@ -9,6 +9,8 @@ dependencies:
   module:
     - text
     - user
+_core:
+  default_config_hash: wRtwtJaWv1gbzUKPRDXPjOZoNX83w28CftPTo_hhHc0
 id: quiz_maker_question.multiple_choice_question.default
 targetEntityType: quiz_maker_question
 bundle: multiple_choice_question

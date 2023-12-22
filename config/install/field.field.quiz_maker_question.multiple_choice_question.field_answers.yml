@@ -5,6 +5,8 @@ dependencies:
     - field.storage.quiz_maker_question.field_answers
     - quiz_maker.quiz_maker_question_answer_type.multiple_choice_answer
     - quiz_maker.quiz_maker_question_type.multiple_choice_question
+_core:
+  default_config_hash: 1YKIMrcAcAToGer9AbvyA5smLxhhNO2zGYJ5TZrqs3A
 id: quiz_maker_question.multiple_choice_question.field_answers
 field_name: field_answers
 entity_type: quiz_maker_question

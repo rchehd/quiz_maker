@@ -4,6 +4,8 @@ dependencies:
   config:
     - field.storage.quiz_maker_question_answer.field_is_correct
     - quiz_maker.quiz_maker_question_answer_type.boolean_answer
+_core:
+  default_config_hash: P_0JXYKTpzCcfpK9tAYJ_mi64LHLkshpSYpurFcI4iE
 id: quiz_maker_question_answer.boolean_answer.field_is_correct
 field_name: field_is_correct
 entity_type: quiz_maker_question_answer

@@ -8,7 +8,7 @@ dependencies:
   module:
     - text
 _core:
-  default_config_hash: t60A6MVwM767rnuWsAkHvwB1-Y8uEgOJTz4_yt3NewA
+  default_config_hash: pNUNPYp1p2hN4HTGApHq0ZVk91_kiRuqKcMaeCxPA9w
 id: quiz_maker_question_answer.single_choice_answer.default
 targetEntityType: quiz_maker_question_answer
 bundle: single_choice_answer

@@ -10,7 +10,7 @@ dependencies:
     - inline_entity_form
     - text
 _core:
-  default_config_hash: tPQB2abBF7bxLf6NejosLxL_LcjDfBZ-uuKL9l5LKo4
+  default_config_hash: AnoiJYkCD1thBaUqXwxV5Qy7Sz51RzuvLxUiVdjJv60
 id: quiz_maker_question.single_choice_question.default
 targetEntityType: quiz_maker_question
 bundle: single_choice_question

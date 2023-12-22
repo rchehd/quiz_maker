@@ -4,6 +4,8 @@ dependencies:
   config:
     - field.storage.quiz_maker_question.field_max_score
     - quiz_maker.quiz_maker_question_type.single_choice_question
+_core:
+  default_config_hash: EMgjDhk649mAvlElQs16K45Nrgviroi4GHTiIr8n4BA
 id: quiz_maker_question.single_choice_question.field_max_score
 field_name: field_max_score
 entity_type: quiz_maker_question
