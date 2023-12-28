@@ -1,51 +1,56 @@
 
 
-administer quiz_maker_quiz types:
+administer quiz types:
   title: 'Administer quiz types'
   description: 'Maintain the types of quiz entity.'
   restrict access: true
-view quiz_maker_quiz:
+view quiz:
   title: 'View quiz'
-edit quiz_maker_quiz:
+edit quiz:
   title: 'Edit quiz'
-delete quiz_maker_quiz:
+delete quiz:
   title: 'Delete quiz'
-create quiz_maker_quiz:
+create quiz:
   title: 'Create quiz'
-take quiz_maker_quiz:
+take quiz:
   title: 'Take quiz'
 
-administer quiz_maker_question types:
+administer question types:
   title: 'Administer question types'
   description: 'Maintain the types of question entity.'
   restrict access: true
-view quiz_maker_question:
+view question:
   title: 'View question'
-edit quiz_maker_question:
+edit question:
   title: 'Edit question'
-delete quiz_maker_question:
+delete question:
   title: 'Delete question'
-create quiz_maker_question:
+create question:
   title: 'Create question'
 
-administer quiz_maker_question_answer types:
+administer question_answer types:
   title: 'Administer question answer types'
   description: 'Maintain the types of question answer entity.'
   restrict access: true
 
-administer quiz_maker_quiz_result types:
+administer quiz_result types:
   title: 'Administer quiz result types'
   description: 'Maintain the types of quiz result entity.'
   restrict access: true
-view quiz_maker_quiz_result:
+view quiz_result:
   title: 'View quiz result'
-edit quiz_maker_quiz_result:
+edit quiz_result:
   title: 'Edit quiz result'
-delete quiz_maker_quiz_result:
+delete quiz_result:
   title: 'Delete quiz result'
-create quiz_maker_quiz_result:
+create quiz_result:
   title: 'Create quiz result'
 
 administer quiz_maker_qq_relationship:
   title: 'Administer quiz question relationships'
+  restrict access: true
+
+administer question_response types:
+  title: 'Administer question response types'
+  description: 'Maintain the types of question response entity.'
   restrict access: true

@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.question.field_tag
+    - quiz_maker.question_type.boolean_question
+    - taxonomy.vocabulary.questions_tags
+_core:
+  default_config_hash: fDNmueqLLhS1ed_HQodGovduul_KZspIhVT3h6lm7-U
+id: question.boolean_question.field_tag
+field_name: field_tag
+entity_type: question
+bundle: boolean_question
+label: Tag
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      questions_tags: questions_tags
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

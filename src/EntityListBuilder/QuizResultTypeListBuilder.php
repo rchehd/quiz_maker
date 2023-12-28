@@ -37,7 +37,7 @@ final class QuizResultTypeListBuilder extends ConfigEntityListBuilder {
 
     $build['table']['#empty'] = $this->t(
       'No quiz result types available. <a href=":link">Add quiz result type</a>.',
-      [':link' => Url::fromRoute('entity.quiz_maker_quiz_result_type.add_form')->toString()],
+      [':link' => Url::fromRoute('entity.quiz_result_type.add_form')->toString()],
     );
 
     return $build;

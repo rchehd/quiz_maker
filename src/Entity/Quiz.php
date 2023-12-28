@@ -18,7 +18,7 @@ use Drupal\user\EntityOwnerTrait;
  * Defines the quiz entity class.
  *
  * @ContentEntityType(
- *   id = "quiz_maker_quiz",
+ *   id = "quiz",
  *   label = @Translation("Quiz"),
  *   label_collection = @Translation("Quizzes"),
  *   label_singular = @Translation("quiz"),
@@ -42,13 +42,13 @@ use Drupal\user\EntityOwnerTrait;
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
  *   },
- *   base_table = "quiz_maker_quiz",
- *   data_table = "quiz_maker_quiz_field_data",
- *   revision_table = "quiz_maker_quiz_revision",
- *   revision_data_table = "quiz_maker_quiz_field_revision",
+ *   base_table = "quiz",
+ *   data_table = "quiz_field_data",
+ *   revision_table = "quiz_revision",
+ *   revision_data_table = "quiz_field_revision",
  *   show_revision_ui = TRUE,
  *   translatable = TRUE,
- *   admin_permission = "administer quiz_maker_quiz types",
+ *   admin_permission = "administer quiz types",
  *   entity_keys = {
  *     "id" = "id",
  *     "revision" = "revision_id",
@@ -65,15 +65,15 @@ use Drupal\user\EntityOwnerTrait;
  *   },
  *   links = {
  *     "collection" = "/admin/quiz/quizzes",
- *     "add-form" = "/quiz/add/{quiz_maker_quiz_type}",
+ *     "add-form" = "/quiz/add/{quiz_type}",
  *     "add-page" = "/quiz/add",
- *     "canonical" = "/quiz/{quiz_maker_quiz}",
- *     "edit-form" = "/quiz/{quiz_maker_quiz}/edit",
- *     "delete-form" = "/quiz/{quiz_maker_quiz}/delete",
+ *     "canonical" = "/quiz/{quiz}",
+ *     "edit-form" = "/quiz/{quiz}/edit",
+ *     "delete-form" = "/quiz/{quiz}/delete",
  *     "delete-multiple-form" = "/admin/quiz/quizzes/delete-multiple",
  *   },
- *   bundle_entity_type = "quiz_maker_quiz_type",
- *   field_ui_base_route = "entity.quiz_maker_quiz_type.edit_form",
+ *   bundle_entity_type = "quiz_type",
+ *   field_ui_base_route = "entity.quiz_type.edit_form",
  * )
  */
 class Quiz extends RevisionableContentEntityBase implements QuizInterface {

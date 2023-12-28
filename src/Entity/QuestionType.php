@@ -8,7 +8,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  * Defines the Question type configuration entity.
  *
  * @ConfigEntityType(
- *   id = "quiz_maker_question_type",
+ *   id = "question_type",
  *   label = @Translation("Question type"),
  *   label_collection = @Translation("Question types"),
  *   label_singular = @Translation("question type"),
@@ -28,19 +28,19 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
  *   },
- *   admin_permission = "administer quiz_maker_question types",
- *   bundle_of = "quiz_maker_question",
- *   config_prefix = "quiz_maker_question_type",
+ *   admin_permission = "administer question types",
+ *   bundle_of = "question",
+ *   config_prefix = "question_type",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid",
  *   },
  *   links = {
- *     "add-form" = "/admin/structure/quiz_maker_question_types/add",
- *     "edit-form" = "/admin/structure/quiz_maker_question_types/manage/{quiz_maker_question_type}",
- *     "delete-form" = "/admin/structure/quiz_maker_question_types/manage/{quiz_maker_question_type}/delete",
- *     "collection" = "/admin/structure/quiz_maker_question_types",
+ *     "add-form" = "/admin/structure/question_types/add",
+ *     "edit-form" = "/admin/structure/question_types/manage/{question_type}",
+ *     "delete-form" = "/admin/structure/question_types/manage/{question_type}/delete",
+ *     "collection" = "/admin/structure/question_types",
  *   },
  *   config_export = {
  *     "id",

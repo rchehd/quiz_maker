@@ -20,10 +20,10 @@ class QuizTakeForm extends FormBase {
    * {@inheritDoc}
    */
   public function getFormId(): string {
-    return 'quiz_maker_quiz_take_form';
+    return 'quiz_take_form';
   }
 
-  public function buildForm(array $form, FormStateInterface $form_state, QuizInterface $quiz_maker_quiz = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, QuizInterface $quiz = NULL) {
     $form['question'] = [
       '#type' => 'container',
       '#attributes' => [
@@ -31,8 +31,8 @@ class QuizTakeForm extends FormBase {
       ],
     ];
 
-    if ($quiz_maker_quiz) {
-      $questions = $quiz_maker_quiz->getQuestions();
+    if ($quiz) {
+      $questions = $quiz->getQuestions();
 
       /** @var \Drupal\quiz_maker\QuestionInterface $current_question */
       $current_question = $questions[$this->question_number];
@@ -118,13 +118,13 @@ class QuizTakeForm extends FormBase {
    *   The form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
-   * @param \Drupal\quiz_maker\QuizInterface|null $quiz_maker_quiz
+   * @param \Drupal\quiz_maker\QuizInterface|null $quiz
    *   The quiz.
    *
    * @return mixed
    *   The form array.
    */
-  public function updateQuestionForm(array &$form, FormStateInterface $form_state, QuizInterface $quiz_maker_quiz = NULL) {
+  public function updateQuestionForm(array &$form, FormStateInterface $form_state, QuizInterface $quiz = NULL) {
     return $form['question'];
   }
 

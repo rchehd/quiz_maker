@@ -5,7 +5,7 @@ namespace Drupal\quiz_maker\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Defines quiz_maker_question annotation object.
+ * Defines question annotation object.
  *
  * @Annotation
  */

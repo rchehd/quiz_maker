@@ -8,7 +8,7 @@ use Drupal\quiz_maker\Entity\Question;
 use Drupal\quiz_maker\Plugin\QuizMaker\Answer\MatchingAnswer;
 
 /**
- * Plugin implementation of the quiz_maker_question.
+ * Plugin implementation of the question.
  *
  * @QuizMakerQuestion(
  *   id = "matching_question",

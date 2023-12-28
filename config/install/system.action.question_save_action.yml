@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_maker
+_core:
+  default_config_hash: vUf9bDtelB0Qa64X54b-RMCJT0plr3FQT6qaPX35lBU
+id: question_save_action
+label: 'Save questions'
+type: question
+plugin: 'entity:save_action:question'
+configuration: {  }

@@ -102,7 +102,7 @@ final class QuizQuestionRelationship extends ContentEntityBase implements QuizQu
 
     $fields['quiz_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Quiz'))
-      ->setSetting('target_type', 'quiz_maker_quiz')
+      ->setSetting('target_type', 'quiz')
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
         'settings' => [
@@ -119,7 +119,7 @@ final class QuizQuestionRelationship extends ContentEntityBase implements QuizQu
 
     $fields['question_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Question'))
-      ->setSetting('target_type', 'quiz_maker_question')
+      ->setSetting('target_type', 'question')
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
         'settings' => [

@@ -8,7 +8,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  * Defines the Quiz Result type configuration entity.
  *
  * @ConfigEntityType(
- *   id = "quiz_maker_quiz_result_type",
+ *   id = "quiz_result_type",
  *   label = @Translation("Quiz Result type"),
  *   label_collection = @Translation("Quiz Result types"),
  *   label_singular = @Translation("quiz result type"),
@@ -28,19 +28,19 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
  *   },
- *   admin_permission = "administer quiz_maker_quiz_result types",
- *   bundle_of = "quiz_maker_quiz_result",
- *   config_prefix = "quiz_maker_quiz_result_type",
+ *   admin_permission = "administer quiz_result types",
+ *   bundle_of = "quiz_result",
+ *   config_prefix = "quiz_result_type",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid",
  *   },
  *   links = {
- *     "add-form" = "/admin/structure/quiz_maker_quiz_result_types/add",
- *     "edit-form" = "/admin/structure/quiz_maker_quiz_result_types/manage/{quiz_maker_quiz_result_type}",
- *     "delete-form" = "/admin/structure/quiz_maker_quiz_result_types/manage/{quiz_maker_quiz_result_type}/delete",
- *     "collection" = "/admin/structure/quiz_maker_quiz_result_types",
+ *     "add-form" = "/admin/structure/quiz_result_types/add",
+ *     "edit-form" = "/admin/structure/quiz_result_types/manage/{quiz_result_type}",
+ *     "delete-form" = "/admin/structure/quiz_result_types/manage/{quiz_result_type}/delete",
+ *     "collection" = "/admin/structure/quiz_result_types",
  *   },
  *   config_export = {
  *     "id",

@@ -14,7 +14,7 @@ use Drupal\user\EntityOwnerTrait;
  * Defines the question answer entity class.
  *
  * @ContentEntityType(
- *   id = "quiz_maker_question_answer",
+ *   id = "question_answer",
  *   label = @Translation("Question Answer"),
  *   label_collection = @Translation("Question Answers"),
  *   label_singular = @Translation("question answer"),
@@ -38,9 +38,9 @@ use Drupal\user\EntityOwnerTrait;
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
  *   },
- *   base_table = "quiz_maker_question_answer",
+ *   base_table = "question_answer",
  *   translatable = FALSE,
- *   admin_permission = "administer quiz_maker_question_answer types",
+ *   admin_permission = "administer question_answer types",
  *   entity_keys = {
  *     "id" = "id",
  *     "bundle" = "bundle",
@@ -50,15 +50,15 @@ use Drupal\user\EntityOwnerTrait;
  *   },
  *   links = {
  *     "collection" = "/admin/content/question-answer",
- *     "add-form" = "/question-answer/add/{quiz_maker_question_answer_type}",
+ *     "add-form" = "/question-answer/add/{question_answer_type}",
  *     "add-page" = "/question-answer/add",
- *     "canonical" = "/question-answer/{quiz_maker_question_answer}",
- *     "edit-form" = "/question-answer/{quiz_maker_question_answer}/edit",
- *     "delete-form" = "/question-answer/{quiz_maker_question_answer}/delete",
+ *     "canonical" = "/question-answer/{question_answer}",
+ *     "edit-form" = "/question-answer/{question_answer}/edit",
+ *     "delete-form" = "/question-answer/{question_answer}/delete",
  *     "delete-multiple-form" = "/admin/content/question-answer/delete-multiple",
  *   },
- *   bundle_entity_type = "quiz_maker_question_answer_type",
- *   field_ui_base_route = "entity.quiz_maker_question_answer_type.edit_form",
+ *   bundle_entity_type = "question_answer_type",
+ *   field_ui_base_route = "entity.question_answer_type.edit_form",
  * )
  */
 abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswerInterface {

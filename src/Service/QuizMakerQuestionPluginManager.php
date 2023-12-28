@@ -18,8 +18,8 @@ final class QuizMakerQuestionPluginManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/QuizMaker/Question', $namespaces, $module_handler, QuestionInterface::class, QuizMakerQuestion::class);
-    $this->alterInfo('quiz_maker_question_info');
-    $this->setCacheBackend($cache_backend, 'quiz_maker_question_plugins');
+    $this->alterInfo('question_info');
+    $this->setCacheBackend($cache_backend, 'question_plugins');
   }
 
 }

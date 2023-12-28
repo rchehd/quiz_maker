@@ -1,44 +1,55 @@
 
-entity.quiz_maker_quiz.edit_form:
-  route_name: entity.quiz_maker_quiz.edit_form
-  group: quiz_maker_quiz
+entity.quiz.edit_form:
+  route_name: entity.quiz.edit_form
+  group: quiz
   title: 'Edit'
 
-entity.quiz_maker_quiz.delete_form:
-  route_name: entity.quiz_maker_quiz.delete_form
-  group: quiz_maker_quiz
+entity.quiz.delete_form:
+  route_name: entity.quiz.delete_form
+  group: quiz
   title: 'Delete'
   weight: 10
 
-entity.quiz_maker_question.edit_form:
-  route_name: entity.quiz_maker_question.edit_form
-  group: quiz_maker_question
+entity.question.edit_form:
+  route_name: entity.question.edit_form
+  group: question
   title: 'Edit'
 
-entity.quiz_maker_question.delete_form:
-  route_name: entity.quiz_maker_question.delete_form
-  group: quiz_maker_question
+entity.question.delete_form:
+  route_name: entity.question.delete_form
+  group: question
   title: 'Delete'
   weight: 10
 
-entity.quiz_maker_question_answer.edit_form:
-  route_name: entity.quiz_maker_question_answer.edit_form
-  group: quiz_maker_question_answer
+entity.question_answer.edit_form:
+  route_name: entity.question_answer.edit_form
+  group: question_answer
   title: 'Edit'
 
-entity.quiz_maker_question_answer.delete_form:
-  route_name: entity.quiz_maker_question_answer.delete_form
-  group: quiz_maker_question_answer
+entity.question_answer.delete_form:
+  route_name: entity.question_answer.delete_form
+  group: question_answer
   title: 'Delete'
   weight: 10
 
-entity.quiz_maker_quiz_result.edit_form:
-  route_name: entity.quiz_maker_quiz_result.edit_form
-  group: quiz_maker_quiz_result
+entity.quiz_result.edit_form:
+  route_name: entity.quiz_result.edit_form
+  group: quiz_result
   title: 'Edit'
 
-entity.quiz_maker_quiz_result.delete_form:
-  route_name: entity.quiz_maker_quiz_result.delete_form
-  group: quiz_maker_quiz_result
+entity.quiz_result.delete_form:
+  route_name: entity.quiz_result.delete_form
+  group: quiz_result
+  title: 'Delete'
+  weight: 10
+
+entity.question_response.edit_form:
+  route_name: entity.question_response.edit_form
+  group: question_response
+  title: 'Edit'
+
+entity.question_response.delete_form:
+  route_name: entity.question_response.delete_form
+  group: question_response
   title: 'Delete'
   weight: 10

@@ -15,42 +15,42 @@ quiz_maker.admin.structure:
     _permission: 'administer quiz'
 
 # Question management tab
-quiz_maker_quiz.questions:
-  path: 'quiz/{quiz_maker_quiz}/questions'
+quiz.questions:
+  path: 'quiz/{quiz}/questions'
   defaults:
     _form: '\Drupal\quiz_maker\Form\QuizQuestionsForm'
     _title: 'Manage questions'
   requirements:
-    _permission: 'view quiz_maker_question'
+    _permission: 'view question'
   options:
     _admin_route: true
     parameters:
-      quiz_maker_quiz:
-        type: 'entity:quiz_maker_quiz'
+      quiz:
+        type: 'entity:quiz'
 
-quiz_maker_quiz.results:
-  path: 'quiz/{quiz_maker_quiz}/results'
+quiz.results:
+  path: 'quiz/{quiz}/results'
   defaults:
     _controller: '\Drupal\quiz_maker\Controller\QuizMakerController::manageResults'
     _title: 'Manage results'
   requirements:
-    _permission: 'edit quiz_maker_quiz_result'
+    _permission: 'edit quiz_result'
   options:
     _admin_route: true
     parameters:
-      quiz_maker_quiz:
-        type: 'entity:quiz_maker_quiz'
+      quiz:
+        type: 'entity:quiz'
 
-quiz_maker_quiz.take:
-  path: 'quiz/{quiz_maker_quiz}/take'
+quiz.take:
+  path: 'quiz/{quiz}/take'
   defaults:
     _form: '\Drupal\quiz_maker\Form\QuizTakeForm'
     _title_callback: '\Drupal\quiz_maker\Controller\QuizMakerController::getQuizTakeFormTitle'
     _title: 'Manage results'
   requirements:
-    _permission: 'take quiz_maker_quiz'
+    _permission: 'take quiz'
   options:
 #    _admin_route: true
     parameters:
-      quiz_maker_quiz:
-        type: 'entity:quiz_maker_quiz'
+      quiz:
+        type: 'entity:quiz'

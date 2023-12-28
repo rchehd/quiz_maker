@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.question_answer.field_is_correct
+    - quiz_maker.question_answer_type.multiple_choice_answer
+_core:
+  default_config_hash: b3fD0jvgBPRhRq1lh_oXqLAL2Ij-jrnvSf9VTdt5bi4
+id: question_answer.multiple_choice_answer.field_is_correct
+field_name: field_is_correct
+entity_type: question_answer
+bundle: multiple_choice_answer
+label: 'Is correct'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

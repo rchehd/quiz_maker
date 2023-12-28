@@ -31,9 +31,9 @@ final class QuizMakerController extends ControllerBase {
   /**
    * Builds the response.
    */
-  public function manageQuestions(QuizInterface $quiz_maker_quiz): array {
+  public function manageQuestions(QuizInterface $quiz): array {
 
-    $questions = $quiz_maker_quiz->getQuestions();
+    $questions = $quiz->getQuestions();
 
     $build['content'] = [
       '#type' => 'item',
@@ -46,7 +46,7 @@ final class QuizMakerController extends ControllerBase {
   /**
    * Builds the response.
    */
-  public function manageResults(QuizInterface $quiz_maker_quiz): array {
+  public function manageResults(QuizInterface $quiz): array {
 
     $build['content'] = [
       '#type' => 'item',
@@ -56,7 +56,7 @@ final class QuizMakerController extends ControllerBase {
     return $build;
   }
 
-  public function takeQuiz(QuizInterface $quiz_maker_quiz) {
+  public function takeQuiz(QuizInterface $quiz) {
     $build['content'] = [
       '#type' => 'item',
       '#markup' => $this->t('Take quiz!'),
@@ -65,8 +65,8 @@ final class QuizMakerController extends ControllerBase {
     return $build;
   }
 
-  public function getQuizTakeFormTitle(QuizInterface $quiz_maker_quiz) {
-    return $quiz_maker_quiz->label();
+  public function getQuizTakeFormTitle(QuizInterface $quiz) {
+    return $quiz->label();
   }
 
 }

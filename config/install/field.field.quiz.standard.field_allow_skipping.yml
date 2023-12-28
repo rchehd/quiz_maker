@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.quiz.field_allow_skipping
+    - quiz_maker.quiz_type.standard
+_core:
+  default_config_hash: 1__nAD8Zk9yZUPK-MSXAaE7zep6BNWoKmzX15T6IJVI
+id: quiz.standard.field_allow_skipping
+field_name: field_allow_skipping
+entity_type: quiz
+bundle: standard
+label: 'Allow skipping'
+description: 'Allow users to skip questions in this Quiz.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

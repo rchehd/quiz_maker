@@ -18,7 +18,7 @@ use Drupal\user\EntityOwnerTrait;
  * Defines the quiz result entity class.
  *
  * @ContentEntityType(
- *   id = "quiz_maker_quiz_result",
+ *   id = "quiz_result",
  *   label = @Translation("Quiz Result"),
  *   label_collection = @Translation("Quiz Results"),
  *   label_singular = @Translation("quiz result"),
@@ -41,8 +41,8 @@ use Drupal\user\EntityOwnerTrait;
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
  *   },
- *   base_table = "quiz_maker_quiz_result",
- *   admin_permission = "administer quiz_maker_quiz_result types",
+ *   base_table = "quiz_result",
+ *   admin_permission = "administer quiz_result types",
  *   entity_keys = {
  *     "id" = "id",
  *     "bundle" = "bundle",
@@ -52,15 +52,15 @@ use Drupal\user\EntityOwnerTrait;
  *   },
  *   links = {
  *     "collection" = "/admin/content/quiz-result",
- *     "add-form" = "/quiz-result/add/{quiz_maker_quiz_result_type}",
+ *     "add-form" = "/quiz-result/add/{quiz_result_type}",
  *     "add-page" = "/quiz-result/add",
- *     "canonical" = "/quiz-result/{quiz_maker_quiz_result}",
- *     "edit-form" = "/quiz-result/{quiz_maker_quiz_result}/edit",
- *     "delete-form" = "/quiz-result/{quiz_maker_quiz_result}/delete",
+ *     "canonical" = "/quiz-result/{quiz_result}",
+ *     "edit-form" = "/quiz-result/{quiz_result}/edit",
+ *     "delete-form" = "/quiz-result/{quiz_result}/delete",
  *     "delete-multiple-form" = "/admin/content/quiz-result/delete-multiple",
  *   },
- *   bundle_entity_type = "quiz_maker_quiz_result_type",
- *   field_ui_base_route = "entity.quiz_maker_quiz_result_type.edit_form",
+ *   bundle_entity_type = "quiz_result_type",
+ *   field_ui_base_route = "entity.quiz_result_type.edit_form",
  * )
  */
 class QuizResult extends ContentEntityBase implements QuizResultInterface {

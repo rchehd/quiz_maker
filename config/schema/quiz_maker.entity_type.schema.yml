@@ -1,4 +1,4 @@
-quiz_maker.quiz_maker_quiz_type.*:
+quiz_maker.quiz_type.*:
   type: config_entity
   label: 'Quiz type config'
   mapping:
@@ -11,7 +11,7 @@ quiz_maker.quiz_maker_quiz_type.*:
     uuid:
       type: string
 
-quiz_maker.quiz_maker_question_type.*:
+quiz_maker.question_type.*:
   type: config_entity
   label: 'Question type config'
   mapping:
@@ -24,7 +24,7 @@ quiz_maker.quiz_maker_question_type.*:
     uuid:
       type: string
 
-quiz_maker.quiz_maker_question_answer_type.*:
+quiz_maker.question_answer_type.*:
   type: config_entity
   label: 'Question Answer type config'
   mapping:
@@ -37,9 +37,22 @@ quiz_maker.quiz_maker_question_answer_type.*:
     uuid:
       type: string
 
-quiz_maker.quiz_maker_quiz_result_type.*:
+quiz_maker.quiz_result_type.*:
   type: config_entity
   label: 'Quiz Result type config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string
+
+quiz_maker.question_response_type.*:
+  type: config_entity
+  label: 'Question Response type config'
   mapping:
     id:
       type: string

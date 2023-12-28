@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_maker
+    - text
+id: question_answer.field_matching_question
+field_name: field_matching_question
+entity_type: question_answer
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

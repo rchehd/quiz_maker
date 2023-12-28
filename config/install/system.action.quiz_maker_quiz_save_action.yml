@@ -5,8 +5,8 @@ dependencies:
     - quiz_maker
 _core:
   default_config_hash: CbqMKnb5tJqs02xq6DJx3ZLshb-LhvP4wvYHCk55vFg
-id: quiz_maker_quiz_save_action
+id: quiz_save_action
 label: 'Save quizzes'
-type: quiz_maker_quiz
-plugin: 'entity:save_action:quiz_maker_quiz'
+type: quiz
+plugin: 'entity:save_action:quiz'
 configuration: {  }

@@ -22,10 +22,11 @@ function quiz_maker_page_attachments(&$page): void {
  */
 function quiz_maker_theme(): array {
   return [
-    'quiz_maker_quiz' => ['render element' => 'elements'],
-    'quiz_maker_question' => ['render element' => 'elements'],
-    'quiz_maker_question_answer' => ['render element' => 'elements'],
-    'quiz_maker_quiz_result' => ['render element' => 'elements'],
+    'quiz' => ['render element' => 'elements'],
+    'question' => ['render element' => 'elements'],
+    'question_answer' => ['render element' => 'elements'],
+    'quiz_result' => ['render element' => 'elements'],
+    'question_response' => ['render element' => 'elements'],
   ];
 }
 
@@ -40,7 +41,7 @@ function quiz_maker_theme(): array {
  *     fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
-function template_preprocess_quiz_maker_quiz(array &$variables): void {
+function template_preprocess_quiz(array &$variables): void {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
@@ -54,89 +55,110 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
   switch ($method) {
     case 'user_cancel_block_unpublish':
       // Unpublish quizzes.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz');
-      $quiz_maker_quiz_ids = $storage->getQuery()
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz');
+      $quiz_ids = $storage->getQuery()
         ->condition('uid', $account->id())
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_quiz_ids) as $quiz_maker_quiz) {
-        $quiz_maker_quiz->set('status', FALSE)->save();
+      foreach ($storage->loadMultiple($quiz_ids) as $quiz) {
+        $quiz->set('status', FALSE)->save();
       }
 
       // Unpublish questions.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question');
-      $quiz_maker_question_ids = $storage->getQuery()
+      $storage = \Drupal::entityTypeManager()->getStorage('question');
+      $question_ids = $storage->getQuery()
         ->condition('uid', $account->id())
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_question_ids) as $quiz_maker_question) {
-        $quiz_maker_question->set('status', FALSE)->save();
+      foreach ($storage->loadMultiple($question_ids) as $question) {
+        $question->set('status', FALSE)->save();
       }
 
       // Unpublish question answers.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question_answer');
-      $quiz_maker_question_answer_ids = $storage->getQuery()
+      $storage = \Drupal::entityTypeManager()->getStorage('question_answer');
+      $question_answer_ids = $storage->getQuery()
         ->condition('uid', $account->id())
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_question_answer_ids) as $quiz_maker_question_answer) {
-        $quiz_maker_question_answer->set('status', FALSE)->save();
+      foreach ($storage->loadMultiple($question_answer_ids) as $question_answer) {
+        $question_answer->set('status', FALSE)->save();
       }
 
       // Unpublish quiz results.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz_result');
-      $quiz_maker_quiz_result_ids = $storage->getQuery()
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz_result');
+      $quiz_result_ids = $storage->getQuery()
         ->condition('uid', $account->id())
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_quiz_result_ids) as $quiz_maker_quiz_result) {
-        $quiz_maker_quiz_result->set('status', FALSE)->save();
+      foreach ($storage->loadMultiple($quiz_result_ids) as $quiz_result) {
+        $quiz_result->set('status', FALSE)->save();
+      }
+
+      // Unpublish question responses.
+      $storage = \Drupal::entityTypeManager()->getStorage('question_response');
+      $question_response_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->condition('status', 1)
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($question_response_ids) as $question_response) {
+        $question_response->set('status', FALSE)->save();
       }
       break;
 
     case 'user_cancel_reassign':
       // Anonymize quizzes.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz');
-      $quiz_maker_quiz_ids = $storage->getQuery()
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz');
+      $quiz_ids = $storage->getQuery()
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_quiz_ids) as $quiz_maker_quiz) {
-        $quiz_maker_quiz->setOwnerId(0)->save();
+      foreach ($storage->loadMultiple($quiz_ids) as $quiz) {
+        $quiz->setOwnerId(0)->save();
       }
 
       // Anonymize questions.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question');
-      $quiz_maker_question_ids = $storage->getQuery()
+      $storage = \Drupal::entityTypeManager()->getStorage('question');
+      $question_ids = $storage->getQuery()
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_question_ids) as $quiz_maker_question) {
-        $quiz_maker_question->setOwnerId(0)->save();
+      foreach ($storage->loadMultiple($question_ids) as $question) {
+        $question->setOwnerId(0)->save();
       }
 
       // Anonymize question answers.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question_answer');
-      $quiz_maker_question_answer_ids = $storage->getQuery()
+      $storage = \Drupal::entityTypeManager()->getStorage('question_answer');
+      $question_answer_ids = $storage->getQuery()
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_question_answer_ids) as $quiz_maker_question_answer) {
-        $quiz_maker_question_answer->setOwnerId(0)->save();
+      foreach ($storage->loadMultiple($question_answer_ids) as $question_answer) {
+        $question_answer->setOwnerId(0)->save();
       }
 
       // Anonymize quiz results.
-      $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz_result');
-      $quiz_maker_quiz_result_ids = $storage->getQuery()
+      $storage = \Drupal::entityTypeManager()->getStorage('quiz_result');
+      $quiz_result_ids = $storage->getQuery()
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
-      foreach ($storage->loadMultiple($quiz_maker_quiz_result_ids) as $quiz_maker_quiz_result) {
-        $quiz_maker_quiz_result->setOwnerId(0)->save();
+      foreach ($storage->loadMultiple($quiz_result_ids) as $quiz_result) {
+        $quiz_result->setOwnerId(0)->save();
+      }
+
+      // Anonymize question responses.
+      $storage = \Drupal::entityTypeManager()->getStorage('question_response');
+      $question_response_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($question_response_ids) as $question_response) {
+        $question_response->setOwnerId(0)->save();
       }
       break;
   }
@@ -147,63 +169,73 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
  */
 function quiz_maker_user_predelete(UserInterface $account): void {
   // Delete quizzes that belong to this account.
-  $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz');
-  $quiz_maker_quiz_ids = $storage->getQuery()
+  $storage = \Drupal::entityTypeManager()->getStorage('quiz');
+  $quiz_ids = $storage->getQuery()
     ->condition('uid', $account->id())
     ->accessCheck(FALSE)
     ->execute();
   $storage->delete(
-    $storage->loadMultiple($quiz_maker_quiz_ids)
+    $storage->loadMultiple($quiz_ids)
   );
 
   // Delete old revisions.
-  $quiz_maker_quiz_ids = $storage->getQuery()
+  $quiz_ids = $storage->getQuery()
     ->allRevisions()
     ->condition('uid', $account->id())
     ->accessCheck(FALSE)
     ->execute();
-  foreach (array_keys($quiz_maker_quiz_ids) as $revision_id) {
+  foreach (array_keys($quiz_ids) as $revision_id) {
     $storage->deleteRevision($revision_id);
   }
 
   // Delete questions that belong to this account.
-  $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question');
-  $quiz_maker_question_ids = $storage->getQuery()
+  $storage = \Drupal::entityTypeManager()->getStorage('question');
+  $question_ids = $storage->getQuery()
     ->condition('uid', $account->id())
     ->accessCheck(FALSE)
     ->execute();
   $storage->delete(
-    $storage->loadMultiple($quiz_maker_question_ids)
+    $storage->loadMultiple($question_ids)
   );
 
   // Delete old revisions.
-  $quiz_maker_question_ids = $storage->getQuery()
+  $question_ids = $storage->getQuery()
     ->allRevisions()
     ->condition('uid', $account->id())
     ->accessCheck(FALSE)
     ->execute();
-  foreach (array_keys($quiz_maker_question_ids) as $revision_id) {
+  foreach (array_keys($question_ids) as $revision_id) {
     $storage->deleteRevision($revision_id);
   }
 
   // Delete question answers that belong to this account.
-  $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_question_answer');
-  $quiz_maker_question_answer_ids = $storage->getQuery()
+  $storage = \Drupal::entityTypeManager()->getStorage('question_answer');
+  $question_answer_ids = $storage->getQuery()
     ->condition('uid', $account->id())
     ->accessCheck(FALSE)
     ->execute();
   $storage->delete(
-    $storage->loadMultiple($quiz_maker_question_answer_ids)
+    $storage->loadMultiple($question_answer_ids)
   );
 
   // Delete quiz results that belong to this account.
-  $storage = \Drupal::entityTypeManager()->getStorage('quiz_maker_quiz_result');
-  $quiz_maker_quiz_result_ids = $storage->getQuery()
+  $storage = \Drupal::entityTypeManager()->getStorage('quiz_result');
+  $quiz_result_ids = $storage->getQuery()
     ->condition('uid', $account->id())
     ->accessCheck(FALSE)
     ->execute();
   $storage->delete(
-    $storage->loadMultiple($quiz_maker_quiz_result_ids)
+    $storage->loadMultiple($quiz_result_ids)
+  );
+
+  // Delete question responses that belong to this account.
+  $storage = \Drupal::entityTypeManager()->getStorage('question_response');
+  $question_response_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
+    ->execute();
+  $storage->delete(
+    $storage->loadMultiple($question_response_ids)
   );
 }
 
@@ -218,7 +250,7 @@ function quiz_maker_user_predelete(UserInterface $account): void {
  *     fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
-function template_preprocess_quiz_maker_question(array &$variables): void {
+function template_preprocess_question(array &$variables): void {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
@@ -236,7 +268,7 @@ function template_preprocess_quiz_maker_question(array &$variables): void {
  *     fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
-function template_preprocess_quiz_maker_question_answer(array &$variables): void {
+function template_preprocess_question_answer(array &$variables): void {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
@@ -254,7 +286,7 @@ function template_preprocess_quiz_maker_question_answer(array &$variables): void
  *     fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
-function template_preprocess_quiz_maker_quiz_result(array &$variables): void {
+function template_preprocess_quiz_result(array &$variables): void {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
@@ -267,13 +299,40 @@ function template_preprocess_quiz_maker_quiz_result(array &$variables): void {
  * Map question and answers classes to bundles.
  */
 function quiz_maker_entity_bundle_info_alter(array &$bundles): void {
-  /* @var $pluginManager \Drupal\quiz\Plugin\QuizQuestionPluginManager */
-  $pluginManager = Drupal::service('plugin.manager.quiz_maker.question');
-  $plugins = $pluginManager->getDefinitions();
-  foreach ($plugins as $key => $plugin) {
-    if (isset($bundles['quiz_maker_question'][$key])) {
-      $bundles['quiz_maker_question'][$key]['class'] = $plugin['class'];
-      $bundles['quiz_maker_question_answer'][$plugin['answer_plugin_id']]['class'] = $plugin['answer_class'];
+  $plugin_types = [
+    'question' => 'plugin.manager.quiz_maker.question',
+    'question_answer' => 'plugin.manager.quiz_maker.question_answer',
+    'question_response' => 'plugin.manager.quiz_maker.question_response',
+  ];
+
+  foreach ($plugin_types as $plugin_type => $plugin_manager) {
+    $pluginManager = \Drupal::service($plugin_manager);
+    $plugins = $pluginManager->getDefinitions();
+    foreach ($plugins as $key => $plugin) {
+      if (isset($bundles[$plugin_type][$key])) {
+        $bundles[$plugin_type][$key]['class'] = $plugin['class'];
+      }
     }
   }
+
+  $d=0;
 }
+
+/**
+ * Prepares variables for question response templates.
+ *
+ * Default template: quiz-maker-question-response.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the question response information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_question_response(array &$variables): void {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+

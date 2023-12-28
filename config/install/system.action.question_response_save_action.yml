@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_maker
+id: question_response_save_action
+label: 'Save question responses'
+type: question_response
+plugin: entity:save_action:question_response
+configuration: {  }

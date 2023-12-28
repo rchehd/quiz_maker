@@ -7,7 +7,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
 
 /**
- * Plugin implementation of the quiz_maker_question.
+ * Plugin implementation of the question.
  *
  * @QuizMakerQuestion(
  *   id = "single_choice_question",

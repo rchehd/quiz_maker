@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_maker
+_core:
+  default_config_hash: KU_EsYunZ_tF-QeKzmolzaCh9dcjZoyo5tvwwHpn3D0
+id: question_answer_delete_action
+label: 'Delete question answers'
+type: question_answer
+plugin: 'entity:delete_action:question_answer'
+configuration: {  }

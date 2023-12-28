@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_maker
+_core:
+  default_config_hash: u8EUaBw3oXViDKqJonIx_o7PV6JqWN9BF3nQg0tf8gw
+id: quiz_delete_action
+label: 'Delete quizzes'
+type: quiz
+plugin: 'entity:delete_action:quiz'
+configuration: {  }

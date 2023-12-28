@@ -14,7 +14,7 @@ use Drupal\user\EntityOwnerTrait;
  * Defines the question entity class.
  *
  * @ContentEntityType(
- *   id = "quiz_maker_question",
+ *   id = "question",
  *   label = @Translation("Question"),
  *   label_collection = @Translation("Questions"),
  *   label_singular = @Translation("question"),
@@ -38,13 +38,13 @@ use Drupal\user\EntityOwnerTrait;
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
  *   },
- *   base_table = "quiz_maker_question",
- *   data_table = "quiz_maker_question_field_data",
- *   revision_table = "quiz_maker_question_revision",
- *   revision_data_table = "quiz_maker_question_field_revision",
+ *   base_table = "question",
+ *   data_table = "question_field_data",
+ *   revision_table = "question_revision",
+ *   revision_data_table = "question_field_revision",
  *   show_revision_ui = TRUE,
  *   translatable = TRUE,
- *   admin_permission = "administer quiz_maker_question types",
+ *   admin_permission = "administer question types",
  *   entity_keys = {
  *     "id" = "id",
  *     "revision" = "revision_id",
@@ -61,15 +61,15 @@ use Drupal\user\EntityOwnerTrait;
  *   },
  *   links = {
  *     "collection" = "/admin/content/question",
- *     "add-form" = "/question/add/{quiz_maker_question_type}",
+ *     "add-form" = "/question/add/{question_type}",
  *     "add-page" = "/question/add",
- *     "canonical" = "/question/{quiz_maker_question}",
- *     "edit-form" = "/question/{quiz_maker_question}/edit",
- *     "delete-form" = "/question/{quiz_maker_question}/delete",
+ *     "canonical" = "/question/{question}",
+ *     "edit-form" = "/question/{question}/edit",
+ *     "delete-form" = "/question/{question}/delete",
  *     "delete-multiple-form" = "/admin/content/question/delete-multiple",
  *   },
- *   bundle_entity_type = "quiz_maker_question_type",
- *   field_ui_base_route = "entity.quiz_maker_question_type.edit_form",
+ *   bundle_entity_type = "question_type",
+ *   field_ui_base_route = "entity.question_type.edit_form",
  * )
  */
 abstract class Question extends RevisionableContentEntityBase implements QuestionInterface {

@@ -1,0 +1,5 @@
+langcode: en
+status: true
+dependencies: {  }
+id: multiple_choice_response
+label: 'Multiple choice response'

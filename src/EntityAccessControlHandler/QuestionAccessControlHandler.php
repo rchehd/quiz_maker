@@ -21,9 +21,9 @@ final class QuestionAccessControlHandler extends EntityAccessControlHandler {
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account): AccessResult {
     return match($operation) {
-      'view' => AccessResult::allowedIfHasPermissions($account, ['view quiz_maker_question', 'administer quiz_maker_question types'], 'OR'),
-      'update' => AccessResult::allowedIfHasPermissions($account, ['edit quiz_maker_question', 'administer quiz_maker_question types'], 'OR'),
-      'delete' => AccessResult::allowedIfHasPermissions($account, ['delete quiz_maker_question', 'administer quiz_maker_question types'], 'OR'),
+      'view' => AccessResult::allowedIfHasPermissions($account, ['view question', 'administer question types'], 'OR'),
+      'update' => AccessResult::allowedIfHasPermissions($account, ['edit question', 'administer question types'], 'OR'),
+      'delete' => AccessResult::allowedIfHasPermissions($account, ['delete question', 'administer question types'], 'OR'),
       default => AccessResult::neutral(),
     };
   }
@@ -32,7 +32,7 @@ final class QuestionAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL): AccessResult {
-    return AccessResult::allowedIfHasPermissions($account, ['create quiz_maker_question', 'administer quiz_maker_question types'], 'OR');
+    return AccessResult::allowedIfHasPermissions($account, ['create question', 'administer question types'], 'OR');
   }
 
 }

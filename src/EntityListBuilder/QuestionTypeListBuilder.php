@@ -37,7 +37,7 @@ final class QuestionTypeListBuilder extends ConfigEntityListBuilder {
 
     $build['table']['#empty'] = $this->t(
       'No question types available. <a href=":link">Add question type</a>.',
-      [':link' => Url::fromRoute('entity.quiz_maker_question_type.add_form')->toString()],
+      [':link' => Url::fromRoute('entity.question_type.add_form')->toString()],
     );
 
     return $build;

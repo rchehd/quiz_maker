@@ -6,9 +6,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\quiz_maker\Entity\QuestionAnswer;
 
 /**
- * Plugin implementation of the quiz_maker_question.
+ * Plugin implementation of the question.
  *
- * @QuizMakerQuestion(
+ * @QuizMakerQuestionAnswer(
  *   id = "multiple_choice_answer",
  *   label = @Translation("Multiple choice answer"),
  *   description = @Translation("Multiple choice answer.")

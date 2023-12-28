@@ -1,0 +1,43 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.question_answer.matching_answer.field_matching_answer
+    - field.field.question_answer.matching_answer.field_matching_question
+    - quiz_maker.question_answer_type.matching_answer
+  module:
+    - text
+_core:
+  default_config_hash: HkkVjZ5wpWgHimiXbDaJT3dfJ77KB-dq7Q5vg9U5jt8
+id: question_answer.matching_answer.default
+targetEntityType: question_answer
+bundle: matching_answer
+mode: default
+content:
+  field_matching_answer:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_matching_question:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  label:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  uid: true
