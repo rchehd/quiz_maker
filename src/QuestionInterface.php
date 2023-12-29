@@ -42,6 +42,8 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
   public function getQuestion(): ?string;
 
   /**
+   * Has referenced answers.
+   *
    * Check if question has referenced answers or there should be only hardcode
    * answers build by answering form.
    *

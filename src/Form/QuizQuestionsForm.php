@@ -6,17 +6,20 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\quiz_maker\QuizInterface;
 
+/**
+ * Question entity form.
+ */
 class QuizQuestionsForm extends FormBase {
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   public function getFormId() {
     return 'quiz_question_form';
   }
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, QuizInterface $quiz = NULL) {
     $questions = $quiz->getQuestions();
@@ -35,7 +38,6 @@ class QuizQuestionsForm extends FormBase {
         $rows[] = $question->label();
       }
     }
-
 
     // Display questions in this quiz.
     $form['question_list'] = [
@@ -65,7 +67,7 @@ class QuizQuestionsForm extends FormBase {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // TODO: Implement submitForm() method.

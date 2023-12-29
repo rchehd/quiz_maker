@@ -70,8 +70,8 @@ class MatchingQuestion extends Question {
   /**
    * Get Matching table.
    *
-   * @param MatchingAnswer[] $answers
-   *   The Matching answers
+   * @param \Drupal\quiz_maker\Plugin\QuizMaker\Answer\MatchingAnswer[] $answers
+   *   The Matching answers.
    * @param string $answer_function
    *   The matching answer function: 'getMatchingQuestion' or 'getMatchingAnswer'.
    * @param mixed $title

@@ -4,6 +4,7 @@ namespace Drupal\quiz_maker\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\quiz_maker\QuizInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -56,16 +57,16 @@ final class QuizMakerController extends ControllerBase {
     return $build;
   }
 
-  public function takeQuiz(QuizInterface $quiz) {
-    $build['content'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('Take quiz!'),
-    ];
-
-    return $build;
-  }
-
-  public function getQuizTakeFormTitle(QuizInterface $quiz) {
+  /**
+   * Take quiz form title.
+   *
+   * @param \Drupal\quiz_maker\QuizInterface $quiz
+   *   The quiz entity.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup|string|null
+   *   The title.
+   */
+  public function getQuizTakeFormTitle(QuizInterface $quiz): string|TranslatableMarkup|null {
     return $quiz->label();
   }
 

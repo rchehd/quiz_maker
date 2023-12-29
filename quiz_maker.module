@@ -334,4 +334,3 @@ function template_preprocess_question_response(array &$variables): void {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 }
-

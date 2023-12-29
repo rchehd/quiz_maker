@@ -5,6 +5,9 @@ namespace Drupal\quiz_maker\Form;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\inline_entity_form\Form\EntityInlineForm;
 
+/**
+ * Inline entity form for question answer entity.
+ */
 class InlineQuestionAnswerForm extends EntityInlineForm {
 
   /**

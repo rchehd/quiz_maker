@@ -15,7 +15,12 @@ class QuizTakeForm extends FormBase {
 
   use StringTranslationTrait;
 
-  protected int $question_number = 0;
+  /**
+   * Current question number.
+   *
+   * @var int
+   */
+  protected int $questionNumber = 0;
 
   /**
    * {@inheritDoc}
@@ -24,6 +29,9 @@ class QuizTakeForm extends FormBase {
     return 'quiz_take_form';
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state, QuizInterface $quiz = NULL) {
     $form['question'] = [
       '#type' => 'container',
@@ -35,8 +43,17 @@ class QuizTakeForm extends FormBase {
     if ($quiz) {
       $questions = $quiz->getQuestions();
 
+      $form['question']['number'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'span',
+        '#value' => $this->t('Question @current/@all', [
+          '@current' => $this->questionNumber + 1,
+          '@all' => count($questions)
+        ])
+      ];
+
       /** @var \Drupal\quiz_maker\QuestionInterface $current_question */
-      $current_question = $questions[$this->question_number];
+      $current_question = $questions[$this->questionNumber];
       $form['question']['title'] = [
         '#type' => 'html_tag',
         '#tag' => 'h3',
@@ -49,7 +66,7 @@ class QuizTakeForm extends FormBase {
         '#type' => 'actions',
       ];
 
-      if ($this->question_number < (count($questions) - 1)) {
+      if ($this->questionNumber < (count($questions) - 1)) {
         $form['question']['navigation']['actions']['next'] = [
           '#type' => 'submit',
           '#value' => $this->t('Next'),
@@ -66,7 +83,7 @@ class QuizTakeForm extends FormBase {
         ];
       }
 
-      if ($this->question_number > 0) {
+      if ($this->questionNumber > 0) {
         $form['question']['navigation']['actions']['previous'] = [
           '#type' => 'submit',
           '#value' => $this->t('Previous'),
@@ -83,7 +100,7 @@ class QuizTakeForm extends FormBase {
         ];
       }
 
-      if ($this->question_number === (count($questions) - 1)) {
+      if ($this->questionNumber === (count($questions) - 1)) {
         $form['question']['navigation']['actions']['finish'] = [
           '#type' => 'submit',
           '#value' => $this->t('Finish'),
@@ -99,7 +116,6 @@ class QuizTakeForm extends FormBase {
         '#value' => $this->t('Quiz doesn\'t have th questions.')
       ];
 
-
     }
     return $form;
   }
@@ -114,11 +130,12 @@ class QuizTakeForm extends FormBase {
   /**
    * Get update question form ans save answer.
    *
-   *
    * @param array $form
    *   The form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
    * @param \Drupal\quiz_maker\QuizInterface|null $quiz
    *   The quiz.
    *
@@ -132,20 +149,18 @@ class QuizTakeForm extends FormBase {
   /**
    * Get previous next via ajax.
    *
-   *
    * @param array $form
    *   The form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
   public function getNextQuestion(array &$form, FormStateInterface $form_state): void {
-    $this->question_number++;
+    $this->questionNumber++;
     $form_state->setRebuild(TRUE);
   }
 
   /**
    * Get previous question via ajax.
-   *
    *
    * @param array $form
    *   The form array.
@@ -153,7 +168,7 @@ class QuizTakeForm extends FormBase {
    *   The form state.
    */
   public function getPreviousQuestion(array &$form, FormStateInterface $form_state): void {
-    $this->question_number--;
+    $this->questionNumber--;
     $form_state->setRebuild(TRUE);
   }
 

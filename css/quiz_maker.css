@@ -23,3 +23,12 @@
 .matching-form .tabledrag-toggle-weight-wrapper {
   display: none !important;
 }
+
+.quiz-take-form .form-item__label {
+  display: inline-block !important;
+}
+
+.quiz-take-form td {
+  display: flex;
+  align-items: center;
+}

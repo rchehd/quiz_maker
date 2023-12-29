@@ -40,6 +40,9 @@ class BooleanQuestion extends Question {
     return $form_state->getValue('answer');
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public function hasReferencedAnswers(): bool {
     return FALSE;
   }
