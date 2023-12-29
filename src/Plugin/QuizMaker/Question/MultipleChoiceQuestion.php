@@ -13,8 +13,6 @@ use Drupal\quiz_maker\Entity\Question;
  *   id = "multiple_choice_question",
  *   label = @Translation("Multiple question"),
  *   description = @Translation("Multiple question."),
- *   answer_class = "\Drupal\quiz_maker\Plugin\QuizMaker\Answer\MultipleChoiceAnswer",
- *   answer_plugin_id = "multiple_choice_answer",
  * )
  */
 class MultipleChoiceQuestion extends Question {
@@ -45,7 +43,6 @@ class MultipleChoiceQuestion extends Question {
    * {@inheritDoc}
    */
   public function submitAnswer(array &$form, FormStateInterface $form_state): mixed {
-    $test = self::get('answer_plugin_id');
     return $form_state->getValue('answer');
   }
 

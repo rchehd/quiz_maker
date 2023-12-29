@@ -30,14 +30,4 @@ final class QuizMakerQuestion extends Plugin {
    */
   public readonly string $description;
 
-  /**
-   * The class id of the plugin.
-   */
-  public readonly string $answer_class;
-
-  /**
-   * The answer plugin id of the plugin.
-   */
-  public readonly string $answer_plugin_id;
-
 }

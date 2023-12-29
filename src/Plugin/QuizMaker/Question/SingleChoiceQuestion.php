@@ -13,8 +13,6 @@ use Drupal\quiz_maker\Entity\Question;
  *   id = "single_choice_question",
  *   label = @Translation("Single choice question"),
  *   description = @Translation("Single choice question."),
- *   answer_class = "\Drupal\quiz_maker\Plugin\QuizMaker\Answer\SingleChoiceAnswer",
- *   answer_plugin_id = "single_choice_answer",
  * )
  */
 class SingleChoiceQuestion extends Question {
@@ -45,7 +43,6 @@ class SingleChoiceQuestion extends Question {
    * {@inheritDoc}
    */
   public function submitAnswer(array &$form, FormStateInterface $form_state): mixed {
-    $test = self::get('answer_plugin_id');
     return $form_state->getValue('answer');
   }
 

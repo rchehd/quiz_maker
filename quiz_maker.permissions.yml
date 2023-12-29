@@ -46,10 +46,6 @@ delete quiz_result:
 create quiz_result:
   title: 'Create quiz result'
 
-administer quiz_maker_qq_relationship:
-  title: 'Administer quiz question relationships'
-  restrict access: true
-
 administer question_response types:
   title: 'Administer question response types'
   description: 'Maintain the types of question response entity.'

@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\QuizInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class of Quiz take form.
@@ -124,7 +125,7 @@ class QuizTakeForm extends FormBase {
    * @return mixed
    *   The form array.
    */
-  public function updateQuestionForm(array &$form, FormStateInterface $form_state, QuizInterface $quiz = NULL) {
+  public function updateQuestionForm(array &$form, FormStateInterface $form_state, Request $request, QuizInterface $quiz = NULL) {
     return $form['question'];
   }
 

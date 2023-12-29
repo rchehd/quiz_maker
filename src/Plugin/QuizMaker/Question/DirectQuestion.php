@@ -13,8 +13,6 @@ use Drupal\quiz_maker\Entity\Question;
  *   id = "direct_question",
  *   label = @Translation("Direct question"),
  *   description = @Translation("Direct question."),
- *   answer_class = "\Drupal\quiz_maker\Plugin\QuizMaker\Answer\DirectAnswer",
- *   answer_plugin_id = "direct_answer",
  * )
  */
 class DirectQuestion extends Question {
@@ -35,7 +33,6 @@ class DirectQuestion extends Question {
    * {@inheritDoc}
    */
   public function submitAnswer(array &$form, FormStateInterface $form_state): mixed {
-    $test = self::get('answer_plugin_id');
     return $form_state->getValue('answer');
   }
 

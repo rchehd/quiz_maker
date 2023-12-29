@@ -54,12 +54,6 @@ quiz_result.add_page:
   appears_on:
     - entity.quiz_result.collection
 
-quiz_maker_qq_relationship.add_form:
-  title: 'Add quiz question relationship'
-  route_name: entity.quiz_maker_qq_relationship.add_form
-  appears_on:
-    - entity.quiz_maker_qq_relationship.collection
-
 question_response.type_add:
   title: 'Add question response type'
   route_name: entity.question_response_type.add_form

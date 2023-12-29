@@ -14,8 +14,6 @@ use Drupal\quiz_maker\Plugin\QuizMaker\Answer\MatchingAnswer;
  *   id = "matching_question",
  *   label = @Translation("Matching question"),
  *   description = @Translation("Matching question."),
- *   answer_class = "\Drupal\quiz_maker\Plugin\QuizMaker\Answer\MatchingAnswer",
- *   answer_plugin_id = "matching_answer",
  * )
  */
 class MatchingQuestion extends Question {
@@ -59,7 +57,6 @@ class MatchingQuestion extends Question {
    * {@inheritDoc}
    */
   public function submitAnswer(array &$form, FormStateInterface $form_state): mixed {
-    $test = self::get('answer_plugin_id');
     return $form_state->getValue('answer');
   }
 
