@@ -141,6 +141,24 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
       ])
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['question_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Author'))
+      ->setSetting('target_type', 'question')
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['quiz_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Author'))
+      ->setSetting('target_type', 'quiz')
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['quiz_result_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Author'))
+      ->setSetting('target_type', 'quiz_result')
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
       ->setDescription(t('The time that the question response was created.'))

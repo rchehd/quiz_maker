@@ -3,12 +3,13 @@ status: true
 dependencies:
   config:
     - field.field.question.boolean_question.field_max_score
+    - field.field.question.boolean_question.field_response
     - field.field.question.boolean_question.field_tag
     - quiz_maker.question_type.boolean_question
   module:
     - text
 _core:
-  default_config_hash: 4mkGAo0gKaeN8uIWELsYCZsNRvlb9WVALMq0rS8JBrs
+  default_config_hash: _C50oEehK7hY34nT4rOmKXlk2i_85RevAfefogxE1iM
 id: question.boolean_question.default
 targetEntityType: question
 bundle: boolean_question
@@ -56,4 +57,5 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_response: true
   uid: true

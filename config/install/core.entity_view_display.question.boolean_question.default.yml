@@ -3,13 +3,14 @@ status: true
 dependencies:
   config:
     - field.field.question.boolean_question.field_max_score
+    - field.field.question.boolean_question.field_response
     - field.field.question.boolean_question.field_tag
     - quiz_maker.question_type.boolean_question
   module:
     - text
     - user
 _core:
-  default_config_hash: nXWTtOdZIz_vN37vCrgoQMmYg4v23F36US0WLR8Hmp8
+  default_config_hash: zr3sT0Hw4TdX51i2sUFFq5diXi64Gi8w5AnzyfPZPuk
 id: question.boolean_question.default
 targetEntityType: question
 bundle: boolean_question
@@ -42,6 +43,14 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     weight: 22
+    region: content
+  field_response:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 24
     region: content
   field_tag:
     type: entity_reference_label

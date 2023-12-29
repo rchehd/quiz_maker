@@ -4,13 +4,14 @@ dependencies:
   config:
     - field.field.question.matching_question.field_answers
     - field.field.question.matching_question.field_max_score
+    - field.field.question.matching_question.field_response
     - field.field.question.matching_question.field_tag
     - quiz_maker.question_type.matching_question
   module:
     - inline_entity_form
     - text
 _core:
-  default_config_hash: J_Zx0Ea3D64Pp61rRoUqH3x4i5R__HuE7GFgee7ya0o
+  default_config_hash: 881B2OkUt-3i0sV-o7bGAlzcokcehsuMx8Ln6l7Zqq8
 id: question.matching_question.default
 targetEntityType: question
 bundle: matching_question
@@ -39,6 +40,16 @@ content:
     weight: 3
     region: content
     settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_response:
+    type: entity_reference_autocomplete
+    weight: 26
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
       placeholder: ''
     third_party_settings: {  }
   field_tag:

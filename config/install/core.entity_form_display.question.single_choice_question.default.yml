@@ -4,13 +4,14 @@ dependencies:
   config:
     - field.field.question.single_choice_question.field_answers
     - field.field.question.single_choice_question.field_max_score
+    - field.field.question.single_choice_question.field_response
     - field.field.question.single_choice_question.field_tag
     - quiz_maker.question_type.single_choice_question
   module:
     - inline_entity_form
     - text
 _core:
-  default_config_hash: AnoiJYkCD1thBaUqXwxV5Qy7Sz51RzuvLxUiVdjJv60
+  default_config_hash: ccmxrinPLEYO1kIM2xj5zoqka0jUab2SXyaiMSKGDGg
 id: question.single_choice_question.default
 targetEntityType: question
 bundle: single_choice_question
@@ -76,4 +77,5 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_response: true
   uid: true

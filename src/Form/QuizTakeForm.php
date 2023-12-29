@@ -123,7 +123,7 @@ class QuizTakeForm extends FormBase {
   /**
    * {@inheritDoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state, QuizInterface $quiz = NULL) {
     // TODO: Implement submitForm() method.
   }
 
@@ -154,7 +154,7 @@ class QuizTakeForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public function getNextQuestion(array &$form, FormStateInterface $form_state): void {
+  public function getNextQuestion(array &$form, FormStateInterface $form_state, Request $request, QuizInterface $quiz = NULL): void {
     $this->questionNumber++;
     $form_state->setRebuild(TRUE);
   }
@@ -167,7 +167,7 @@ class QuizTakeForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public function getPreviousQuestion(array &$form, FormStateInterface $form_state): void {
+  public function getPreviousQuestion(array &$form, FormStateInterface $form_state, Request $request, QuizInterface $quiz = NULL): void {
     $this->questionNumber--;
     $form_state->setRebuild(TRUE);
   }

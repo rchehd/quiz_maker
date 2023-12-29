@@ -3,13 +3,14 @@ status: true
 dependencies:
   config:
     - field.field.question.direct_question.field_max_score
+    - field.field.question.direct_question.field_response
     - field.field.question.direct_question.field_tag
     - quiz_maker.question_type.direct_question
   module:
     - text
     - user
 _core:
-  default_config_hash: DGoEHxK4x8dYpaOn_16SoF88QN_3YK-424_Klkxysf8
+  default_config_hash: ItWa5nh_TO--89GRTgnXDBoJintmQbSd0cIEyzASQiY
 id: question.direct_question.default
 targetEntityType: question
 bundle: direct_question
@@ -42,6 +43,14 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     weight: 22
+    region: content
+  field_response:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 24
     region: content
   field_tag:
     type: entity_reference_label

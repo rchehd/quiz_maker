@@ -4,13 +4,14 @@ dependencies:
   config:
     - field.field.question.single_choice_question.field_answers
     - field.field.question.single_choice_question.field_max_score
+    - field.field.question.single_choice_question.field_response
     - field.field.question.single_choice_question.field_tag
     - quiz_maker.question_type.single_choice_question
   module:
     - text
     - user
 _core:
-  default_config_hash: xTey-w8mOsHFcrYc-3a04jTWq7KY0uTwwYBgQbrFh9k
+  default_config_hash: QEYiXEfloj94uYoSYMuW9SOUUbKslL_AJFNU3k1Ectk
 id: question.single_choice_question.default
 targetEntityType: question
 bundle: single_choice_question
@@ -51,6 +52,14 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     weight: 22
+    region: content
+  field_response:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 24
     region: content
   field_tag:
     type: entity_reference_label

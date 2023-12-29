@@ -4,13 +4,14 @@ dependencies:
   config:
     - field.field.question.matching_question.field_answers
     - field.field.question.matching_question.field_max_score
+    - field.field.question.matching_question.field_response
     - field.field.question.matching_question.field_tag
     - quiz_maker.question_type.matching_question
   module:
     - text
     - user
 _core:
-  default_config_hash: '-YFrL5w6YXPUUVDgms4T6CuvrI-HbOPsvtOWcQ1Ci4M'
+  default_config_hash: DM9ZKpXneXS1eR6lib54OxHiALuWnU-2fuEdXGRK310
 id: question.matching_question.default
 targetEntityType: question
 bundle: matching_question
@@ -51,6 +52,14 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     weight: 22
+    region: content
+  field_response:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 24
     region: content
   field_tag:
     type: entity_reference_label

@@ -3,12 +3,13 @@ status: true
 dependencies:
   config:
     - field.field.question.direct_question.field_max_score
+    - field.field.question.direct_question.field_response
     - field.field.question.direct_question.field_tag
     - quiz_maker.question_type.direct_question
   module:
     - text
 _core:
-  default_config_hash: WCJ0qgHD6NHFLaeEgNxvCv4yGQYFY_0mou5mylPdFiQ
+  default_config_hash: tQOfH73FP2u0-rTnImXRAOVgGdHBLmBOfKS6x4BY9M8
 id: question.direct_question.default
 targetEntityType: question
 bundle: direct_question
@@ -56,4 +57,5 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_response: true
   uid: true

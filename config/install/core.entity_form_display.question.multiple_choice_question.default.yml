@@ -4,13 +4,14 @@ dependencies:
   config:
     - field.field.question.multiple_choice_question.field_answers
     - field.field.question.multiple_choice_question.field_max_score
+    - field.field.question.multiple_choice_question.field_response
     - field.field.question.multiple_choice_question.field_tag
     - quiz_maker.question_type.multiple_choice_question
   module:
     - inline_entity_form
     - text
 _core:
-  default_config_hash: MOiJx__RGYYU5yUglo-SRDKvI_eZ7WLJA4k20ndJT7c
+  default_config_hash: 8CG2tDF47M0hA23kFNciqRNALpZSyvEZKuGchEPTwmk
 id: question.multiple_choice_question.default
 targetEntityType: question
 bundle: multiple_choice_question
@@ -39,6 +40,16 @@ content:
     weight: 3
     region: content
     settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_response:
+    type: entity_reference_autocomplete
+    weight: 26
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
       placeholder: ''
     third_party_settings: {  }
   field_tag:
