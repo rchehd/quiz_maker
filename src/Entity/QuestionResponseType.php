@@ -37,10 +37,10 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "uuid" = "uuid",
  *   },
  *   links = {
- *     "add-form" = "/admin/structure/question_response_types/add",
- *     "edit-form" = "/admin/structure/question_response_types/manage/{question_response_type}",
- *     "delete-form" = "/admin/structure/question_response_types/manage/{question_response_type}/delete",
- *     "collection" = "/admin/structure/question_response_types",
+ *     "add-form" = "/admin/quiz-maker/structure/question_response_types/add",
+ *     "edit-form" = "/admin/quiz-maker/structure/question_response_types/manage/{question_response_type}",
+ *     "delete-form" = "/admin/quiz-maker/structure/question_response_types/manage/{question_response_type}/delete",
+ *     "collection" = "/admin/quiz-maker/structure/question_response_types",
  *   },
  *   config_export = {
  *     "id",

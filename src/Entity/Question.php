@@ -25,7 +25,7 @@ use Drupal\user\EntityOwnerTrait;
  *   ),
  *   bundle_label = @Translation("Question type"),
  *   handlers = {
- *     "list_builder" = "Drupal\quiz_maker\EntityListBuilder\QuestionListBuilder",
+ *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "access" = "Drupal\quiz_maker\EntityAccessControlHandler\QuestionAccessControlHandler",
  *     "form" = {
@@ -60,13 +60,13 @@ use Drupal\user\EntityOwnerTrait;
  *     "revision_log_message" = "revision_log",
  *   },
  *   links = {
- *     "collection" = "/admin/content/question",
+ *     "collection" = "/admin/quiz-maker/question",
  *     "add-form" = "/question/add/{question_type}",
  *     "add-page" = "/question/add",
  *     "canonical" = "/question/{question}",
  *     "edit-form" = "/question/{question}/edit",
  *     "delete-form" = "/question/{question}/delete",
- *     "delete-multiple-form" = "/admin/content/question/delete-multiple",
+ *     "delete-multiple-form" = "/admin/quiz-maker/question/delete-multiple",
  *   },
  *   bundle_entity_type = "question_type",
  *   field_ui_base_route = "entity.question_type.edit_form",

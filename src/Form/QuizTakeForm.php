@@ -2,11 +2,13 @@
 
 namespace Drupal\quiz_maker\Form;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuizInterface;
+use Drupal\quiz_maker\Service\QuizManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -34,6 +36,8 @@ class QuizTakeForm extends FormBase {
 
   public function __construct(
     RequestStack $requestStack,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected QuizManager $quizManager
   ) {
     $this->currentRequest = $requestStack->getCurrentRequest();
   }
@@ -44,6 +48,8 @@ class QuizTakeForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('request_stack'),
+      $container->get('entity_type.manager'),
+      $container->get('quiz_maker.manager'),
     );
   }
 
@@ -165,9 +171,23 @@ class QuizTakeForm extends FormBase {
    * @return mixed
    *   The form array.
    */
-  public function updateQuestionForm(array &$form, FormStateInterface $form_state, Request $request) {
+  public function updateQuestionForm(array &$form, FormStateInterface $form_state, Request $request): mixed {
+    $quiz = $this->currentRequest->get('quiz');
+
     $current_question = $this->getCurrentQuestion();
     $response = $current_question->submitAnswer($form, $form_state);
+    $response_type = $this->getQuestionResponseType($current_question);
+    if ($response && $response_type) {
+
+
+      $question_response = $this->entityTypeManager->getStorage('question_response')->create([
+        'type' => $response_type,
+        'quiz_id' => $quiz->id(),
+        'question_id' => $current_question->id(),
+      ]);
+
+      $question_response->save();
+    }
 
     return $form['question'];
   }

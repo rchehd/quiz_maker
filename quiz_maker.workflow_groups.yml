@@ -1,0 +1,3 @@
+quiz_result:
+  label: Quiz result
+  entity_type: quiz_result

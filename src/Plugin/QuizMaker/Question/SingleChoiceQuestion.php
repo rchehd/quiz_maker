@@ -48,6 +48,10 @@ class SingleChoiceQuestion extends Question {
     return $form_state->getValue('single_choice_answer');
   }
 
+  public function createResponse(array &$form, FormStateInterface $form_state) {
+
+  }
+
   /**
    * {@inheritDoc}
    */

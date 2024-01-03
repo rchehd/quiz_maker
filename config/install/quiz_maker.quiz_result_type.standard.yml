@@ -1,5 +1,6 @@
 langcode: en
 status: true
+workflow: quiz_result_default
 dependencies: {  }
 _core:
   default_config_hash: vFqO31BXp0plA9TFq26iMwyd7bfqOMeB7-FTQ957_N8

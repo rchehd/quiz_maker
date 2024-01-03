@@ -37,15 +37,16 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "uuid" = "uuid",
  *   },
  *   links = {
- *     "add-form" = "/admin/structure/quiz_result_types/add",
- *     "edit-form" = "/admin/structure/quiz_result_types/manage/{quiz_result_type}",
- *     "delete-form" = "/admin/structure/quiz_result_types/manage/{quiz_result_type}/delete",
- *     "collection" = "/admin/structure/quiz_result_types",
+ *     "add-form" = "/admin/quiz-maker/structure/quiz_result_types/add",
+ *     "edit-form" = "/admin/quiz-maker/structure/quiz_result_types/manage/{quiz_result_type}",
+ *     "delete-form" = "/admin/quiz-maker/structure/quiz_result_types/manage/{quiz_result_type}/delete",
+ *     "collection" = "/admin/quiz-maker/structure/quiz_result_types",
  *   },
  *   config_export = {
  *     "id",
  *     "label",
  *     "uuid",
+ *     "workflow",
  *   },
  * )
  */
@@ -60,5 +61,38 @@ final class QuizResultType extends ConfigEntityBundleBase {
    * The human-readable name of the quiz result type.
    */
   protected string $label;
+
+  /**
+   * The order type workflow ID.
+   *
+   * @var string
+   */
+  protected string $workflow;
+
+  /**
+   * Gets the quiz result type's workflow ID.
+   *
+   * Used by the $quiz_result->state field.
+   *
+   * @return string
+   *   The quiz result type workflow ID.
+   */
+  public function getWorkflowId() {
+    return $this->workflow;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+
+    // The order type must depend on the module that provides the workflow.
+    $workflow_manager = \Drupal::service('plugin.manager.workflow');
+    $workflow = $workflow_manager->createInstance($this->getWorkflowId());
+    $this->calculatePluginDependencies($workflow);
+
+    return $this;
+  }
 
 }

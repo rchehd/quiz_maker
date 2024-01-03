@@ -1,5 +1,3 @@
-
-
 quiz.type_add:
   title: 'Add quiz type'
   route_name: entity.quiz_type.add_form
@@ -10,7 +8,7 @@ quiz.add_page:
   title: 'Add quiz'
   route_name: entity.quiz.add_page
   appears_on:
-    - view.quizzes.quiz_list
+    - entity.quiz.collection
 
 question.type_add:
   title: 'Add question type'
@@ -22,7 +20,7 @@ question.add_page:
   title: 'Add question'
   route_name: entity.question.add_page
   appears_on:
-    - view.questions.question_list
+    - entity.question.collection
 
 quiz.question.add:
   route_name: entity.question.add_page
@@ -40,7 +38,7 @@ question_answer.add_page:
   title: 'Add question answer'
   route_name: entity.question_answer.add_page
   appears_on:
-    - view.question_answers.answer_list
+    - entity.question_answer.collection
 
 quiz_result.type_add:
   title: 'Add quiz result type'

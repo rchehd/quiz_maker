@@ -10,7 +10,7 @@ dependencies:
     - text
     - user
 _core:
-  default_config_hash: zr3sT0Hw4TdX51i2sUFFq5diXi64Gi8w5AnzyfPZPuk
+  default_config_hash: KFbap0DA2_VCqgOdh13jtHaB3vxQy93oOPJdrNXO0Ig
 id: question.boolean_question.default
 targetEntityType: question
 bundle: boolean_question
@@ -33,7 +33,7 @@ content:
         granularity: 2
         refresh: 60
     third_party_settings: {  }
-    weight: 20
+    weight: 4
     region: content
   field_max_score:
     type: number_integer
@@ -42,15 +42,7 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 22
-    region: content
-  field_response:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 24
+    weight: 5
     region: content
   field_tag:
     type: entity_reference_label
@@ -58,7 +50,7 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 23
+    weight: 6
     region: content
   label:
     type: string
@@ -66,14 +58,14 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: -5
+    weight: 0
     region: content
   question:
     type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 10
+    weight: 2
     region: content
   status:
     type: boolean
@@ -83,13 +75,14 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 0
+    weight: 1
     region: content
   uid:
     type: author
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 15
+    weight: 3
     region: content
-hidden: {  }
+hidden:
+  field_response: true

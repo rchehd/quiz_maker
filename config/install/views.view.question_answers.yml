@@ -5,6 +5,8 @@ dependencies:
     - quiz_maker
     - user
     - views_bulk_operations
+_core:
+  default_config_hash: FIpTswdVeL8J31MqLH9vdbjU7GwUo_amMB1s5S-tUlQ
 id: question_answers
 label: 'Question Answers'
 module: views
@@ -504,7 +506,7 @@ display:
           admin_label: ''
           entity_type: question_answer
           plugin_id: entity_operations
-          label: Operations
+          label: Operation
           exclude: false
           alter:
             alter_text: false
@@ -581,7 +583,20 @@ display:
       cache:
         type: tag
         options: {  }
-      empty: {  }
+      empty:
+        area:
+          id: area
+          table: views
+          field: area
+          relationship: none
+          group_type: group
+          admin_label: ''
+          plugin_id: text
+          empty: true
+          content:
+            value: 'There are no answers yet.'
+            format: basic_html
+          tokenize: false
       sorts: {  }
       arguments: {  }
       filters:
@@ -786,7 +801,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/content/question-answer
+      path: admin/quiz-maker/question-answer
     cache_metadata:
       max-age: 0
       contexts:

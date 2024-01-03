@@ -10,3 +10,7 @@ services:
   plugin.manager.quiz_maker.question_response:
     class: Drupal\quiz_maker\Service\QuizMakerQuestionResponsePluginManager
     parent: default_plugin_manager
+
+  quiz_maker.manager:
+    class: Drupal\quiz_maker\Service\QuizManager
+    arguments: ['@entity_type.manager', '@request_stack']

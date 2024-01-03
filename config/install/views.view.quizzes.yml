@@ -5,6 +5,8 @@ dependencies:
     - quiz_maker
     - user
     - views_bulk_operations
+_core:
+  default_config_hash: _PcqzA_af20lfK0AEkXOwx-CThdz30a7Cb1CsMC1-9I
 id: quizzes
 label: Quizzes
 module: views
@@ -74,7 +76,7 @@ display:
           batch_size: 10
           form_step: true
           ajax_loader: false
-          buttons: true
+          buttons: false
           action_title: Action
           clear_on_exposed: true
           force_selection_info: false
@@ -440,7 +442,7 @@ display:
           admin_label: ''
           entity_type: quiz
           plugin_id: entity_operations
-          label: Operations
+          label: Operation
           exclude: false
           alter:
             alter_text: false
@@ -473,7 +475,7 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: false
+          element_label_colon: true
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
@@ -675,7 +677,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/quiz/quizzes
+      path: admin/quiz-maker/quizzes
     cache_metadata:
       max-age: 0
       contexts:

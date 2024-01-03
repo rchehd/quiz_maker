@@ -2,16 +2,25 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.quiz_result.standard.field_question_response
+    - field.field.quiz_result.standard.field_quiz
     - quiz_maker.quiz_result_type.standard
   module:
+    - inline_entity_form
     - text
 _core:
-  default_config_hash: xb446ANooQhU-szxTx07jxTBZfeZs6zznTCrMzd8eEo
+  default_config_hash: wGJREJUWEXpcaUr-YUcwt1-C_gd_rZvJmqciwlVAaSw
 id: quiz_result.standard.default
 targetEntityType: quiz_result
 bundle: standard
 mode: default
 content:
+  created:
+    type: datetime_timestamp
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   description:
     type: text_textarea
     weight: 1
@@ -19,6 +28,48 @@ content:
     settings:
       rows: 5
       placeholder: ''
+    third_party_settings: {  }
+  field_question_response:
+    type: inline_entity_form_complex
+    weight: 5
+    region: content
+    settings:
+      form_mode: default
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      allow_new: true
+      allow_existing: false
+      match_operator: CONTAINS
+      allow_duplicate: false
+      collapsible: false
+      collapsed: false
+      revision: false
+      removed_reference: optional
+    third_party_settings: {  }
+  field_quiz:
+    type: inline_entity_form_complex
+    weight: 4
+    region: content
+    settings:
+      form_mode: default
+      override_labels: false
+      label_singular: ''
+      label_plural: ''
+      allow_new: false
+      allow_existing: true
+      match_operator: CONTAINS
+      allow_duplicate: false
+      collapsible: false
+      collapsed: false
+      revision: false
+      removed_reference: optional
+    third_party_settings: {  }
+  finished:
+    type: datetime_timestamp
+    weight: 3
+    region: content
+    settings: {  }
     third_party_settings: {  }
   label:
     type: string_textfield
@@ -28,6 +79,19 @@ content:
       size: 60
       placeholder: ''
     third_party_settings: {  }
+  score:
+    type: number
+    weight: 7
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  state:
+    type: options_select
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
   status:
     type: boolean_checkbox
     weight: 2
@@ -36,5 +100,4 @@ content:
       display_label: false
     third_party_settings: {  }
 hidden:
-  created: true
   uid: true

@@ -5,6 +5,8 @@ dependencies:
     - quiz_maker
     - user
     - views_bulk_operations
+_core:
+  default_config_hash: tlyFzHH3AlVILdz6K1jt-4S0E_WowbP6SFddicGFBnw
 id: quiz_results
 label: 'Quiz Results'
 module: views
@@ -439,7 +441,7 @@ display:
           admin_label: ''
           entity_type: quiz_result
           plugin_id: entity_operations
-          label: Operations
+          label: Operation
           exclude: false
           alter:
             alter_text: false
@@ -532,7 +534,55 @@ display:
           tokenize: false
       sorts: {  }
       arguments: {  }
-      filters: {  }
+      filters:
+        label:
+          id: label
+          table: quiz_result
+          field: label
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: quiz_result
+          entity_field: label
+          plugin_id: string
+          operator: word
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: label_op
+            label: Label
+            description: ''
+            use_operator: false
+            operator: label_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: label
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              content_editor: '0'
+              administrator: '0'
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
       style:
         type: table
         options:
@@ -590,6 +640,8 @@ display:
               empty_column: false
               responsive: ''
             operations:
+              sortable: false
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
@@ -619,6 +671,7 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - user.permissions
       tags: {  }
@@ -629,12 +682,13 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/content/quiz-result
+      path: admin/quiz-maker/quiz-result
     cache_metadata:
       max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
         - url.query_args
         - user.permissions
       tags: {  }

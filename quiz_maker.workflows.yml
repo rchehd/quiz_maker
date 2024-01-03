@@ -1,0 +1,20 @@
+quiz_result_default:
+  id: quiz_result_default
+  group: quiz_result
+  label: 'Default'
+  states:
+    draft:
+      label: Draft
+    needs_review:
+      label: 'Needs review'
+    completed:
+      label: Completed
+  transitions:
+    send_to_review:
+      label: 'Send quiz to review'
+      from: [draft]
+      to: needs_review
+    finished:
+      label: 'Cancel order'
+      from: [needs_review, draft]
+      to: completed

@@ -5,6 +5,8 @@ dependencies:
     - quiz_maker
     - user
     - views_bulk_operations
+_core:
+  default_config_hash: fB812KZ69zzwqVBhciqbZwpHVP3UfkrKelkeOyxgAzo
 id: questions
 label: Questions
 module: views
@@ -134,7 +136,8 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: string
-          settings: {  }
+          settings:
+            link_to_entity: false
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -440,7 +443,7 @@ display:
           admin_label: ''
           entity_type: question
           plugin_id: entity_operations
-          label: Operations
+          label: Operation
           exclude: false
           alter:
             alter_text: false
@@ -675,7 +678,7 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
-      path: admin/content/question
+      path: admin/quiz-maker/question
     cache_metadata:
       max-age: 0
       contexts:

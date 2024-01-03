@@ -8,7 +8,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\quiz_maker\boll;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\quiz_maker\QuizResultInterface;
@@ -29,6 +28,7 @@ use Drupal\user\EntityOwnerTrait;
  *   ),
  *   bundle_label = @Translation("Quiz type"),
  *   handlers = {
+ *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "access" = "Drupal\quiz_maker\EntityAccessControlHandler\QuizAccessControlHandler",
  *     "form" = {
@@ -63,13 +63,13 @@ use Drupal\user\EntityOwnerTrait;
  *     "revision_log_message" = "revision_log",
  *   },
  *   links = {
- *     "collection" = "/admin/quiz/quizzes",
+ *     "collection" = "/admin/quiz-maker/quizzes",
  *     "add-form" = "/quiz/add/{quiz_type}",
  *     "add-page" = "/quiz/add",
  *     "canonical" = "/quiz/{quiz}",
  *     "edit-form" = "/quiz/{quiz}/edit",
  *     "delete-form" = "/quiz/{quiz}/delete",
- *     "delete-multiple-form" = "/admin/quiz/quizzes/delete-multiple",
+ *     "delete-multiple-form" = "/admin/quiz-maker/quizzes/delete-multiple",
  *   },
  *   bundle_entity_type = "quiz_type",
  *   field_ui_base_route = "entity.quiz_type.edit_form",

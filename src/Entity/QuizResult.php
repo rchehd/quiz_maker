@@ -2,6 +2,8 @@
 
 namespace Drupal\quiz_maker\Entity;
 
+use Drupal\commerce_order\Entity\OrderInterface;
+use Drupal\commerce_order\Entity\OrderType;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -29,6 +31,7 @@ use Drupal\user\EntityOwnerTrait;
  *   ),
  *   bundle_label = @Translation("Quiz Result type"),
  *   handlers = {
+ *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "form" = {
  *       "add" = "Drupal\quiz_maker\Form\QuizResultForm",
@@ -101,28 +104,6 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['status'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Status'))
-      ->setDefaultValue(TRUE)
-      ->setSetting('on_label', 'Enabled')
-      ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
-        'settings' => [
-          'display_label' => FALSE,
-        ],
-        'weight' => 0,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'type' => 'boolean',
-        'label' => 'above',
-        'weight' => 0,
-        'settings' => [
-          'format' => 'enabled-disabled',
-        ],
-      ])
-      ->setDisplayConfigurable('view', TRUE);
-
     $fields['description'] = BaseFieldDefinition::create('text_long')
       ->setLabel(t('Description'))
       ->setDisplayOptions('form', [
@@ -158,8 +139,53 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['state'] = BaseFieldDefinition::create('state')
+      ->setLabel(t('State'))
+      ->setDescription(t('The quiz result state.'))
+      ->setRequired(TRUE)
+      ->setSetting('max_length', 255)
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'state_transition_form',
+        'settings' => [
+          'require_confirmation' => TRUE,
+          'use_modal' => TRUE,
+        ],
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setSetting('workflow_callback', ['\Drupal\quiz_maker\Entity\QuizResult', 'getWorkflowId']);
+
+
+    $fields['score'] = BaseFieldDefinition::create('integer')
+      ->setLabel('Score')
+      ->setDisplayOptions('form', [
+        'type' => 'number',
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'inline',
+        'type' => 'number_integer',
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['attempt'] = BaseFieldDefinition::create('integer')
+      ->setLabel('Attempt')
+      ->setDisplayOptions('form', [
+        'type' => 'number',
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'inline',
+        'type' => 'number_integer',
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Authored on'))
+      ->setLabel(t('Quiz started time'))
       ->setDescription(t('The time that the quiz result was created.'))
       ->setDisplayOptions('view', [
         'label' => 'above',
@@ -172,6 +198,21 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
         'weight' => 20,
       ])
       ->setDisplayConfigurable('view', TRUE);
+
+    $fields['finished'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel('Quiz finished time')
+      ->setDisplayOptions('view', [
+        'label' => 'inline',
+        'type' => 'timestamp',
+        'weight' => 1,
+      ])
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'datetime_timestamp',
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
@@ -241,6 +282,20 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
    */
   public function getQuestionAnswer(QuestionInterface $question): QuestionAnswerInterface|bool {
     return FALSE;
+  }
+
+  /**
+   * Gets the workflow ID for the state field.
+   *
+   * @param \Drupal\quiz_maker\QuizResultInterface $order
+   *   The order.
+   *
+   * @return string
+   *   The workflow ID.
+   */
+  public static function getWorkflowId(QuizResultInterface $order) {
+    $workflow = QuizResultType::load($order->bundle())->getWorkflowId();
+    return $workflow;
   }
 
 }

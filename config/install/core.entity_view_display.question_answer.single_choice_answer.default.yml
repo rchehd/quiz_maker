@@ -9,7 +9,7 @@ dependencies:
     - text
     - user
 _core:
-  default_config_hash: 1KpGQlWcdPZBjaihGQ2VD6PI-XtNl6hOnCKoBNc7Ozk
+  default_config_hash: RHCnLS4qjtU2fY1BhlNgPAvf4S6MOCAQtEvSYpviNBo
 id: question_answer.single_choice_answer.default
 targetEntityType: question_answer
 bundle: single_choice_answer

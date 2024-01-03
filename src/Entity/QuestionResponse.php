@@ -25,7 +25,7 @@ use Drupal\user\EntityOwnerTrait;
  *   ),
  *   bundle_label = @Translation("Question Response type"),
  *   handlers = {
- *     "list_builder" = "Drupal\quiz_maker\EntityListBuilder\QuestionResponseListBuilder",
+ *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "form" = {
  *       "add" = "Drupal\quiz_maker\Form\QuestionResponseForm",
@@ -47,13 +47,13 @@ use Drupal\user\EntityOwnerTrait;
  *     "owner" = "uid",
  *   },
  *   links = {
- *     "collection" = "/admin/content/question-response",
+ *     "collection" = "/admin/quiz-maker/question-response",
  *     "add-form" = "/question-response/add/{question_response_type}",
  *     "add-page" = "/question-response/add",
  *     "canonical" = "/question-response/{question_response}",
  *     "edit-form" = "/question-response/{question_response}/edit",
  *     "delete-form" = "/question-response/{question_response}/delete",
- *     "delete-multiple-form" = "/admin/content/question-response/delete-multiple",
+ *     "delete-multiple-form" = "/admin/quiz-maker/question-response/delete-multiple",
  *   },
  *   bundle_entity_type = "question_response_type",
  *   field_ui_base_route = "entity.question_response_type.edit_form",
@@ -98,28 +98,6 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['status'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Status'))
-      ->setDefaultValue(TRUE)
-      ->setSetting('on_label', 'Enabled')
-      ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
-        'settings' => [
-          'display_label' => FALSE,
-        ],
-        'weight' => 0,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'type' => 'boolean',
-        'label' => 'above',
-        'weight' => 0,
-        'settings' => [
-          'format' => 'enabled-disabled',
-        ],
-      ])
-      ->setDisplayConfigurable('view', TRUE);
-
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Author'))
       ->setSetting('target_type', 'user')
@@ -142,21 +120,68 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['question_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Author'))
+      ->setLabel(t('Question'))
       ->setSetting('target_type', 'question')
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'placeholder' => '',
+        ],
+        'weight' => 15,
+      ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['quiz_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Author'))
+      ->setLabel(t('Quiz'))
       ->setSetting('target_type', 'quiz')
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'placeholder' => '',
+        ],
+        'weight' => 15,
+      ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['quiz_result_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Author'))
-      ->setSetting('target_type', 'quiz_result')
+    $fields['is_correct'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Is correct'))
+      ->setDefaultValue(TRUE)
+      ->setSetting('on_label', 'Is correct')
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => FALSE,
+        ],
+        'weight' => 0,
+      ])
       ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'boolean',
+        'label' => 'above',
+        'weight' => 0,
+        'settings' => [
+          'format' => 'enabled-disabled',
+        ],
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['score'] = BaseFieldDefinition::create('integer')
+      ->setLabel('Score')
+      ->setDisplayOptions('form', [
+        'type' => 'number',
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'inline',
+        'type' => 'number_integer',
+        'weight' => 0,
+      ])
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
