@@ -5,8 +5,11 @@ namespace Drupal\quiz_maker\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuizInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class of Quiz take form.
@@ -21,6 +24,28 @@ class QuizTakeForm extends FormBase {
    * @var int
    */
   protected int $questionNumber = 0;
+
+  /**
+   * Current request.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request|null
+   */
+  protected ?Request $currentRequest;
+
+  public function __construct(
+    RequestStack $requestStack,
+  ) {
+    $this->currentRequest = $requestStack->getCurrentRequest();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('request_stack'),
+    );
+  }
 
   /**
    * {@inheritDoc}
@@ -136,13 +161,14 @@ class QuizTakeForm extends FormBase {
    *   The form state.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
-   * @param \Drupal\quiz_maker\QuizInterface|null $quiz
-   *   The quiz.
    *
    * @return mixed
    *   The form array.
    */
-  public function updateQuestionForm(array &$form, FormStateInterface $form_state, Request $request, QuizInterface $quiz = NULL) {
+  public function updateQuestionForm(array &$form, FormStateInterface $form_state, Request $request) {
+    $current_question = $this->getCurrentQuestion();
+    $response = $current_question->submitAnswer($form, $form_state);
+
     return $form['question'];
   }
 
@@ -154,7 +180,7 @@ class QuizTakeForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public function getNextQuestion(array &$form, FormStateInterface $form_state, Request $request, QuizInterface $quiz = NULL): void {
+  public function getNextQuestion(array &$form, FormStateInterface $form_state): void {
     $this->questionNumber++;
     $form_state->setRebuild(TRUE);
   }
@@ -167,9 +193,40 @@ class QuizTakeForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
-  public function getPreviousQuestion(array &$form, FormStateInterface $form_state, Request $request, QuizInterface $quiz = NULL): void {
+  public function getPreviousQuestion(array &$form, FormStateInterface $form_state): void {
     $this->questionNumber--;
     $form_state->setRebuild(TRUE);
+  }
+
+  /**
+   * Return current question.
+   *
+   * @return ?\Drupal\quiz_maker\QuestionInterface
+   */
+  private function getCurrentQuestion(): ?QuestionInterface {
+    $quiz = $this->currentRequest->get('quiz');
+    if ($quiz instanceof QuizInterface) {
+      $question = $quiz->getQuestions();
+      return $question[$this->questionNumber - 1];
+    }
+    return NULL;
+  }
+
+  /**
+   * Get question response type.
+   *
+   * @param \Drupal\quiz_maker\QuestionInterface $question
+   *   The question.
+   *
+   * @return false|mixed|null
+   *   The response type.
+   */
+  private function getQuestionResponseType(QuestionInterface $question): mixed {
+    if ($question->hasField('field_response')) {
+      $target_bundles = $question->get('field_response')->getFieldDefinition()->getSetting('handler_settings')['target_bundles'];
+      return reset($target_bundles);
+    }
+    return NULL;
   }
 
 }

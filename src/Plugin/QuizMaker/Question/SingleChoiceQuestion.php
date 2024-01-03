@@ -30,9 +30,11 @@ class SingleChoiceQuestion extends Question {
         $options[$answer->id()] = $answer->getAnswer();
       }
       return [
-        '#type' => 'radios',
-        '#title' => $this->t('Select an answer'),
-        '#options' => $options,
+        'single_choice_answer' => [
+          '#type' => 'radios',
+          '#title' => $this->t('Select an answer'),
+          '#options' => $options,
+        ]
       ];
     }
 
@@ -43,7 +45,7 @@ class SingleChoiceQuestion extends Question {
    * {@inheritDoc}
    */
   public function submitAnswer(array &$form, FormStateInterface $form_state): mixed {
-    return $form_state->getValue('answer');
+    return $form_state->getValue('single_choice_answer');
   }
 
   /**
