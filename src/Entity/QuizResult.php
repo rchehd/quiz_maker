@@ -29,7 +29,6 @@ use Drupal\user\EntityOwnerTrait;
  *   ),
  *   bundle_label = @Translation("Quiz Result type"),
  *   handlers = {
- *     "list_builder" = "Drupal\quiz_maker\EntityListBuilder\QuizResultListBuilder",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "form" = {
  *       "add" = "Drupal\quiz_maker\Form\QuizResultForm",

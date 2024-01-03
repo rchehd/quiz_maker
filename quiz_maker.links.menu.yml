@@ -51,28 +51,28 @@ entity.question_response_type.collection:
 entity.quiz.collection:
   title: 'Quizzes'
   description: 'List of quizzes.'
-  route_name: entity.quiz.collection
+  route_name: view.quizzes.quiz_list
   parent: quiz_maker.admin
   weight: 0
 
 entity.question.collection:
   title: 'Questions'
   description: 'List of questions.'
-  route_name: entity.question.collection
+  route_name: view.questions.question_list
   parent: quiz_maker.admin
   weight: 1
 
 entity.question_answer.collection:
   title: 'Question Answers'
   description: 'List of question answers.'
-  route_name: entity.question_answer.collection
+  route_name: view.question_answers.answer_list
   parent: quiz_maker.admin
   weight: 2
 
 entity.quiz_result.collection:
   title: 'Quiz Results'
   description: 'List of quiz results.'
-  route_name: entity.quiz_result.collection
+  route_name: view.quiz_results.result_list
   parent: quiz_maker.admin
   weight: 3
 

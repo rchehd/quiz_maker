@@ -38,7 +38,7 @@ final class QuizForm extends ContentEntityForm {
         throw new \LogicException('Could not save the entity.');
     }
 
-    $form_state->setRedirectUrl(Url::fromRoute('entity.quiz.collection'));
+    $form_state->setRedirectUrl(Url::fromRoute('view.quizzes.quiz_list'));
 
     return $result;
   }
