@@ -56,8 +56,10 @@ class MatchingQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function submitAnswer(array &$form, FormStateInterface $form_state): mixed {
-    return $form_state->getValue('answer');
+  public function getResponse(array &$form, FormStateInterface $form_state): array {
+    return [
+      'response' => $form_state->getValue('question_table')
+    ];
   }
 
   /**

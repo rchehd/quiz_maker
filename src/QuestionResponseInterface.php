@@ -11,4 +11,44 @@ use Drupal\user\EntityOwnerInterface;
  */
 interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
+  /**
+   * Get question.
+   *
+   * @return \Drupal\quiz_maker\QuestionInterface|null
+   *   The question.
+   */
+  public function getQuestion(): ?QuestionInterface;
+
+  /**
+   * Get quiz.
+   *
+   * @return \Drupal\quiz_maker\QuizInterface|null
+   *   The quiz.
+   */
+  public function getQuiz(): ?QuizInterface;
+
+  /**
+   * TRUE if response was correct.
+   *
+   * @return bool
+   *   TRUE if correct, otherwise FALSE.
+   */
+  public function isCorrect(): bool;
+
+  /**
+   * Get response score.
+   *
+   * @return int
+   *   The score.
+   */
+  public function getScore(): int;
+
+  /**
+   * Set response data.
+   *
+   * @param array $data
+   *   The data.
+   */
+  public function setResponseData(array $data): void;
+
 }

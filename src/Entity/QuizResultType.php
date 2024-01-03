@@ -53,6 +53,21 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 final class QuizResultType extends ConfigEntityBundleBase {
 
   /**
+   * Quiz result state - draft.
+   */
+  const DRAFT = 'draft';
+
+  /**
+   * Quiz result state - on review.
+   */
+  const ON_REVIEW = 'on_review';
+
+  /**
+   * Quiz result state - completed.
+   */
+  const COMPLETED = 'completed';
+
+  /**
    * The machine name of this quiz result type.
    */
   protected string $id;

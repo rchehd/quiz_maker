@@ -5,9 +5,11 @@ namespace Drupal\quiz_maker\Form;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuizInterface;
+use Drupal\quiz_maker\QuizResultInterface;
 use Drupal\quiz_maker\Service\QuizManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,10 +36,21 @@ class QuizTakeForm extends FormBase {
    */
   protected ?Request $currentRequest;
 
+  /**
+   * Quiz result.
+   *
+   * @var \Drupal\quiz_maker\QuizResultInterface|null
+   */
+  protected ?QuizResultInterface $quizResult;
+
+  /**
+   * Form constructor.
+   */
   public function __construct(
     RequestStack $requestStack,
     protected EntityTypeManagerInterface $entityTypeManager,
-    protected QuizManager $quizManager
+    protected QuizManager $quizManager,
+    protected AccountInterface $currentUser
   ) {
     $this->currentRequest = $requestStack->getCurrentRequest();
   }
@@ -50,6 +63,7 @@ class QuizTakeForm extends FormBase {
       $container->get('request_stack'),
       $container->get('entity_type.manager'),
       $container->get('quiz_maker.manager'),
+      $container->get('current_user'),
     );
   }
 
@@ -64,6 +78,9 @@ class QuizTakeForm extends FormBase {
    * {@inheritDoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, QuizInterface $quiz = NULL) {
+    // Create or get draft quiz result.
+    $this->quizResult = $this->quizManager->createQuizResult($this->currentUser, $quiz);
+
     $form['question'] = [
       '#type' => 'container',
       '#attributes' => [
@@ -84,7 +101,16 @@ class QuizTakeForm extends FormBase {
       ];
 
       /** @var \Drupal\quiz_maker\QuestionInterface $current_question */
-      $current_question = $questions[$this->questionNumber];
+      if ($this->questionNumber === 0) {
+        // When user open form - it will get the last active question if quiz
+        // wasn't finished before.
+        $active_question = $this->quizResult->getActiveQuestion();
+        $current_question = $active_question;
+        $this->questionNumber = array_search($active_question, $questions);
+      }
+      else {
+        $current_question = $questions[$this->questionNumber];
+      }
       $form['question']['title'] = [
         '#type' => 'html_tag',
         '#tag' => 'h3',
@@ -155,7 +181,16 @@ class QuizTakeForm extends FormBase {
    * {@inheritDoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state, QuizInterface $quiz = NULL) {
-    // TODO: Implement submitForm() method.
+    $current_question = $this->getCurrentQuestion();
+    $response_data = $current_question->getResponse($form, $form_state);
+    if ($response_data) {
+      $this->quizManager->updateQuizResult($this->quizResult, $current_question, $response_data);
+      $this->quizManager->finishQuiz($this->quizResult);
+    }
+
+    $form_state->setRedirect('entity.quiz_result.canonical', [
+      'quiz_result' => $this->quizResult->id(),
+    ]);
   }
 
   /**
@@ -170,23 +205,16 @@ class QuizTakeForm extends FormBase {
    *
    * @return mixed
    *   The form array.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function updateQuestionForm(array &$form, FormStateInterface $form_state, Request $request): mixed {
-    $quiz = $this->currentRequest->get('quiz');
-
     $current_question = $this->getCurrentQuestion();
-    $response = $current_question->submitAnswer($form, $form_state);
-    $response_type = $this->getQuestionResponseType($current_question);
-    if ($response && $response_type) {
-
-
-      $question_response = $this->entityTypeManager->getStorage('question_response')->create([
-        'type' => $response_type,
-        'quiz_id' => $quiz->id(),
-        'question_id' => $current_question->id(),
-      ]);
-
-      $question_response->save();
+    $response_data = $current_question->getResponse($form, $form_state);
+    if ($response_data) {
+      $this->quizManager->updateQuizResult($this->quizResult, $current_question, $response_data);
     }
 
     return $form['question'];
@@ -222,29 +250,13 @@ class QuizTakeForm extends FormBase {
    * Return current question.
    *
    * @return ?\Drupal\quiz_maker\QuestionInterface
+   *   The question.
    */
   private function getCurrentQuestion(): ?QuestionInterface {
     $quiz = $this->currentRequest->get('quiz');
     if ($quiz instanceof QuizInterface) {
       $question = $quiz->getQuestions();
       return $question[$this->questionNumber - 1];
-    }
-    return NULL;
-  }
-
-  /**
-   * Get question response type.
-   *
-   * @param \Drupal\quiz_maker\QuestionInterface $question
-   *   The question.
-   *
-   * @return false|mixed|null
-   *   The response type.
-   */
-  private function getQuestionResponseType(QuestionInterface $question): mixed {
-    if ($question->hasField('field_response')) {
-      $target_bundles = $question->get('field_response')->getFieldDefinition()->getSetting('handler_settings')['target_bundles'];
-      return reset($target_bundles);
     }
     return NULL;
   }

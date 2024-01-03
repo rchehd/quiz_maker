@@ -7,7 +7,9 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\QuizInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -171,6 +173,10 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
       ])
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['response'] = BaseFieldDefinition::create('map')
+      ->setLabel(t('Data'))
+      ->setDescription(t('A serialized array of response data.'));
+
     $fields['score'] = BaseFieldDefinition::create('integer')
       ->setLabel('Score')
       ->setDisplayOptions('form', [
@@ -204,6 +210,41 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
       ->setDescription(t('The time that the question response was last edited.'));
 
     return $fields;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getQuestion(): ?QuestionInterface {
+    return $this->get('question_id')->entity;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getQuiz(): ?QuizInterface {
+    return $this->get('quiz_id')->entity;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function isCorrect(): bool {
+    return $this->get('is_correct')->value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getScore(): int {
+    return $this->get('score')->value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function setResponseData(array $data): void {
+    $this->set('response', $data);
   }
 
 }

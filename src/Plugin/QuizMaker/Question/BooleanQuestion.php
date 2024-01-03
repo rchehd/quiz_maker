@@ -24,20 +24,24 @@ class BooleanQuestion extends Question {
    */
   public function getAnsweringForm(): array {
     return [
-      '#type' => 'radios',
-      '#title' => $this->t('Select an answer'),
-      '#options' => [
-        'true' => $this->t('True'),
-        'false' => $this->t('False'),
-      ],
+      'boolean_answer' => [
+        '#type' => 'radios',
+        '#title' => $this->t('Select an answer'),
+        '#options' => [
+          'true' => $this->t('True'),
+          'false' => $this->t('False'),
+        ],
+      ]
     ];
   }
 
   /**
    * {@inheritDoc}
    */
-  public function submitAnswer(array &$form, FormStateInterface $form_state): mixed {
-    return $form_state->getValue('answer');
+  public function getResponse(array &$form, FormStateInterface $form_state): array {
+    return [
+      'response' => $form_state->getValue('boolean_answer')
+    ];
   }
 
   /**

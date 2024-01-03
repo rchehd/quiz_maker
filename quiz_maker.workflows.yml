@@ -5,16 +5,16 @@ quiz_result_default:
   states:
     draft:
       label: Draft
-    needs_review:
-      label: 'Needs review'
+    on_review:
+      label: 'On review'
     completed:
       label: Completed
   transitions:
-    send_to_review:
+    to_review:
       label: 'Send quiz to review'
       from: [draft]
-      to: needs_review
-    finished:
+      to: on_review
+    complete:
       label: 'Cancel order'
-      from: [needs_review, draft]
+      from: [on_review, draft]
       to: completed

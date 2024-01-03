@@ -30,9 +30,11 @@ class MultipleChoiceQuestion extends Question {
         $options[$answer->id()] = $answer->getAnswer();
       }
       return [
-        '#type' => 'checkboxes',
-        '#title' => $this->t('Select an answer'),
-        '#options' => $options,
+        'multiple_choice_answer' => [
+          '#type' => 'checkboxes',
+          '#title' => $this->t('Select an answer'),
+          '#options' => $options,
+        ]
       ];
     }
 
@@ -42,8 +44,10 @@ class MultipleChoiceQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function submitAnswer(array &$form, FormStateInterface $form_state): mixed {
-    return $form_state->getValue('answer');
+  public function getResponse(array &$form, FormStateInterface $form_state): array {
+    return [
+      'response' => $form_state->getValue('multiple_choice_answer')
+    ];
   }
 
   /**

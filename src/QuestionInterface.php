@@ -28,10 +28,10 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    *
-   * @return mixed
+   * @return array
    *   The question answer.
    */
-  public function submitAnswer(array &$form, FormStateInterface $form_state): mixed;
+  public function getResponse(array &$form, FormStateInterface $form_state): array;
 
   /**
    * Get question text.

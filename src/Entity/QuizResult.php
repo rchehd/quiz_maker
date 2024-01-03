@@ -2,8 +2,6 @@
 
 namespace Drupal\quiz_maker\Entity;
 
-use Drupal\commerce_order\Entity\OrderInterface;
-use Drupal\commerce_order\Entity\OrderType;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -12,6 +10,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
+use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\quiz_maker\QuizResultInterface;
 use Drupal\user\EntityOwnerTrait;
@@ -157,7 +156,6 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
       ->setDisplayConfigurable('view', TRUE)
       ->setSetting('workflow_callback', ['\Drupal\quiz_maker\Entity\QuizResult', 'getWorkflowId']);
 
-
     $fields['score'] = BaseFieldDefinition::create('integer')
       ->setLabel('Score')
       ->setDisplayOptions('form', [
@@ -212,7 +210,6 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
         'weight' => 0,
       ])
       ->setDisplayConfigurable('form', TRUE);
-
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
@@ -271,31 +268,81 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
   }
 
   /**
-   * {@inheritDoc}
-   */
-  public function getAnswers(): array|bool {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getQuestionAnswer(QuestionInterface $question): QuestionAnswerInterface|bool {
-    return FALSE;
-  }
-
-  /**
    * Gets the workflow ID for the state field.
    *
-   * @param \Drupal\quiz_maker\QuizResultInterface $order
+   * @param \Drupal\quiz_maker\QuizResultInterface $quiz_result
    *   The order.
    *
    * @return string
    *   The workflow ID.
    */
-  public static function getWorkflowId(QuizResultInterface $order) {
-    $workflow = QuizResultType::load($order->bundle())->getWorkflowId();
-    return $workflow;
+  public static function getWorkflowId(QuizResultInterface $quiz_result) {
+    return QuizResultType::load($quiz_result->bundle())->getWorkflowId();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponses(): ?array {
+    if ($this->hasField('field_question_response')) {
+      return $this->get('field_question_response')->referencedEntities();
+    }
+    return NULL;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponse(QuestionInterface $question): ?QuestionResponseInterface {
+    if ($this->hasField('field_question_response')) {
+      $responses = $this->get('field_question_response')->referencedEntities();
+      foreach ($responses as $response) {
+        if ($response->get('question_id')->target_id === $question->id()) {
+          return $response;
+        }
+      }
+    }
+    return NULL;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function addResponse(QuestionResponseInterface $response): void {
+    $responses = $this->get('field_question_response')->referencedEntities();
+    if ($responses) {
+      $response_ids = array_map(function ($responses) {
+        return $responses->id();
+      }, $responses);
+    }
+    else {
+      $response_ids = [];
+    }
+    $response_ids[] = $response->id();
+    $this->set('field_question_response', $response_ids);
+    $this->save();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getActiveQuestion(): ?QuestionInterface {
+    $responses = $this->get('field_question_response')->referencedEntities();
+    $questions = $this->getQuiz()->getQuestions();
+    $question_ids = array_map(function ($questions) {
+      return $questions->id();
+    }, $questions);
+    if (!$responses) {
+      return reset($questions);
+    }
+    else {
+      foreach ($responses as $response) {
+        if (!in_array($response->getQuestion()->id(), $question_ids)) {
+          return $response->getQuestion();
+        }
+      }
+      return NULL;
+    }
   }
 
 }

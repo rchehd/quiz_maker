@@ -71,20 +71,39 @@ interface QuizResultInterface extends ContentEntityInterface, EntityOwnerInterfa
   /**
    * Get all answers.
    *
-   * @return \Drupal\quiz_maker\QuestionAnswerInterface[]|bool
+   * @return ?\Drupal\quiz_maker\QuestionResponseInterface[]
    *   Array of answers of FALSE.
    */
-  public function getAnswers(): array|bool;
+  public function getResponses(): ?array;
 
   /**
-   * Get question answer.
+   * Get question response by question.
    *
    * @param \Drupal\quiz_maker\QuestionInterface $question
    *   The question.
    *
-   * @return \Drupal\quiz_maker\QuestionAnswerInterface|bool
+   * @return ?\Drupal\quiz_maker\QuestionResponseInterface
    *   The answer or FALSE.
    */
-  public function getQuestionAnswer(QuestionInterface $question): QuestionAnswerInterface|bool;
+  public function getResponse(QuestionInterface $question): ?QuestionResponseInterface;
+
+  /**
+   * Add question response to quiz result.
+   *
+   * @param \Drupal\quiz_maker\QuestionResponseInterface $response
+   *   The question response.
+   */
+  public function addResponse(QuestionResponseInterface $response): void;
+
+  /**
+   * Get active question that need to be answered.
+   *
+   * User can answer only several question, and then continue taking quiz from
+   * the last question.
+   *
+   * @return ?\Drupal\quiz_maker\QuestionInterface
+   *   The question.
+   */
+  public function getActiveQuestion(): ?QuestionInterface;
 
 }
