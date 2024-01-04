@@ -15,4 +15,12 @@ use Drupal\quiz_maker\Entity\QuestionResponse;
  */
 class BooleanResponse extends QuestionResponse {
 
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponseData(): mixed {
+    $data = $this->get('response');
+    return $data;
+  }
+
 }

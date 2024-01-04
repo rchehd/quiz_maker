@@ -231,4 +231,25 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     return FALSE;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function allowSkipping(): bool {
+    return (bool) $this->get('field_allow_skipping')->getString();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function allowBackwardNavigation(): bool {
+    return (bool) $this->get('field_backwards_navigation')->getString();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function allowChangeAnswer(): bool {
+    return (bool) $this->get('field_allow_changing_answers')->getString();
+  }
+
 }

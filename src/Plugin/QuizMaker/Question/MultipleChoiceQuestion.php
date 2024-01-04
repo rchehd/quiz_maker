@@ -5,6 +5,7 @@ namespace Drupal\quiz_maker\Plugin\QuizMaker\Question;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
+use Drupal\quiz_maker\QuestionResponseInterface;
 
 /**
  * Plugin implementation of the question.
@@ -22,7 +23,7 @@ class MultipleChoiceQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(): array {
+  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL): array {
     $answers = $this->get('field_answers')->referencedEntities();
     if ($answers) {
       $options = [];
@@ -34,11 +35,21 @@ class MultipleChoiceQuestion extends Question {
           '#type' => 'checkboxes',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
+          '#default_value' => $questionResponse?->getResponseData(),
         ]
       ];
     }
 
     return [];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
+    if (!$form_state->getValue('multiple_choice_answer')) {
+      $form_state->setErrorByName('multiple_choice_answer', $this->t('Choose the answer, please.'));
+    }
   }
 
   /**

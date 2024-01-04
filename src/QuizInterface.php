@@ -75,4 +75,28 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
    */
   public function requiresManualEvaluation(): bool;
 
+  /**
+   * Check if quiz allows to skip questions.
+   *
+   * @return bool
+   *  TRUE if allowed, otherwise FALSE.
+   */
+  public function allowSkipping(): bool;
+
+  /**
+   * Check if quiz allows to backward navigation.
+   *
+   * @return bool
+   *  TRUE if allowed, otherwise FALSE.
+   */
+  public function allowBackwardNavigation(): bool;
+
+  /**
+   * Check if quiz allows to change answer.
+   *
+   * @return bool
+   *  TRUE if allowed, otherwise FALSE.
+   */
+  public function allowChangeAnswer(): bool;
+
 }

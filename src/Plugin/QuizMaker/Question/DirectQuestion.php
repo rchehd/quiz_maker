@@ -5,6 +5,7 @@ namespace Drupal\quiz_maker\Plugin\QuizMaker\Question;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
+use Drupal\quiz_maker\QuestionResponseInterface;
 
 /**
  * Plugin implementation of the question.
@@ -22,13 +23,22 @@ class DirectQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(): array {
+  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL): array {
     return [
       'direct_answer' => [
         '#type' => 'textarea',
         '#title' => $this->t('Write an answer'),
       ]
     ];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
+    if (!$form_state->getValue('direct_answer')) {
+      $form_state->setErrorByName('direct_answer', $this->t('Choose the answer, please.'));
+    }
   }
 
   /**

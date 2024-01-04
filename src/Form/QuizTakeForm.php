@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\QuestionInterface;
+use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\quiz_maker\QuizResultInterface;
 use Drupal\quiz_maker\Service\QuizManager;
@@ -27,7 +28,7 @@ class QuizTakeForm extends FormBase {
    *
    * @var int
    */
-  protected int $questionNumber = 0;
+  protected int $questionNumber;
 
   /**
    * Current request.
@@ -53,6 +54,7 @@ class QuizTakeForm extends FormBase {
     protected AccountInterface $currentUser
   ) {
     $this->currentRequest = $requestStack->getCurrentRequest();
+    $this->questionNumber = -1;
   }
 
   /**
@@ -91,17 +93,8 @@ class QuizTakeForm extends FormBase {
     if ($quiz) {
       $questions = $quiz->getQuestions();
 
-      $form['question']['number'] = [
-        '#type' => 'html_tag',
-        '#tag' => 'span',
-        '#value' => $this->t('Question @current/@all', [
-          '@current' => $this->questionNumber + 1,
-          '@all' => count($questions)
-        ])
-      ];
-
       /** @var \Drupal\quiz_maker\QuestionInterface $current_question */
-      if ($this->questionNumber === 0) {
+      if ($this->questionNumber == -1) {
         // When user open form - it will get the last active question if quiz
         // wasn't finished before.
         $active_question = $this->quizResult->getActiveQuestion();
@@ -111,13 +104,24 @@ class QuizTakeForm extends FormBase {
       else {
         $current_question = $questions[$this->questionNumber];
       }
+
+      $form['question']['number'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'span',
+        '#value' => $this->t('Question @current/@all', [
+          '@current' => $this->questionNumber + 1,
+          '@all' => count($questions)
+        ])
+      ];
+
       $form['question']['title'] = [
         '#type' => 'html_tag',
         '#tag' => 'h3',
         '#value' => $current_question->getQuestion(),
       ];
 
-      $form['question']['answer_form'] = $current_question->getAnsweringForm();
+      $current_question_response = $this->quizResult->getResponse($current_question);
+      $form['question']['answer_form'] = $current_question->getAnsweringForm($current_question_response);
 
       $form['question']['navigation']['actions'] = [
         '#type' => 'actions',
@@ -140,7 +144,7 @@ class QuizTakeForm extends FormBase {
         ];
       }
 
-      if ($this->questionNumber > 0) {
+      if ($this->questionNumber > 0 && $quiz->allowBackwardNavigation()) {
         $form['question']['navigation']['actions']['previous'] = [
           '#type' => 'submit',
           '#value' => $this->t('Previous'),
@@ -154,6 +158,7 @@ class QuizTakeForm extends FormBase {
               'message' => $this->t('Go to the next question...'),
             ],
           ],
+          '#limit_validation_errors' => [],
         ];
       }
 
@@ -194,6 +199,19 @@ class QuizTakeForm extends FormBase {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    /** @var \Drupal\quiz_maker\QuestionInterface $current_question */
+    $current_question = $this->getCurrentQuestion();
+    $quiz = $this->quizResult->getQuiz();
+    if (!$quiz->allowSkipping()) {
+      $current_question->validateAnsweringForm($form, $form_state);
+    }
+
+  }
+
+  /**
    * Get update question form ans save answer.
    *
    * @param array $form
@@ -211,12 +229,6 @@ class QuizTakeForm extends FormBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function updateQuestionForm(array &$form, FormStateInterface $form_state, Request $request): mixed {
-    $current_question = $this->getCurrentQuestion();
-    $response_data = $current_question->getResponse($form, $form_state);
-    if ($response_data) {
-      $this->quizManager->updateQuizResult($this->quizResult, $current_question, $response_data);
-    }
-
     return $form['question'];
   }
 
@@ -229,6 +241,11 @@ class QuizTakeForm extends FormBase {
    *   The form state.
    */
   public function getNextQuestion(array &$form, FormStateInterface $form_state): void {
+    $current_question = $this->getCurrentQuestion();
+    $response_data = $current_question?->getResponse($form, $form_state);
+    if (isset($response_data['response'])) {
+      $this->quizManager->updateQuizResult($this->quizResult, $current_question, $response_data);
+    }
     $this->questionNumber++;
     $form_state->setRebuild(TRUE);
   }
@@ -256,7 +273,7 @@ class QuizTakeForm extends FormBase {
     $quiz = $this->currentRequest->get('quiz');
     if ($quiz instanceof QuizInterface) {
       $question = $quiz->getQuestions();
-      return $question[$this->questionNumber - 1];
+      return $question[$this->questionNumber];
     }
     return NULL;
   }

@@ -5,6 +5,7 @@ namespace Drupal\quiz_maker\Plugin\QuizMaker\Question;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
+use Drupal\quiz_maker\QuestionResponseInterface;
 
 /**
  * Plugin implementation of the question.
@@ -22,7 +23,7 @@ class BooleanQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(): array {
+  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL): array {
     return [
       'boolean_answer' => [
         '#type' => 'radios',
@@ -33,6 +34,15 @@ class BooleanQuestion extends Question {
         ],
       ]
     ];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
+    if (!$form_state->getValue('boolean_answer')) {
+      $form_state->setErrorByName('boolean_answer', $this->t('Choose the answer, please.'));
+    }
   }
 
   /**

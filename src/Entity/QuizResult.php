@@ -222,7 +222,7 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
    * {@inheritDoc}
    */
   public function getQuiz(): QuizInterface {
-    return $this->get('quiz_id')->entity;
+    return $this->get('field_quiz')->entity;
   }
 
   /**
@@ -329,16 +329,16 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
   public function getActiveQuestion(): ?QuestionInterface {
     $responses = $this->get('field_question_response')->referencedEntities();
     $questions = $this->getQuiz()->getQuestions();
-    $question_ids = array_map(function ($questions) {
-      return $questions->id();
-    }, $questions);
+    $answered_question_ids = array_map(function ($responses) {
+      return $responses->getQuestion()->id();
+    }, $responses);
     if (!$responses) {
       return reset($questions);
     }
     else {
-      foreach ($responses as $response) {
-        if (!in_array($response->getQuestion()->id(), $question_ids)) {
-          return $response->getQuestion();
+      foreach ($questions as $question) {
+        if (!in_array($question->id(), $answered_question_ids)) {
+          return $question;
         }
       }
       return NULL;

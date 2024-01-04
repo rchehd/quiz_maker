@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
 use Drupal\quiz_maker\Plugin\QuizMaker\Answer\MatchingAnswer;
+use Drupal\quiz_maker\QuestionResponseInterface;
 
 /**
  * Plugin implementation of the question.
@@ -23,7 +24,7 @@ class MatchingQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(): array {
+  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL): array {
     $answers = $this->get('field_answers')->referencedEntities();
     if ($answers) {
       $answer_form = [
@@ -51,6 +52,13 @@ class MatchingQuestion extends Question {
     }
 
     return [];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
+    // No need to validate, because answer will be gotten from default matching.
   }
 
   /**

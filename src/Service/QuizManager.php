@@ -4,6 +4,7 @@ namespace Drupal\quiz_maker\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\QuizResultType;
 use Drupal\quiz_maker\Entity\QuizType;
 use Drupal\quiz_maker\QuestionInterface;
@@ -16,6 +17,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Quiz manager service.
  */
 final class QuizManager {
+
+  use StringTranslationTrait;
 
   /**
    * Constructs a QuizManager object.
@@ -48,9 +51,10 @@ final class QuizManager {
     }
     $quiz_result_type = $quiz->get('field_result_type')->target_id;
     $quiz_result = $this->entityTypeManager->getStorage('quiz_result')->create([
-      'type' => $quiz_result_type,
+      'bundle' => $quiz_result_type,
+      'label' => $this->t('Result of "@quiz_label"', ['@quiz_label' => $quiz->label()]),
       'state' => QuizResultType::DRAFT,
-      'quiz_id' => $quiz->id(),
+      'field_quiz' => $quiz->id(),
       'uid' => $user->id(),
     ]);
 
@@ -80,9 +84,9 @@ final class QuizManager {
   public function getDraftResults(AccountInterface $user, QuizInterface $quiz): array {
     $quiz_result_type = $quiz->get('field_result_type')->target_id;
     return $this->entityTypeManager->getStorage('quiz_result')->loadByProperties([
-      'type' => $quiz_result_type,
+      'bundle' => $quiz_result_type,
       'state' => QuizResultType::DRAFT,
-      'quiz_id' => $quiz->id(),
+      'field_quiz' => $quiz->id(),
       'uid' => $user->id(),
     ]);
   }
@@ -102,15 +106,26 @@ final class QuizManager {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function updateQuizResult(QuizResultInterface $result, QuestionInterface $question, array $response_data): void {
-    /** @var \Drupal\quiz_maker\QuestionResponseInterface $question_response */
-    $question_response = $this->entityTypeManager->getStorage('question_response')->create([
-      'type' => $this->getQuestionResponseType($question),
-      'quiz_id' => $result->getQuiz()->id(),
-      'question_id' => $question->id(),
-    ]);
-    $question_response->setResponseData($response_data);
-    $question_response->save();
-    $result->addResponse($question_response);
+    // Get question response from result, if it doesn't exist - create new response,
+    // otherwise - update current response.
+    $response = $result->getResponse($question);
+    if (!$response) {
+      /** @var \Drupal\quiz_maker\QuestionResponseInterface $question_response */
+      $question_response = $this->entityTypeManager->getStorage('question_response')->create([
+        'bundle' => $this->getQuestionResponseType($question),
+        'label' => $this->t('Response of "@question_label"', ['@question_label' => $question->label()]),
+        'quiz_id' => $result->getQuiz()->id(),
+        'question_id' => $question->id(),
+      ]);
+      $question_response->setResponseData($response_data);
+      $question_response->save();
+      $result->addResponse($question_response);
+    }
+    else {
+      $response->setResponseData($response_data);
+      $response->save();
+    }
+
   }
 
   /**
