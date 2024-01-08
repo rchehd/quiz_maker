@@ -6,9 +6,10 @@ dependencies:
     - field.field.quiz_result.standard.field_quiz
     - quiz_maker.quiz_result_type.standard
   module:
+    - quiz_maker
     - text
 _core:
-  default_config_hash: wsE7Pp_pw3U8RSs6rlBu4f1rq9wjk1QArFP-3LHQaXY
+  default_config_hash: ZnYmYOaq1O3HQ_rVsUXOjL94wJCA2GyH14HnZuaUzV8
 id: quiz_result.standard.default
 targetEntityType: quiz_result
 bundle: standard
@@ -50,12 +51,12 @@ content:
     weight: 1
     region: content
   field_question_response:
-    type: entity_reference_label
+    type: question_response_formatter
     label: above
     settings:
-      link: true
+      foo: bar
     third_party_settings: {  }
-    weight: 6
+    weight: 7
     region: content
   finished:
     type: timestamp
@@ -83,6 +84,16 @@ content:
       link_to_entity: false
     third_party_settings: {  }
     weight: 0
+    region: content
+  passed:
+    type: boolean
+    label: hidden
+    settings:
+      format: yes-no
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 6
     region: content
   score:
     type: number_integer

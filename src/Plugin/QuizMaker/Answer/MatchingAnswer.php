@@ -4,6 +4,7 @@ namespace Drupal\quiz_maker\Plugin\QuizMaker\Answer;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\quiz_maker\Entity\QuestionAnswer;
+use Drupal\quiz_maker\QuestionResponseInterface;
 
 /**
  * Plugin implementation of the question.
@@ -35,5 +36,14 @@ final class MatchingAnswer extends QuestionAnswer {
   public function getMatchingAnswer(): string {
     return $this->get('field_matching_answer')->value;
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponseStatus(QuestionResponseInterface $response): string {
+    return self::NEUTRAL;
+  }
+
+
 
 }

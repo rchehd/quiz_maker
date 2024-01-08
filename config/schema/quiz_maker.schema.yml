@@ -1,0 +1,7 @@
+field.formatter.settings.question_response:
+  type: mapping
+  label: Question Response formatter formatter settings
+  mapping:
+    foo:
+      type: string
+      label: Foo

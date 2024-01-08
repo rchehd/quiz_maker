@@ -37,3 +37,66 @@
   width: 100%;
   text-align: left;
 }
+
+.in-correct,
+.correct {
+  position: relative;
+}
+
+.in-correct::after {
+  content: '';
+  background-image: url("../icons/cross-mark.svg");
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-size: contain;
+  background-position: right;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.correct::after {
+  content: '';
+  background-image: url("../icons/check-mark.svg");
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-size: contain;
+  background-position: right;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.question-score {
+  font-weight: bold;
+}
+
+.question-result {
+  border-bottom: dashed;
+  padding-bottom: 30px;
+  border-width: thin;
+}
+
+.response-list {
+  margin-top: 30px;
+}
+
+.response-list .field__label {
+  font-size: xx-large;
+  border-bottom: dashed;
+  padding-bottom: 30px;
+  border-width: thin;
+}
+
+
+.result-info-table,
+.result-info-table th,
+.result-info-table td {
+  border: thin dashed;
+  border-collapse: collapse;
+  padding: 5px;
+}

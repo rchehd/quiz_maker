@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\quiz_maker\QuestionAnswerInterface;
+use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -65,6 +66,21 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
+
+  /**
+   * "Correct" answer status.
+   */
+  const CORRECT = 'correct';
+
+  /**
+   * "In-correct" answer status.
+   */
+  const IN_CORRECT = 'in-correct';
+
+  /**
+   * "Neutral" answer status.
+   */
+  const NEUTRAL = 'neutral';
 
   /**
    * {@inheritdoc}
