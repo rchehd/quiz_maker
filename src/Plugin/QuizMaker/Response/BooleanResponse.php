@@ -19,7 +19,7 @@ class BooleanResponse extends QuestionResponse {
    * {@inheritDoc}
    */
   public function getResponseData(): mixed {
-    $data = $this->get('response');
+    $data = $this->get('response')->response;
     return $data;
   }
 

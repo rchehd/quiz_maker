@@ -24,17 +24,24 @@ class BooleanQuestion extends Question {
    * {@inheritDoc}
    */
   public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
-    return [
-      'boolean_answer' => [
-        '#type' => 'radios',
-        '#title' => $this->t('Select an answer'),
-        '#options' => [
-          'true' => $this->t('True'),
-          'false' => $this->t('False'),
-        ],
-        '#disabled' => !$allow_change_response
-      ]
-    ];
+    $answers = $this->get('field_answers')->referencedEntities();
+    if ($answers) {
+      $options = [];
+      foreach ($answers as $answer) {
+        $options[$answer->id()] = $answer->getAnswer();
+      }
+      return [
+        'boolean_answer' => [
+          '#type' => 'radios',
+          '#title' => $this->t('Select an answer'),
+          '#options' => $options,
+          '#default_value' => $questionResponse?->getResponseData(),
+          '#disabled' => !$allow_change_response
+        ]
+      ];
+    }
+
+    return [];
   }
 
   /**
@@ -59,7 +66,7 @@ class BooleanQuestion extends Question {
    * {@inheritDoc}
    */
   public function hasReferencedAnswers(): bool {
-    return FALSE;
+    return TRUE;
   }
 
   /**
@@ -68,6 +75,37 @@ class BooleanQuestion extends Question {
   public function isResponseCorrect(array $response_data): bool {
     $answer = $response_data['response'];
     return $answer === 'true';
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getDefaultAnswersData(): array {
+    return [
+      [
+        'label' => $this->t('True'),
+        'answer' => $this->t('True'),
+        'is_correct' => $this->isBooleanState(TRUE),
+      ],
+      [
+        'label' => $this->t('False'),
+        'answer' => $this->t('False'),
+        'is_correct' => $this->isBooleanState(FALSE),
+      ]
+    ];
+  }
+
+  /**
+   * Get answer state.
+   *
+   * @param bool $state
+   *   The state: TRUE or FALSE.
+   *
+   * @return bool
+   *   TRUE if it is current state, otherwise FALSE.
+   */
+  private function isBooleanState(bool $state): bool {
+    return $state === (bool) $this->get('field_boolean_state')->getString();
   }
 
 }

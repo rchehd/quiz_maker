@@ -21,6 +21,13 @@ final class BooleanAnswer extends QuestionAnswer {
    * {@inheritDoc}
    */
   public function getResponseStatus(QuestionResponseInterface $response): string {
+    $response_data = $response->getResponseData();
+    if ($this->id() === $response_data && $this->isCorrect()) {
+      return self::CORRECT;
+    }
+    elseif ($this->id() === $response_data && !$this->isCorrect()) {
+      return self::IN_CORRECT;
+    }
     return self::NEUTRAL;
   }
 

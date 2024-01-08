@@ -238,4 +238,32 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
     return $this->get('field_max_score')->value;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function getDefaultAnswersData(): array {
+    return [];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function addAnswer(QuestionAnswerInterface $answer): void {
+    $answers = $this->getAnswers();
+    if ($answers) {
+      $answer_ids = array_map(function($answer) {
+        return $answer->id();
+      }, $answers);
+    }
+    else {
+      $answer_ids = [];
+    }
+
+    if (!in_array($answer->id(), $answer_ids)) {
+      $answer_ids[] = $answer->id();
+      $this->set('field_answers', $answer_ids);
+    }
+
+  }
+
 }

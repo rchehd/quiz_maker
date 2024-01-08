@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\quiz_maker\Entity\QuestionResponse;
+use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
 
@@ -72,7 +73,7 @@ final class QuestionResponseFormatter extends FormatterBase {
   }
 
   protected function getQuestionResult(QuestionInterface $question, QuestionResponseInterface $response): array {
-    $answers = $question->getAnswers();
+
     $result_view = [
       '#type' => 'container',
       '#attributes' => [
@@ -93,18 +94,22 @@ final class QuestionResponseFormatter extends FormatterBase {
       ]
     ];
 
-
+    $answers = $question->getAnswers();
     foreach ($answers as $answer) {
-      /** @var \Drupal\quiz_maker\QuestionAnswerInterface $answer */
-      $result_view['answers'][$answer->id()] = [
-        '#type' => 'html_tag',
-        '#tag' => 'li',
-        '#value' => $answer->getAnswer(),
-        '#attributes' => [
-          'class' => [$answer->getResponseStatus($response)]
-        ]
-      ];
+      if ($answer instanceof QuestionAnswerInterface) {
+        $result_view['answers'][$answer->id()] = [
+          '#type' => 'html_tag',
+          '#tag' => 'li',
+          '#value' => $answer->getAnswer(),
+          '#attributes' => [
+            'class' => [$answer->getResponseStatus($response)]
+          ]
+        ];
+      }
     }
+
+
+
 
     $result_view['score'] = [
       '#type' => 'html_tag',

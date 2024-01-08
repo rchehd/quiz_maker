@@ -76,6 +76,14 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
   public function getAnswers(): ?array;
 
   /**
+   * Add answer to question.
+   *
+   * @param \Drupal\quiz_maker\QuestionAnswerInterface $answer
+   *   The answer.
+   */
+  public function addAnswer(QuestionAnswerInterface $answer):void;
+
+  /**
    * Get question correct answers.
    *
    * @return \Drupal\quiz_maker\QuestionResponseInterface[]
@@ -101,5 +109,14 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
    *   The score.
    */
   public function getMaxScore(): int;
+
+  /**
+   * Get default answers.
+   *
+   * @return array
+   *   Return array if arrays with default answer data, or empty array if there
+   *   aren't default answers.
+   */
+  public function getDefaultAnswersData(): array;
 
 }

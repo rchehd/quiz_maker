@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.question.field_boolean_state
+    - quiz_maker.question_type.boolean_question
+id: question.boolean_question.field_boolean_state
+field_name: field_boolean_state
+entity_type: question
+bundle: boolean_question
+label: 'Boolean state'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: 'TRUE'
+  off_label: 'FALSE'
+field_type: boolean
