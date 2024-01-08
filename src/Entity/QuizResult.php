@@ -368,7 +368,9 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
     foreach ($responses as $response) {
       $score = $score + $response->getScore();
     }
-    $this->set('score', round(($score / $this->getQuiz()->getMaxScore()) * 100));
+    $result_score = round(($score / $this->getQuiz()->getMaxScore()) * 100);
+    $this->set('score', $result_score);
+    $this->set('passed', $result_score >= $this->getPassRate() ? 1 : 0);
   }
 
   /**

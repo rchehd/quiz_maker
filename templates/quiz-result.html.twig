@@ -50,10 +50,17 @@
         <td>
           {{ content.attempt }}
         </td>
+        <td>
+          {{ content.passed }}
+        </td>
       </tr>
 
     </table>
-{#    {{ dump(content) }}#}
-    {{ content.field_question_response }}
+    <div class="response-list">
+      {{ content.field_question_response }}
+    </div>
+    <div class="take-quiz-link">
+      {{ take_quiz }}
+    </div>
   {% endif %}
 </article>

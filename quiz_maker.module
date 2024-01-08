@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
 use Drupal\user\UserInterface;
 
 /**
@@ -335,15 +336,18 @@ function template_preprocess_question_response(array &$variables): void {
   }
 }
 
+/**
+ * Implement hook_preprocess_HOOK().
+ */
 function quiz_maker_preprocess_quiz_result(array &$variables) {
   /** @var \Drupal\quiz_maker\QuizResultInterface $quiz_result */
   $quiz_result = $variables["elements"]["#quiz_result"];
-  $score = $quiz_result->getScore();
-  $quiz = $quiz_result->getQuiz();
-  $pass_rate = $quiz->getPassRate();
-  $variables["content"]['pass_rate'] = [
-    '#type' => 'html_tag',
-    '#tag' => 'span',
-    '#value' => $score >= $pass_rate ? "Yes" : "No",
+  $variables['take_quiz'] = [
+    '#type' => 'link',
+    '#title' => t('Take again'),
+    '#url' => Url::fromRoute('quiz.take', ['quiz' => $quiz_result->getQuiz()->id()]),
+    '#attributes' => [
+      'class' => ['button', 'button--primary'],
+    ]
   ];
 }

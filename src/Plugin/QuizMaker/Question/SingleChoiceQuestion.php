@@ -71,7 +71,7 @@ class SingleChoiceQuestion extends Question {
       return $correct_answer->id();
     }, $correct_answers);
     $answers_ids = $response_data['response'];
-    return $correct_answers_ids === $answers_ids;
+    return reset($correct_answers_ids) === $answers_ids;
   }
 
   /**
