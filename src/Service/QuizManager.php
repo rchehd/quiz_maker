@@ -2,6 +2,7 @@
 
 namespace Drupal\quiz_maker\Service;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -26,6 +27,7 @@ final class QuizManager {
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected RequestStack $requestStack,
+    protected TimeInterface $time
   ) {}
 
   /**
@@ -56,6 +58,7 @@ final class QuizManager {
       'state' => QuizResultType::DRAFT,
       'field_quiz' => $quiz->id(),
       'uid' => $user->id(),
+      'attempt' => $this->getQuizAttempts($user, $quiz) + 1,
     ]);
 
     $quiz_result->save();
@@ -110,19 +113,23 @@ final class QuizManager {
     // otherwise - update current response.
     $response = $result->getResponse($question);
     if (!$response) {
-      /** @var \Drupal\quiz_maker\QuestionResponseInterface $question_response */
-      $question_response = $this->entityTypeManager->getStorage('question_response')->create([
+      /** @var \Drupal\quiz_maker\QuestionResponseInterface $response */
+      $response = $this->entityTypeManager->getStorage('question_response')->create([
         'bundle' => $this->getQuestionResponseType($question),
         'label' => $this->t('Response of "@question_label"', ['@question_label' => $question->label()]),
-        'quiz_id' => $result->getQuiz()->id(),
-        'question_id' => $question->id(),
       ]);
-      $question_response->setResponseData($response_data);
-      $question_response->save();
-      $result->addResponse($question_response);
+      $response->setQuiz($result->getQuiz());
+      $response->setQuestion($question);
+      $response->setResponseData($response_data);
+      $response->setCorrect($question->isResponseCorrect($response_data));
+      $response->setScore($question, $question->isResponseCorrect($response_data));
+      $response->save();
+      $result->addResponse($response);
     }
     else {
       $response->setResponseData($response_data);
+      $response->setCorrect($question->isResponseCorrect($response_data));
+      $response->setScore($question, $question->isResponseCorrect($response_data));
       $response->save();
     }
 
@@ -137,7 +144,9 @@ final class QuizManager {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function finishQuiz(QuizResultInterface $result): void {
-    $result->set('state', QuizResultType::COMPLETED);
+    $result->calculateScore();
+    $result->setStatus(QuizResultType::COMPLETED);
+    $result->setFinishedTime($this->time->getCurrentTime());
     $result->save();
   }
 
@@ -156,6 +165,28 @@ final class QuizManager {
       return reset($target_bundles);
     }
     return NULL;
+  }
+
+  /**
+   * Get quiz attempts count.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user.
+   * @param \Drupal\quiz_maker\QuizInterface $quiz
+   *   The quiz.
+   *
+   * @return int
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getQuizAttempts(AccountInterface $user, QuizInterface $quiz): int {
+    $results = $this->entityTypeManager->getStorage('quiz_result')->loadByProperties([
+      'uid' => $user->id(),
+      'field_quiz' => $quiz->id(),
+      'state' => QuizResultType::COMPLETED,
+    ]);
+
+    return count($results);
   }
 
 }

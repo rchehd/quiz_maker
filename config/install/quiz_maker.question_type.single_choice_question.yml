@@ -2,6 +2,6 @@ langcode: en
 status: true
 dependencies: {  }
 _core:
-  default_config_hash: yC-GEZR-cNy3OWXWtlUoXsayVIhUV2Ac2vT5lyQoB90
+  default_config_hash: 0BSFQcD2s-KeR945oXulfK93SJXq13Jg4deoDeh_KGk
 id: single_choice_question
 label: 'Single choice question'

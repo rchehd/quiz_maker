@@ -3,6 +3,8 @@ status: true
 dependencies:
   module:
     - quiz_maker
+_core:
+  default_config_hash: q3TV9iIfjEMr8mprvQn_rL--vr1wDefOX86WsUcAZ54
 id: quiz.field_time_limit
 field_name: field_time_limit
 entity_type: quiz

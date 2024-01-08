@@ -121,7 +121,8 @@ class QuizTakeForm extends FormBase {
       ];
 
       $current_question_response = $this->quizResult->getResponse($current_question);
-      $form['question']['answer_form'] = $current_question->getAnsweringForm($current_question_response);
+      $allow_change_response = $quiz->allowChangeAnswer() || !$this->quizResult->getResponse($current_question);
+      $form['question']['answer_form'] = $current_question->getAnsweringForm($current_question_response, $allow_change_response);
 
       $form['question']['navigation']['actions'] = [
         '#type' => 'actions',
@@ -224,9 +225,6 @@ class QuizTakeForm extends FormBase {
    * @return mixed
    *   The form array.
    *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function updateQuestionForm(array &$form, FormStateInterface $form_state, Request $request): mixed {
     return $form['question'];
@@ -239,6 +237,10 @@ class QuizTakeForm extends FormBase {
    *   The form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function getNextQuestion(array &$form, FormStateInterface $form_state): void {
     $current_question = $this->getCurrentQuestion();

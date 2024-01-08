@@ -6,7 +6,7 @@ dependencies:
     - user
     - views_bulk_operations
 _core:
-  default_config_hash: fB812KZ69zzwqVBhciqbZwpHVP3UfkrKelkeOyxgAzo
+  default_config_hash: IPucBqQoCORTsl7CNkhV691kE2gdKYEMLRLBroLbhN4
 id: questions
 label: Questions
 module: views

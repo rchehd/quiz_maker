@@ -4,6 +4,8 @@ dependencies:
   module:
     - quiz_maker
     - text
+_core:
+  default_config_hash: cmZpVUaSz2FOcma-qRINNNNYdGAQE2nwFWzPgf5t7tQ
 id: question_answer.field_answer
 field_name: field_answer
 entity_type: question_answer

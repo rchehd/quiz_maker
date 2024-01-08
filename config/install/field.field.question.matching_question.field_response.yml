@@ -5,6 +5,8 @@ dependencies:
     - field.storage.question.field_response
     - quiz_maker.question_response_type.matching_choice_response
     - quiz_maker.question_type.matching_question
+_core:
+  default_config_hash: CqXg3byA3ct9RBhE9tRxLF2MxZxehNeIJ77AXdM73gU
 id: question.matching_question.field_response
 field_name: field_response
 entity_type: question

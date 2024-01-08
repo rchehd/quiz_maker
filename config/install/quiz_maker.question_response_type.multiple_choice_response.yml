@@ -1,5 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: 2JeMNMD65E8cUyfJIx-jVfq9xXzHgBiubInihRLbOXo
 id: multiple_choice_response
 label: 'Multiple choice response'

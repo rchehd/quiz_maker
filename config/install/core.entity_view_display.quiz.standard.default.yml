@@ -21,7 +21,7 @@ dependencies:
     - text
     - user
 _core:
-  default_config_hash: 6jsXq1G8d7GIaDr8ZgGBFrn0JftbemskHIvc6fWWHEY
+  default_config_hash: WSTPv3h92KZfciG-ZFDov62mFxYp-pYtQjdrSoxcil4
 id: quiz.standard.default
 targetEntityType: quiz
 bundle: standard

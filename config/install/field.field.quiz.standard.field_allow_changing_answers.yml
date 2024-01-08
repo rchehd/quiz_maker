@@ -5,7 +5,7 @@ dependencies:
     - field.storage.quiz.field_allow_changing_answers
     - quiz_maker.quiz_type.standard
 _core:
-  default_config_hash: R2Utj_PCq2lYR9LjRWR2Y3X6qinRcAQjEJB5NH4N2_0
+  default_config_hash: sVcGsfebGHwmzQBeUORH6I3Ose2MB0iDJ7ST2ORKvnQ
 id: quiz.standard.field_allow_changing_answers
 field_name: field_allow_changing_answers
 entity_type: quiz

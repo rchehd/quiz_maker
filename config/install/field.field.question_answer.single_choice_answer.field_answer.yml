@@ -8,7 +8,7 @@ dependencies:
   module:
     - text
 _core:
-  default_config_hash: COjWdaI1MgdP0GYS9uxmufISiVTSAElrkG6QkY3AqXY
+  default_config_hash: M53v3nHajiYOP6xI08E4XnzrNEStC_XDM8yPPmM5evM
 id: question_answer.single_choice_answer.field_answer
 field_name: field_answer
 entity_type: question_answer

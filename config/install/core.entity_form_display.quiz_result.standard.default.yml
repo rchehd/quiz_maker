@@ -9,12 +9,19 @@ dependencies:
     - inline_entity_form
     - text
 _core:
-  default_config_hash: wGJREJUWEXpcaUr-YUcwt1-C_gd_rZvJmqciwlVAaSw
+  default_config_hash: gt6HOHrIxPYduJKAURnu5J9hKXt9_lo46AwJ7ilPzVk
 id: quiz_result.standard.default
 targetEntityType: quiz_result
 bundle: standard
 mode: default
 content:
+  attempt:
+    type: number
+    region: content
+    weight: 8
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   created:
     type: datetime_timestamp
     weight: 2

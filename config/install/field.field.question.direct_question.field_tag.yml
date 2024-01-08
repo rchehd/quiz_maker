@@ -6,7 +6,7 @@ dependencies:
     - quiz_maker.question_type.direct_question
     - taxonomy.vocabulary.questions_tags
 _core:
-  default_config_hash: lbr3AFHZkHg-w73Trw9dKfKqu-Z-bgqA2ML65Z_-pv8
+  default_config_hash: c8dWfyN-PxCwYHUUR6-QyofRKozm-PkUaKf7aadgE48
 id: question.direct_question.field_tag
 field_name: field_tag
 entity_type: question

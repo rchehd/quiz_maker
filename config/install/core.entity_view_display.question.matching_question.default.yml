@@ -11,7 +11,7 @@ dependencies:
     - text
     - user
 _core:
-  default_config_hash: 335G__Ke_elBEM3Fg2enilzYNL3VtD_AFwoHj7zl6bc
+  default_config_hash: O_urc5z8KXKul84Opo0hsv_1IEJbA8RMrC3HjjNGghU
 id: question.matching_question.default
 targetEntityType: question
 bundle: matching_question

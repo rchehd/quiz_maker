@@ -6,7 +6,7 @@ dependencies:
     - quiz_maker.question_type.boolean_question
     - taxonomy.vocabulary.questions_tags
 _core:
-  default_config_hash: fDNmueqLLhS1ed_HQodGovduul_KZspIhVT3h6lm7-U
+  default_config_hash: f15TKurpNX4HYdb816mra4yEZz3myUKfHediM2uYUMU
 id: question.boolean_question.field_tag
 field_name: field_tag
 entity_type: question

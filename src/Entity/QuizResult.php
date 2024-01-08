@@ -215,6 +215,26 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the quiz result was last edited.'));
 
+    $fields['passed'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Passed'))
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => [
+          'display_label' => FALSE,
+        ],
+        'weight' => 0,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'boolean',
+        'label' => 'above',
+        'weight' => 0,
+        'settings' => [
+          'format' => 'enabled-disabled',
+        ],
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
     return $fields;
   }
 
@@ -243,28 +263,22 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
    * {@inheritDoc}
    */
   public function getPassRate(): ?int {
-    return 0;
+    $quiz = $this->getQuiz();
+    return $quiz->getPassRate();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getScore(): int {
-    return 0;
+    return $this->get('score')->value;
   }
 
   /**
    * {@inheritDoc}
    */
   public function isPassed(): bool {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function setAnswer(QuestionAnswerInterface $answer): void {
-    // TODO: Implement setAnswer() method.
+    return $this->get('passed')->value;
   }
 
   /**
@@ -276,7 +290,7 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
    * @return string
    *   The workflow ID.
    */
-  public static function getWorkflowId(QuizResultInterface $quiz_result) {
+  public static function getWorkflowId(QuizResultInterface $quiz_result): string {
     return QuizResultType::load($quiz_result->bundle())->getWorkflowId();
   }
 
@@ -343,6 +357,32 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
       }
       return NULL;
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function calculateScore(): void {
+    $responses = $this->getResponses();
+    $score = 0;
+    foreach ($responses as $response) {
+      $score = $score + $response->getScore();
+    }
+    $this->set('score', round(($score / $this->getQuiz()->getMaxScore()) * 100));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function setStatus(string $status): void {
+    $this->set('state', $status);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function setFinishedTime(int $timestamp): void {
+    $this->set('finished', $timestamp);
   }
 
 }

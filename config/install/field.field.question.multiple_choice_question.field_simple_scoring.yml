@@ -1,0 +1,23 @@
+uuid: 70c04fa9-d76d-40a9-82fc-399206883f43
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.question.field_simple_scoring
+    - quiz_maker.question_type.multiple_choice_question
+id: question.multiple_choice_question.field_simple_scoring
+field_name: field_simple_scoring
+entity_type: question
+bundle: multiple_choice_question
+label: 'Simple scoring'
+description: 'Turn it on if you want to evaluate the whole question, if not, turn it off and each answer will be evaluated separately.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

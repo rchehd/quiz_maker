@@ -247,4 +247,37 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
     $this->set('response', $data);
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function setCorrect(bool $value): void {
+    $this->set('is_correct', $value);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function setQuiz(QuizInterface $quiz): void {
+    $this->set('quiz_id', $quiz->id());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function setQuestion(QuestionInterface $question): void {
+    $this->set('question_id', $question->id());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function setScore(QuestionInterface $question, bool $value): void {
+    if ($value) {
+      $this->set('score', $question->getMaxScore());
+    }
+    else {
+      $this->set('score', 0);
+    }
+  }
+
 }

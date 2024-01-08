@@ -4,7 +4,7 @@ dependencies:
   module:
     - quiz_maker
 _core:
-  default_config_hash: 3evr7PiOGMij0eh0KhGhlx-mWh8cLf1U_t9iFii79fg
+  default_config_hash: DBrMq8r1--HxUrUXZXgl_CrEGWVFOwQDLXGIvV_gXnI
 id: question_answer_save_action
 label: 'Save question answers'
 type: question_answer

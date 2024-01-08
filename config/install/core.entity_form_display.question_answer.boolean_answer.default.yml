@@ -8,7 +8,7 @@ dependencies:
   module:
     - text
 _core:
-  default_config_hash: r0r1BjmzjfI06sScqp2YoChMf67LmgnFq4cheQ_QgJM
+  default_config_hash: gEcs6Cwvu6U9J_-eU0_D2_hrbXQUN-ABnxHWLLzeGO4
 id: question_answer.boolean_answer.default
 targetEntityType: question_answer
 bundle: boolean_answer

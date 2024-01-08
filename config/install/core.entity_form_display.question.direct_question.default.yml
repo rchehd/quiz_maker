@@ -9,7 +9,7 @@ dependencies:
   module:
     - text
 _core:
-  default_config_hash: tQOfH73FP2u0-rTnImXRAOVgGdHBLmBOfKS6x4BY9M8
+  default_config_hash: H6EMgmn67-cnnrO1UXM-Vuh6iBBebuUAKw6dcWPdnSk
 id: question.direct_question.default
 targetEntityType: question
 bundle: direct_question

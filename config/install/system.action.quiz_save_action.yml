@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - quiz_maker
+_core:
+  default_config_hash: pNVt0ZGaZlnGJVJF7FDaCtzouG_L3Ottxkdo_X8qPdU
+id: quiz_save_action
+label: 'Save quizzes'
+type: quiz
+plugin: 'entity:save_action:quiz'
+configuration: {  }

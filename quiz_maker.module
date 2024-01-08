@@ -334,3 +334,16 @@ function template_preprocess_question_response(array &$variables): void {
     $variables['content'][$key] = $variables['elements'][$key];
   }
 }
+
+function quiz_maker_preprocess_quiz_result(array &$variables) {
+  /** @var \Drupal\quiz_maker\QuizResultInterface $quiz_result */
+  $quiz_result = $variables["elements"]["#quiz_result"];
+  $score = $quiz_result->getScore();
+  $quiz = $quiz_result->getQuiz();
+  $pass_rate = $quiz->getPassRate();
+  $variables["content"]['pass_rate'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'span',
+    '#value' => $score >= $pass_rate ? "Yes" : "No",
+  ];
+}

@@ -5,7 +5,7 @@ dependencies:
     - field.storage.question.field_max_score
     - quiz_maker.question_type.single_choice_question
 _core:
-  default_config_hash: EMgjDhk649mAvlElQs16K45Nrgviroi4GHTiIr8n4BA
+  default_config_hash: 1vvx4vb4zVtur-BKSEQNWfoRkeM8JB4TryIj5q_5JFw
 id: question.single_choice_question.field_max_score
 field_name: field_max_score
 entity_type: question

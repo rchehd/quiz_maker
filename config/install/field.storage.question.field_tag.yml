@@ -4,6 +4,8 @@ dependencies:
   module:
     - quiz_maker
     - taxonomy
+_core:
+  default_config_hash: Y-ezeQYdRbXRvosdy-WzJOQKa9On4vKCncHQiIntu_8
 id: question.field_tag
 field_name: field_tag
 entity_type: question

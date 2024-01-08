@@ -6,7 +6,7 @@ dependencies:
     - quiz_maker.question_answer_type.matching_answer
     - quiz_maker.question_type.matching_question
 _core:
-  default_config_hash: MbiwifIvq64flzP_EfYHJjhGrqRAQHiV4Dx-QCQ4cYA
+  default_config_hash: 9x4lSA31-G3phT6EIbxDb_4w8QaMHVfaE82ZKipxXN0
 id: question.matching_question.field_answers
 field_name: field_answers
 entity_type: question

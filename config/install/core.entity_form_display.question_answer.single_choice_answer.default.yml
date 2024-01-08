@@ -8,7 +8,7 @@ dependencies:
   module:
     - text
 _core:
-  default_config_hash: pNUNPYp1p2hN4HTGApHq0ZVk91_kiRuqKcMaeCxPA9w
+  default_config_hash: YA5ZuCxybkBYf91C81mWKBrPgVxwHRcNkQT7XdkxHwc
 id: question_answer.single_choice_answer.default
 targetEntityType: question_answer
 bundle: single_choice_answer

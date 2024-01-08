@@ -1,5 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: DO4-RD91FAlFzLV_AO8eahA5BI0qFxtx3OmILGsVhzk
 id: boolean_answer
 label: 'Boolean answer'

@@ -1,5 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: 4kpPbts7icNHu24OJkjq27QNjhMcZOfcOYLd8ZPnww4
 id: single_choice_response
 label: 'Single choice response'

@@ -3,6 +3,8 @@ status: true
 dependencies:
   module:
     - quiz_maker
+_core:
+  default_config_hash: lG7iZXgBPGMTbNzb7ONd2TaQlUbL1CjrRk-tHRbCMt8
 id: quiz.field_allow_jumping
 field_name: field_allow_jumping
 entity_type: quiz

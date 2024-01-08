@@ -3,11 +3,9 @@ status: true
 dependencies:
   module:
     - quiz_maker
-_core:
-  default_config_hash: nBqvBq6f6SPyl1Apw_1OplDga_eWpVT6FfEAYM-U0R0
-id: quiz.field_backwards_navigation
-field_name: field_backwards_navigation
-entity_type: quiz
+id: question.field_simple_scoring
+field_name: field_simple_scoring
+entity_type: question
 type: boolean
 settings: {  }
 module: core

@@ -7,7 +7,7 @@ dependencies:
   module:
     - text
 _core:
-  default_config_hash: T7K0_PQKzakwi4Jop-zswjNMPaN-lEPhoIeGDS-15CA
+  default_config_hash: Y1SHWYGiLiigcqoL-_i3JGDckNMstg68vPGJlbzDllg
 id: question_answer.direct_answer.default
 targetEntityType: question_answer
 bundle: direct_answer

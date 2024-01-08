@@ -7,7 +7,9 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
+use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -212,11 +214,28 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
   /**
    * {@inheritDoc}
    */
-  public function getAnswers(): array|bool {
+  public function getAnswers(): ?array {
     if ($this->hasReferencedAnswers()) {
       return $this->get('field_answers')->referencedEntities();
     }
-    return FALSE;
+    return NULL;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getCorrectAnswers(): array {
+    $answers = $this->get('field_answers')->referencedEntities();
+    return array_filter($answers, function($answer) {
+      return $answer->isCorrect();
+    });
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getMaxScore(): int {
+    return $this->get('field_max_score')->value;
   }
 
 }

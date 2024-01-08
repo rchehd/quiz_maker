@@ -59,4 +59,38 @@ interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerI
    */
   public function getResponseData(): mixed;
 
+  /**
+   * Set is_correct value.
+   *
+   * @param bool $value
+   *   The value.
+   */
+  public function setCorrect(bool $value): void;
+
+  /**
+   * Set quiz reference.
+   *
+   * @param \Drupal\quiz_maker\QuizInterface $quiz
+   *   The quiz.
+   */
+  public function setQuiz(QuizInterface $quiz): void;
+
+  /**
+   * Set question reference.
+   *
+   * @param \Drupal\quiz_maker\QuestionInterface $question
+   *   The question.
+   */
+  public function setQuestion(QuestionInterface $question): void;
+
+  /**
+   * Calculate and set score.
+   *
+   * @param \Drupal\quiz_maker\QuestionInterface $question
+   *   The question.
+   * @param bool $value
+   *   TRUE id response is correct, otherwise FALSE.
+   */
+  public function setScore(QuestionInterface $question, bool $value): void;
+
 }

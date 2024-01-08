@@ -5,7 +5,7 @@ dependencies:
     - field.storage.quiz.field_allow_jumping
     - quiz_maker.quiz_type.standard
 _core:
-  default_config_hash: XW1wY8TBeRj3nmdO-CAEicPmUVJPE65TYPZwH6_p27k
+  default_config_hash: Rvq0oa-_-2TnZyamka-M7iMZKpjRJj7wJ3Vd1mNKDqA
 id: quiz.standard.field_allow_jumping
 field_name: field_allow_jumping
 entity_type: quiz

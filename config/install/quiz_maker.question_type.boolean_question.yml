@@ -1,5 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: E79XVOOGDIZLtZx4LwuWXlE28vxWxYcYZ5SJlGvjwrk
 id: boolean_question
 label: 'Boolean question'

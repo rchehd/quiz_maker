@@ -1,5 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: yQ5GP0rW56pVKp766Y2VQ4S9FKdAr8dv_aYlmtWc-WE
 id: matching_question
 label: 'Matching question'

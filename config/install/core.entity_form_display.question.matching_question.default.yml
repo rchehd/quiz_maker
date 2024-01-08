@@ -11,7 +11,7 @@ dependencies:
     - inline_entity_form
     - text
 _core:
-  default_config_hash: 881B2OkUt-3i0sV-o7bGAlzcokcehsuMx8Ln6l7Zqq8
+  default_config_hash: rSiVPyS8-w5fdW0tF4ni2IrtkJCc7S4nH9RaV-QCRWA
 id: question.matching_question.default
 targetEntityType: question
 bundle: matching_question

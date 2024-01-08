@@ -17,11 +17,13 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
    *
    * @param \Drupal\quiz_maker\QuestionResponseInterface|null $questionResponse
    *   Question response. Used for set default value for answering form.
+   * @param bool $allow_change_response
+   *   TRUE if question allow to change response, otherwise FALSE.
    *
    * @return array
    *   Form array.
    */
-  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL): array;
+  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array;
 
   /**
    * Question form validation
@@ -68,11 +70,36 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
   /**
    * Get question's answers if it has.
    *
-   * @return array|bool
-   *   Array of answers if it has, otherwise FALSE.
+   * @return ?array
+   *   Array of answers if it has, otherwise NULL.
    */
-  public function getAnswers(): array|bool;
+  public function getAnswers(): ?array;
 
+  /**
+   * Get question correct answers.
+   *
+   * @return \Drupal\quiz_maker\QuestionResponseInterface[]
+   *   The array of answers.
+   */
+  public function getCorrectAnswers(): array;
 
+  /**
+   * Check if response is correct.
+   *
+   * @param array $response_data
+   *   The response data.
+   *
+   * @return bool
+   *   TRUE if correct, otherwise FALSE.
+   */
+  public function isResponseCorrect(array $response_data): bool;
+
+  /**
+   * Get max score.
+   *
+   * @return int
+   *   The score.
+   */
+  public function getMaxScore(): int;
 
 }

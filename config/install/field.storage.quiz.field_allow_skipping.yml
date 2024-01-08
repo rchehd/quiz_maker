@@ -3,6 +3,8 @@ status: true
 dependencies:
   module:
     - quiz_maker
+_core:
+  default_config_hash: INOMSVKWeuwH5yohAeWk8G3KYKYxnYlUgvcQuPeanOA
 id: quiz.field_allow_skipping
 field_name: field_allow_skipping
 entity_type: quiz

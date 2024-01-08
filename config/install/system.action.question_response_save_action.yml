@@ -3,8 +3,10 @@ status: true
 dependencies:
   module:
     - quiz_maker
+_core:
+  default_config_hash: YqLDMKqM3sw87Oca0-xQgu-ymAqQSG4TnlK5PrR3tIU
 id: question_response_save_action
 label: 'Save question responses'
 type: question_response
-plugin: entity:save_action:question_response
+plugin: 'entity:save_action:question_response'
 configuration: {  }

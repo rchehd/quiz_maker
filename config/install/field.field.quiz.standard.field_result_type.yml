@@ -5,7 +5,7 @@ dependencies:
     - field.storage.quiz.field_result_type
     - quiz_maker.quiz_type.standard
 _core:
-  default_config_hash: WmmGFIvCc-b7RQvQ2UcjJZajavonIq88EFi2ZdAj_dU
+  default_config_hash: 4G73jEdpOmJ2LjTFPgnEaX7EAkKXBhmJ4xEl1F1qxzI
 id: quiz.standard.field_result_type
 field_name: field_result_type
 entity_type: quiz

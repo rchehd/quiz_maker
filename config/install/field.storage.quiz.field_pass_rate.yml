@@ -3,6 +3,8 @@ status: true
 dependencies:
   module:
     - quiz_maker
+_core:
+  default_config_hash: gPKGl_OkMr4-q-GVEjr4XDn3UxYW85K2RI-hv9uLzuI
 id: quiz.field_pass_rate
 field_name: field_pass_rate
 entity_type: quiz

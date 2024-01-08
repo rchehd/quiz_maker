@@ -4,12 +4,13 @@ dependencies:
   config:
     - field.field.question_answer.multiple_choice_answer.field_answer
     - field.field.question_answer.multiple_choice_answer.field_is_correct
+    - field.field.question_answer.multiple_choice_answer.field_score
     - quiz_maker.question_answer_type.multiple_choice_answer
   module:
     - text
     - user
 _core:
-  default_config_hash: Ki8m0UCmoGfk54_UE5Mas4Xr4vgxsepXe2edmfoDH_0
+  default_config_hash: AdRHOHxEGXWliSsdNUqYe72AMGeq0EykLsxTBSJGcJU
 id: question_answer.multiple_choice_answer.default
 targetEntityType: question_answer
 bundle: multiple_choice_answer
@@ -50,6 +51,15 @@ content:
       format_custom_true: ''
     third_party_settings: {  }
     weight: 21
+    region: content
+  field_score:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 23
     region: content
   label:
     type: string

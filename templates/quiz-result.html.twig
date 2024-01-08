@@ -19,6 +19,41 @@
     {{ title_suffix }}
   {% endif %}
   {% if content %}
-    {{- content -}}
+    <table class="result-info-table">
+      <tr>
+        <th>
+          {{ 'Started'|t }}
+        </th>
+        <th>
+          {{ 'Finished'|t }}
+        </th>
+        <th>
+          {{ 'Score'|t }}
+        </th>
+        <th>
+          {{ 'Attempts'|t }}
+        </th>
+        <th>
+          {{ 'Passed'|t }}
+        </th>
+      </tr>
+      <tr>
+        <td>
+          {{ content.created }}
+        </td>
+        <td>
+          {{ content.finished }}
+        </td>
+        <td>
+          {{ content.score }}
+        </td>
+        <td>
+          {{ content.attempt }}
+        </td>
+      </tr>
+
+    </table>
+{#    {{ dump(content) }}#}
+    {{ content.field_question_response }}
   {% endif %}
 </article>

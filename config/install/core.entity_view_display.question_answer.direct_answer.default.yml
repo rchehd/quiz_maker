@@ -8,7 +8,7 @@ dependencies:
     - text
     - user
 _core:
-  default_config_hash: HPm7I1n6V5x6-b3XSIFV9kbdGBI3FerxsOc0HEDyghM
+  default_config_hash: jcg3RcsZFwMr2sus2lQpQYIrHp_dE64OO2KYnUbm338
 id: question_answer.direct_answer.default
 targetEntityType: question_answer
 bundle: direct_answer

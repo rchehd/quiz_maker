@@ -11,7 +11,7 @@ dependencies:
     - text
     - user
 _core:
-  default_config_hash: 5i-XlCIYiieWQ80kZU2Qa46EOZLKKxBc4Xcjaxu34fM
+  default_config_hash: RcalGQeVJfcpSqD4lN0cfhRnBrCLE4HFCODDNzXfEnA
 id: question.single_choice_question.default
 targetEntityType: question
 bundle: single_choice_question

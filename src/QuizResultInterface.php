@@ -61,14 +61,6 @@ interface QuizResultInterface extends ContentEntityInterface, EntityOwnerInterfa
   public function isPassed(): bool;
 
   /**
-   * Set answer.
-   *
-   * @param \Drupal\quiz_maker\QuestionAnswerInterface $answer
-   *   The answer.
-   */
-  public function setAnswer(QuestionAnswerInterface $answer): void;
-
-  /**
    * Get all answers.
    *
    * @return ?\Drupal\quiz_maker\QuestionResponseInterface[]
@@ -105,5 +97,26 @@ interface QuizResultInterface extends ContentEntityInterface, EntityOwnerInterfa
    *   The question.
    */
   public function getActiveQuestion(): ?QuestionInterface;
+
+  /**
+   * Calculate result score.
+   */
+  public function calculateScore(): void;
+
+  /**
+   * Set quiz status.
+   *
+   * @param string $status
+   *   The status.
+   */
+  public function setStatus(string $status): void;
+
+  /**
+   * Set finished time.
+   *
+   * @param int $timestamp
+   *   The timestamp.
+   */
+  public function setFinishedTime(int $timestamp): void;
 
 }

@@ -1,5 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: yO3XvUhJcXiashdAEB83KHjBLuHXhSLF66eGfEbUpVk
 id: direct_response
 label: 'Direct response'

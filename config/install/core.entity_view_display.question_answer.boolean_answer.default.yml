@@ -9,7 +9,7 @@ dependencies:
     - text
     - user
 _core:
-  default_config_hash: B3d6GNuy_CBWN91Yt5wZINe-IMVg11QvgbBja6RVvcE
+  default_config_hash: R9dpnZUj4sBAEql9FUD4H_q7xv1qUe190sCng7EvzxU
 id: question_answer.boolean_answer.default
 targetEntityType: question_answer
 bundle: boolean_answer

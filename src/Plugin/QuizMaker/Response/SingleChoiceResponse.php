@@ -3,6 +3,7 @@
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Response;
 
 use Drupal\quiz_maker\Entity\QuestionResponse;
+use Drupal\quiz_maker\QuestionInterface;
 
 /**
  * Plugin implementation of the question.

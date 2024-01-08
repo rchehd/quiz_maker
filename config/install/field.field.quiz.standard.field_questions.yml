@@ -12,7 +12,7 @@ dependencies:
   module:
     - entity_reference_revisions
 _core:
-  default_config_hash: rDYLFUniY3pcuM4Hj5BiS5aGjyVM5ERGxu4gWHnDR7Q
+  default_config_hash: ECha6lxd7YK6eV94KRv4kb58wo2xdRpoe_JLAA38540
 id: quiz.standard.field_questions
 field_name: field_questions
 entity_type: quiz

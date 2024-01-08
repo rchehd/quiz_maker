@@ -32,3 +32,8 @@
   display: flex;
   align-items: center;
 }
+
+.result-info-table {
+  width: 100%;
+  text-align: left;
+}

@@ -8,7 +8,7 @@ dependencies:
   module:
     - text
 _core:
-  default_config_hash: HkkVjZ5wpWgHimiXbDaJT3dfJ77KB-dq7Q5vg9U5jt8
+  default_config_hash: u5b5JcW29SfrhPYTw1TGt2kDCc0oJHl2YgHkUKDbqn0
 id: question_answer.matching_answer.default
 targetEntityType: question_answer
 bundle: matching_answer

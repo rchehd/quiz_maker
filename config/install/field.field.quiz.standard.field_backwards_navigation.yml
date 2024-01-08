@@ -5,7 +5,7 @@ dependencies:
     - field.storage.quiz.field_backwards_navigation
     - quiz_maker.quiz_type.standard
 _core:
-  default_config_hash: PAWC6nqIqGBt0gvmQudnUyC2RFhEe75oEITzwtQfE84
+  default_config_hash: N1Y2C1C9Tt-XGI4fl9cP8bOMuzI5PlwZear8vPCylOQ
 id: quiz.standard.field_backwards_navigation
 field_name: field_backwards_navigation
 entity_type: quiz

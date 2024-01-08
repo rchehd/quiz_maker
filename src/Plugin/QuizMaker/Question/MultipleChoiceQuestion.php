@@ -23,7 +23,7 @@ class MultipleChoiceQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL): array {
+  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
     $answers = $this->get('field_answers')->referencedEntities();
     if ($answers) {
       $options = [];
@@ -36,6 +36,7 @@ class MultipleChoiceQuestion extends Question {
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
           '#default_value' => $questionResponse?->getResponseData(),
+          '#disabled' => !$allow_change_response
         ]
       ];
     }
@@ -59,6 +60,21 @@ class MultipleChoiceQuestion extends Question {
     return [
       'response' => $form_state->getValue('multiple_choice_answer')
     ];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function isResponseCorrect(array $response_data): bool {
+    $correct_answers = $this->getCorrectAnswers();
+    $correct_answers_ids = array_map(function($correct_answer) {
+      return $correct_answer->id();
+    }, $correct_answers);
+    $answers_ids = array_values($response_data['response']);
+    $answers_ids = array_filter($answers_ids, function($answers_id) {
+      return is_string($answers_id);
+    });
+    return $correct_answers_ids === $answers_ids;
   }
 
   /**

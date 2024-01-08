@@ -252,4 +252,24 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     return (bool) $this->get('field_allow_changing_answers')->getString();
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function getMaxScore(): int {
+    $questions = $this->getQuestions();
+    $max_score = 0;
+    foreach ($questions as $question) {
+      /** @var QuestionInterface $question */
+      $max_score+=$question->getMaxScore();
+    }
+    return $max_score;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getPassRate(): int {
+    return $this->get('field_pass_rate')->value;
+  }
+
 }

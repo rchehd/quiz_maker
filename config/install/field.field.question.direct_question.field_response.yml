@@ -5,6 +5,8 @@ dependencies:
     - field.storage.question.field_response
     - quiz_maker.question_response_type.direct_response
     - quiz_maker.question_type.direct_question
+_core:
+  default_config_hash: tom_e1psu8ZTv3fqL-QVL4y3acH8cn65SinXdXxO7Pk
 id: question.direct_question.field_response
 field_name: field_response
 entity_type: question

@@ -3,6 +3,8 @@ status: true
 dependencies:
   module:
     - quiz_maker
+_core:
+  default_config_hash: bbxIxeg_7N4AvJ-Gevgtx_UZ0xK2N35pzm0p25s8qLo
 id: quiz.field_allow_resume
 field_name: field_allow_resume
 entity_type: quiz

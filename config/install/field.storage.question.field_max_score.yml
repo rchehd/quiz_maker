@@ -3,6 +3,8 @@ status: true
 dependencies:
   module:
     - quiz_maker
+_core:
+  default_config_hash: 0xuXYUSt544ZEJVPZxT_l4OVVMMXrwBNhWKbk9sVuNo
 id: question.field_max_score
 field_name: field_max_score
 entity_type: question

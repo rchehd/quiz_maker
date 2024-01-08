@@ -23,11 +23,12 @@ class DirectQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL): array {
+  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
     return [
       'direct_answer' => [
         '#type' => 'textarea',
         '#title' => $this->t('Write an answer'),
+        '#disabled' => !$allow_change_response
       ]
     ];
   }
@@ -54,6 +55,13 @@ class DirectQuestion extends Question {
    * {@inheritDoc}
    */
   public function hasReferencedAnswers(): bool {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function isResponseCorrect(array $response_data): bool {
     return FALSE;
   }
 

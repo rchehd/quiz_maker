@@ -6,17 +6,26 @@ dependencies:
     - field.field.quiz_result.standard.field_quiz
     - quiz_maker.quiz_result_type.standard
   module:
-    - state_machine
     - text
-    - user
+_core:
+  default_config_hash: wsE7Pp_pw3U8RSs6rlBu4f1rq9wjk1QArFP-3LHQaXY
 id: quiz_result.standard.default
 targetEntityType: quiz_result
 bundle: standard
 mode: default
 content:
+  attempt:
+    type: number_integer
+    label: hidden
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
   created:
     type: timestamp
-    label: above
+    label: hidden
     settings:
       date_format: medium
       custom_date_format: ''
@@ -31,14 +40,14 @@ content:
         granularity: 2
         refresh: 60
     third_party_settings: {  }
-    weight: 20
+    weight: 4
     region: content
   description:
     type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
-    weight: 10
+    weight: 1
     region: content
   field_question_response:
     type: entity_reference_label
@@ -46,19 +55,11 @@ content:
     settings:
       link: true
     third_party_settings: {  }
-    weight: 22
-    region: content
-  field_quiz:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 21
+    weight: 6
     region: content
   finished:
     type: timestamp
-    label: inline
+    label: hidden
     settings:
       date_format: medium
       custom_date_format: ''
@@ -73,7 +74,7 @@ content:
         granularity: 2
         refresh: 60
     third_party_settings: {  }
-    weight: 1
+    weight: 5
     region: content
   label:
     type: string
@@ -81,31 +82,18 @@ content:
     settings:
       link_to_entity: false
     third_party_settings: {  }
-    weight: -5
+    weight: 0
     region: content
   score:
     type: number_integer
-    label: inline
+    label: hidden
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 0
+    weight: 2
     region: content
-  state:
-    type: state_transition_form
-    label: hidden
-    settings:
-      require_confirmation: true
-      use_modal: true
-    third_party_settings: {  }
-    weight: 10
-    region: content
-  uid:
-    type: author
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 15
-    region: content
-hidden: {  }
+hidden:
+  field_quiz: true
+  state: true
+  uid: true

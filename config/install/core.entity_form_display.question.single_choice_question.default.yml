@@ -11,7 +11,7 @@ dependencies:
     - inline_entity_form
     - text
 _core:
-  default_config_hash: ccmxrinPLEYO1kIM2xj5zoqka0jUab2SXyaiMSKGDGg
+  default_config_hash: XnCJW6NSeIiCM36UXaCqIEk56U6MoiDs1xWxvyYBBbI
 id: question.single_choice_question.default
 targetEntityType: question
 bundle: single_choice_question

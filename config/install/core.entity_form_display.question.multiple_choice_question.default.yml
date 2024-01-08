@@ -5,13 +5,14 @@ dependencies:
     - field.field.question.multiple_choice_question.field_answers
     - field.field.question.multiple_choice_question.field_max_score
     - field.field.question.multiple_choice_question.field_response
+    - field.field.question.multiple_choice_question.field_simple_scoring
     - field.field.question.multiple_choice_question.field_tag
     - quiz_maker.question_type.multiple_choice_question
   module:
     - inline_entity_form
     - text
 _core:
-  default_config_hash: 8CG2tDF47M0hA23kFNciqRNALpZSyvEZKuGchEPTwmk
+  default_config_hash: c25-9T2UTEMvlaAT6MlpThhhSbt6gniCOsYOCeVO_c0
 id: question.multiple_choice_question.default
 targetEntityType: question
 bundle: multiple_choice_question
@@ -19,7 +20,7 @@ mode: default
 content:
   field_answers:
     type: inline_entity_form_complex
-    weight: 5
+    weight: 6
     region: content
     settings:
       form_mode: default
@@ -42,19 +43,16 @@ content:
     settings:
       placeholder: ''
     third_party_settings: {  }
-  field_response:
-    type: entity_reference_autocomplete
-    weight: 26
+  field_simple_scoring:
+    type: boolean_checkbox
+    weight: 4
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      display_label: true
     third_party_settings: {  }
   field_tag:
     type: entity_reference_autocomplete
-    weight: 4
+    weight: 5
     region: content
     settings:
       match_operator: CONTAINS
@@ -87,4 +85,5 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
+  field_response: true
   uid: true

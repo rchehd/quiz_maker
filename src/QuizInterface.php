@@ -99,4 +99,20 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
    */
   public function allowChangeAnswer(): bool;
 
+  /**
+   * Get maximum possible score od quiz.
+   *
+   * @return int
+   *   The score.
+   */
+  public function getMaxScore(): int;
+
+  /**
+   * Get pass rate.
+   *
+   * @return int
+   *   The pass rate.
+   */
+  public function getPassRate(): int;
+
 }

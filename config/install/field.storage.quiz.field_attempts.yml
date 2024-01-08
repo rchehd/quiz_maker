@@ -3,6 +3,8 @@ status: true
 dependencies:
   module:
     - quiz_maker
+_core:
+  default_config_hash: kgNI9cu3WSQBMmbIzAmCWdSL002PfBFot44D_q8XXM0
 id: quiz.field_attempts
 field_name: field_attempts
 entity_type: quiz

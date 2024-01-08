@@ -23,7 +23,7 @@ class BooleanQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL): array {
+  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
     return [
       'boolean_answer' => [
         '#type' => 'radios',
@@ -32,6 +32,7 @@ class BooleanQuestion extends Question {
           'true' => $this->t('True'),
           'false' => $this->t('False'),
         ],
+        '#disabled' => !$allow_change_response
       ]
     ];
   }
@@ -59,6 +60,14 @@ class BooleanQuestion extends Question {
    */
   public function hasReferencedAnswers(): bool {
     return FALSE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function isResponseCorrect(array $response_data): bool {
+    $answer = $response_data['response'];
+    return $answer === 'true';
   }
 
 }

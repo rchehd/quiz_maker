@@ -2,6 +2,6 @@ langcode: en
 status: true
 dependencies: {  }
 _core:
-  default_config_hash: IWXRjsNlZi6i6MlVMsDpeuVnotZknrwFusmCq8efhZE
+  default_config_hash: XShfQfv0Y6OR0RjgehmrTV4kw_Cg3_0hp_8jJV32s4Q
 id: multiple_choice_question
 label: 'Multiple choice question'

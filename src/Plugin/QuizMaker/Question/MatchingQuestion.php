@@ -24,7 +24,7 @@ class MatchingQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL): array {
+  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
     $answers = $this->get('field_answers')->referencedEntities();
     if ($answers) {
       $answer_form = [
@@ -45,8 +45,8 @@ class MatchingQuestion extends Question {
           'class' => ['answer-table']
         ]
       ];
-      $answer_form['question_table']['form'] = $this->getMatchingTable($answers, 'getMatchingQuestion', $this->t('Question'));
-      $answer_form['answer_table']['form'] = $this->getMatchingTable($answers, 'getMatchingAnswer', $this->t('Answer'));
+      $answer_form['question_table']['form'] = $this->getMatchingTable($answers, 'getMatchingQuestion', $this->t('Question'), $allow_change_response);
+      $answer_form['answer_table']['form'] = $this->getMatchingTable($answers, 'getMatchingAnswer', $this->t('Answer'), $allow_change_response);
 
       return $answer_form;
     }
@@ -90,7 +90,7 @@ class MatchingQuestion extends Question {
    * @return array
    *   The table.
    */
-  private function getMatchingTable(array $answers, string $answer_function, mixed $title): array {
+  private function getMatchingTable(array $answers, string $answer_function, mixed $title, bool $allow_change_response = TRUE): array {
     $table = [
       '#type' => 'table',
       '#header' => [
@@ -103,7 +103,8 @@ class MatchingQuestion extends Question {
           'relationship' => 'sibling',
           'group' => 'table-sort-weight',
         ],
-      ]
+      ],
+      '#disabled' => !$allow_change_response
     ];
 
     $i = 0;
@@ -129,6 +130,13 @@ class MatchingQuestion extends Question {
       $i++;
     }
     return $table;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function isResponseCorrect(array $response_data): bool {
+    return FALSE;
   }
 
 }

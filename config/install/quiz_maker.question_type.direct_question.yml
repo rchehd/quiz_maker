@@ -1,5 +1,7 @@
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: H33yqL6u9KuiGKdtpZqb8zw0vX9yvFjC3wiN18gj9-A
 id: direct_question
 label: 'Direct question'

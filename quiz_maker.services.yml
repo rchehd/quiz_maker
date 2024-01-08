@@ -13,4 +13,4 @@ services:
 
   quiz_maker.manager:
     class: Drupal\quiz_maker\Service\QuizManager
-    arguments: ['@entity_type.manager', '@request_stack']
+    arguments: ['@entity_type.manager', '@request_stack', '@datetime.time']

@@ -10,7 +10,7 @@ dependencies:
     - text
     - user
 _core:
-  default_config_hash: gEsLYYYNbpzO0MXQVMw8nwpWxOzP9eCBSHgIICst7uU
+  default_config_hash: Sjd8616evhOPgyf4mB_FAQtS_zBVcMrHE72f_GnM61Y
 id: question.direct_question.default
 targetEntityType: question
 bundle: direct_question

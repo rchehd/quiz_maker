@@ -9,7 +9,7 @@ dependencies:
   module:
     - text
 _core:
-  default_config_hash: _C50oEehK7hY34nT4rOmKXlk2i_85RevAfefogxE1iM
+  default_config_hash: 49Nikx3oI1kYg-fl7he0IC8N5wi_rk5FR4g_BqhYkVA
 id: question.boolean_question.default
 targetEntityType: question
 bundle: boolean_question

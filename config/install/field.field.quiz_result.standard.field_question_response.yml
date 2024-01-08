@@ -9,6 +9,8 @@ dependencies:
     - quiz_maker.question_response_type.multiple_choice_response
     - quiz_maker.question_response_type.single_choice_response
     - quiz_maker.quiz_result_type.standard
+_core:
+  default_config_hash: dxBXvCVsAeY5KSo797TZwnNfnJkJquo0Jty87jkQoOQ
 id: quiz_result.standard.field_question_response
 field_name: field_question_response
 entity_type: quiz_result

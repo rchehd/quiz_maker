@@ -7,7 +7,7 @@ dependencies:
   module:
     - datetime_range
 _core:
-  default_config_hash: ECiGWbQsBq92x4rrARXEzxeN_Gr2QVpQAsg3saM_PQQ
+  default_config_hash: HeHNEIIBWh9kJgud_HYo8o7hW3uhk92ityASC3Fds_4
 id: quiz.standard.field_access_period
 field_name: field_access_period
 entity_type: quiz

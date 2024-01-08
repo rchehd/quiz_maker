@@ -5,13 +5,14 @@ dependencies:
     - field.field.question.multiple_choice_question.field_answers
     - field.field.question.multiple_choice_question.field_max_score
     - field.field.question.multiple_choice_question.field_response
+    - field.field.question.multiple_choice_question.field_simple_scoring
     - field.field.question.multiple_choice_question.field_tag
     - quiz_maker.question_type.multiple_choice_question
   module:
     - text
     - user
 _core:
-  default_config_hash: hVkQq9giYKRTovzsfZNQAvSmtMblfXv5LoDNKns-Xt4
+  default_config_hash: zvpmKCzN4z8h0_TNaYU0TPuwirq2otM2M909taExbt8
 id: question.multiple_choice_question.default
 targetEntityType: question
 bundle: multiple_choice_question
@@ -52,6 +53,16 @@ content:
       prefix_suffix: true
     third_party_settings: {  }
     weight: 6
+    region: content
+  field_simple_scoring:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 8
     region: content
   field_tag:
     type: entity_reference_label

@@ -6,7 +6,7 @@ dependencies:
     - quiz_maker.question_answer_type.single_choice_answer
     - quiz_maker.question_type.single_choice_question
 _core:
-  default_config_hash: U4Oyzfbm3ELxwehDIZSwYaPFZvVxD_kcwUlbb4btSEc
+  default_config_hash: x3ybSAkBO6ZRfZVPFKWqytrBdtfsGx5zqyZBfnNrpt0
 id: question.single_choice_question.field_answers
 field_name: field_answers
 entity_type: question

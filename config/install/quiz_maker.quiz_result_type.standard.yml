@@ -1,8 +1,8 @@
 langcode: en
 status: true
-workflow: quiz_result_default
 dependencies: {  }
 _core:
-  default_config_hash: vFqO31BXp0plA9TFq26iMwyd7bfqOMeB7-FTQ957_N8
+  default_config_hash: aKUWeJ2WH0m2WiQNexTs7M0NweEjOBab37GQjPvMQNI
 id: standard
 label: Standard
+workflow: quiz_result_default

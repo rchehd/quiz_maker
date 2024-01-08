@@ -5,6 +5,8 @@ dependencies:
     - field.storage.question.field_response
     - quiz_maker.question_response_type.boolean_response
     - quiz_maker.question_type.boolean_question
+_core:
+  default_config_hash: EYiIaDClo9me_C5FH8zJmH6n2sl_QZXJJUZ3sqOmiaE
 id: question.boolean_question.field_response
 field_name: field_response
 entity_type: question

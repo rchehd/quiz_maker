@@ -3,6 +3,8 @@ status: true
 dependencies:
   module:
     - quiz_maker
+_core:
+  default_config_hash: OsG81XLQyyAg7Csi-5yR8GYklLYSXhDWMCPDl3_Yt4M
 id: question.field_answers
 field_name: field_answers
 entity_type: question

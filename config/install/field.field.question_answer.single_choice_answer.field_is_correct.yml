@@ -5,7 +5,7 @@ dependencies:
     - field.storage.question_answer.field_is_correct
     - quiz_maker.question_answer_type.single_choice_answer
 _core:
-  default_config_hash: XWt-dSJsE7Wx9P1-AMeE2HYSp0zT_3WoCVtWEUXAftY
+  default_config_hash: o2lLBpQrVXnQ-qU_M2rEAtdmaGhiUWDWZaxWjhX5qz4
 id: question_answer.single_choice_answer.field_is_correct
 field_name: field_is_correct
 entity_type: question_answer
