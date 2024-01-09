@@ -19,7 +19,7 @@
     {{ title_suffix }}
   {% endif %}
   {% if content %}
-    <table class="result-info-table">
+    <table class="info-table">
       <tr>
         <th>
           {{ 'Started'|t }}
@@ -59,8 +59,9 @@
     <div class="response-list">
       {{ content.field_question_response }}
     </div>
-    <div class="take-quiz-link">
+    <div class="quiz-result-links">
       {{ take_quiz }}
+      {{ back_to_quiz }}
     </div>
   {% endif %}
 </article>

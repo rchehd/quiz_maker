@@ -8,11 +8,6 @@ entity.quiz.edit_form:
   title: Edit
   base_route: entity.quiz.canonical
 
-quiz.questions:
-  route_name: quiz.questions
-  title: Questions
-  base_route: entity.quiz.canonical
-
 quiz.results:
   route_name: quiz.results
   title: Results
@@ -37,11 +32,6 @@ entity.quiz_result_type.edit:
   route_name: entity.quiz_result_type.edit_form
   title: Edit
   base_route: entity.quiz_result_type.edit_form
-
-quiz.take:
-  route_name: quiz.take
-  title: Take quiz
-  base_route: entity.quiz.canonical
 
 entity.question_response.view:
   title: 'View'

@@ -33,7 +33,7 @@
   align-items: center;
 }
 
-.result-info-table {
+.info-table {
   width: 100%;
   text-align: left;
 }
@@ -94,9 +94,19 @@
 }
 
 
-.result-info-table,
-.result-info-table th,
-.result-info-table td {
+.info-table,
+.info-table th,
+.info-table td {
+  border: thin dashed;
+  border-collapse: collapse;
+  padding: 5px;
+}
+
+.quiz-info-value {
+  text-align: center;
+}
+
+.quiz-info-table {
   border: thin dashed;
   border-collapse: collapse;
   padding: 5px;

@@ -6,7 +6,7 @@ dependencies:
     - user
     - views_bulk_operations
 _core:
-  default_config_hash: _PcqzA_af20lfK0AEkXOwx-CThdz30a7Cb1CsMC1-9I
+  default_config_hash: EG2kJyo8TsDCJCYVXL2D_iQ49cLMICGxVBD6Q9XIcv0
 id: quizzes
 label: Quizzes
 module: views
@@ -203,7 +203,7 @@ display:
           click_sort_column: value
           type: string
           settings:
-            link_to_entity: false
+            link_to_entity: true
           group_column: value
           group_columns: {  }
           group_rows: true

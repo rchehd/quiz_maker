@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\quiz_maker\QuestionInterface;
+use Drupal\quiz_maker\QuizInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -343,14 +344,57 @@ function template_preprocess_question_response(array &$variables): void {
  */
 function quiz_maker_preprocess_quiz_result(array &$variables) {
   /** @var \Drupal\quiz_maker\QuizResultInterface $quiz_result */
-  $quiz_result = $variables["elements"]["#quiz_result"];
-  $variables['take_quiz'] = [
+  $quiz_result = $variables['elements']['#quiz_result'];
+  $variables['take_quiz'] = get_quiz_take_link($quiz_result->getQuiz(), 'Take quiz again');
+  $variables['back_to_quiz'] = get_quiz_link($quiz_result->getQuiz(), 'Go back to quiz');
+}
+
+/**
+ * Implement hook_preprocess_HOOK().
+ */
+function quiz_maker_preprocess_quiz(array &$variables) {
+  /** @var \Drupal\quiz_maker\QuizInterface $quiz_result */
+  $quiz = $variables['elements']['#quiz'];
+  $variables['take_quiz'] = get_quiz_take_link($quiz, 'Take quiz');
+}
+
+/**
+ * Get quiz take link.
+ *
+ * @param \Drupal\quiz_maker\QuizInterface $quiz
+ *   The quiz.
+ *
+ * @return array
+ *   The link.
+ */
+function get_quiz_take_link(QuizInterface $quiz, string $label): array {
+  return [
     '#type' => 'link',
-    '#title' => t('Take again'),
-    '#url' => Url::fromRoute('quiz.take', ['quiz' => $quiz_result->getQuiz()->id()]),
+    '#title' => t($label),
+    '#url' => Url::fromRoute('quiz.take', ['quiz' => $quiz->id()]),
     '#attributes' => [
       'class' => ['button', 'button--primary'],
-    ]
+    ],
+  ];
+}
+
+/**
+ * Get quiz take link.
+ *
+ * @param \Drupal\quiz_maker\QuizInterface $quiz
+ *   The quiz.
+ *
+ * @return array
+ *   The link.
+ */
+function get_quiz_link(QuizInterface $quiz, string $label): array {
+  return [
+    '#type' => 'link',
+    '#title' => t($label),
+    '#url' => Url::fromRoute('entity.quiz.canonical', ['quiz' => $quiz->id()]),
+    '#attributes' => [
+      'class' => ['button', 'button--danger'],
+    ],
   ];
 }
 

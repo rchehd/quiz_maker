@@ -19,6 +19,23 @@
     {{ title_suffix }}
   {% endif %}
   {% if content %}
-    {{- content -}}
+    <h3>{{ 'Quiz information'|t }}</h3>
+    <table class="info-table">
+      {% for field in content %}
+        {% if field['#title'] and field.0 %}
+          <tr>
+            <td class="quiz-info-name">
+              {{ field['#title'] }}
+            </td>
+            <td class="quiz-info-value">
+              {{ field.0 }}
+            </td>
+          </tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+    <div class="take-quiz-link">
+      {{ take_quiz }}
+    </div>
   {% endif %}
 </article>
