@@ -26,7 +26,7 @@ final class QuestionResponseFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings(): array {
-    $setting = ['foo' => 'bar'];
+    $setting = ['list_style' => 'Numeric with dot'];
     return $setting + parent::defaultSettings();
   }
 
@@ -34,10 +34,17 @@ final class QuestionResponseFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state): array {
-    $elements['foo'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Foo'),
-      '#default_value' => $this->getSetting('foo'),
+    $elements['list_style'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('List style'),
+      '#options' => [
+        'Number with dot' => $this->t('Number with dot (ex. "@example")', ['@example' => '1.']),
+        'Number with bracket' => $this->t('Number with bracket (ex. "@example")', ['@example' => '1)']),
+        'Letter with dot' => $this->t('Letter with dot (ex. "@example")', ['@example' => 'a.']),
+        'Letter with bracket' => $this->t('Letter with bracket (ex. "@example")', ['@example' => 'a)']),
+        'Dot' => $this->t('Dot (ex. "@example")', ['@example' => '•']),
+      ],
+      '#default_value' => $this->getSetting('list_style'),
     ];
     return $elements;
   }
@@ -47,7 +54,7 @@ final class QuestionResponseFormatter extends FormatterBase {
    */
   public function settingsSummary(): array {
     return [
-      $this->t('Foo: @foo', ['@foo' => $this->getSetting('foo')]),
+      $this->t('List style: @style', ['@style' => $this->getSetting('list_style')]),
     ];
   }
 
@@ -90,7 +97,7 @@ final class QuestionResponseFormatter extends FormatterBase {
       '#type' => 'html_tag',
       '#tag' => 'ol',
       '#attributes' => [
-        'class' => ['question-answers']
+        'class' => ['question-answers', $this->getListStyle()]
       ]
     ];
 
@@ -108,13 +115,10 @@ final class QuestionResponseFormatter extends FormatterBase {
       }
     }
 
-
-
-
     $result_view['score'] = [
       '#type' => 'html_tag',
       '#tag' => 'div',
-      '#value' => $this->t('Total score: @value', ['@value' =>  $response->getScore()]),
+      '#value' => $this->t('Score: @value', ['@value' =>  $response->getScore()]),
       '#attributes' => [
         'class' => ['question-score']
       ]
@@ -122,5 +126,17 @@ final class QuestionResponseFormatter extends FormatterBase {
 
     return $result_view;
   }
+
+  private function getListStyle() {
+    $style = $this->getSetting('list_style');
+    return match($style) {
+      'Number with dot' => 'response-list-number-with-dot',
+      'Number with bracket' => 'response-list-number-with-bracket',
+      'Letter with dot' => 'response-list-letter-with-dot',
+      'Letter with bracket' => 'response-list-letter-with-bracket',
+      'Dot' => 'response-list-dot',
+    };
+  }
+
 
 }

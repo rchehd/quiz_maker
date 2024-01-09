@@ -73,6 +73,7 @@
 
 .question-score {
   font-weight: bold;
+  margin-top: 20px;
 }
 
 .question-result {
@@ -99,4 +100,34 @@
   border: thin dashed;
   border-collapse: collapse;
   padding: 5px;
+}
+
+.response-list-number-with-bracket,
+.response-list-letter-with-bracket {
+  counter-reset: list;
+  margin: 0;
+}
+
+.response-list-number-with-bracket > li,
+.response-list-letter-with-bracket > li {
+  list-style: none;
+  position: relative;
+}
+
+.response-list-number-with-bracket > li:before {
+  counter-increment: list;
+  content: counter(list, decimal) ") ";
+  position: absolute;
+  left: -1.4em;
+}
+
+.response-list-letter-with-bracket > li:before {
+  counter-increment: list;
+  content: counter(list, lower-alpha) ") ";
+  position: absolute;
+  left: -1.4em;
+}
+
+.response-list-dot {
+  list-style-type: disc;
 }

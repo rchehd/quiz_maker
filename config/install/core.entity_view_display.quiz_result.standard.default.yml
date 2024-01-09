@@ -54,7 +54,7 @@ content:
     type: question_response_formatter
     label: above
     settings:
-      foo: bar
+      list_style: 'Number with bracket'
     third_party_settings: {  }
     weight: 7
     region: content
@@ -96,11 +96,10 @@ content:
     weight: 6
     region: content
   score:
-    type: number_integer
+    type: score_field_formatter
     label: hidden
     settings:
-      thousand_separator: ''
-      prefix_suffix: true
+      suffix: '%'
     third_party_settings: {  }
     weight: 2
     region: content

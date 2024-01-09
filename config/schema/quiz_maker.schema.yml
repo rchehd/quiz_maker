@@ -2,6 +2,14 @@ field.formatter.settings.question_response:
   type: mapping
   label: Question Response formatter formatter settings
   mapping:
-    foo:
+    list_style:
       type: string
-      label: Foo
+      label: 'Number with bracket'
+
+field.formatter.settings.score_field_formatter:
+  type: mapping
+  label: Score formatter settings
+  mapping:
+    suffix:
+      type: string
+      label: '%'

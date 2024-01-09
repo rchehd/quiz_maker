@@ -73,8 +73,12 @@ class BooleanQuestion extends Question {
    * {@inheritDoc}
    */
   public function isResponseCorrect(array $response_data): bool {
-    $answer = $response_data['response'];
-    return $answer === 'true';
+    $correct_answers = $this->getCorrectAnswers();
+    $correct_answers_ids = array_map(function($correct_answer) {
+      return $correct_answer->id();
+    }, $correct_answers);
+    $answers_ids = $response_data['response'];
+    return reset($correct_answers_ids) === $answers_ids;
   }
 
   /**
