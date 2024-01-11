@@ -30,9 +30,6 @@ quiz.questions:
 
 quiz.results:
   path: 'quiz/{quiz}/results'
-  defaults:
-    _controller: '\Drupal\quiz_maker\Controller\QuizMakerController::manageResults'
-    _title: 'Manage results'
   requirements:
     _permission: 'edit quiz_result'
   options:

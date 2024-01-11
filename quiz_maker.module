@@ -11,6 +11,7 @@ use Drupal\Core\Url;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\user\UserInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_page_attachments().
@@ -353,9 +354,16 @@ function quiz_maker_preprocess_quiz_result(array &$variables) {
  * Implement hook_preprocess_HOOK().
  */
 function quiz_maker_preprocess_quiz(array &$variables) {
+  /** @var \Drupal\quiz_maker\Service\QuizManager $quiz_manager */
+  $quiz_manager = \Drupal::service('quiz_maker.manager');
   /** @var \Drupal\quiz_maker\QuizInterface $quiz_result */
   $quiz = $variables['elements']['#quiz'];
-  $variables['take_quiz'] = get_quiz_take_link($quiz, 'Take quiz');
+  $label = 'Take quiz';
+  if (!empty($quiz_manager->getDraftResults(\Drupal::currentUser(), $quiz))) {
+    $label = 'Continue quiz';
+  }
+  $variables['take_quiz'] = get_quiz_take_link($quiz, $label);
+  $variables['quiz_results'] = views_embed_view('quiz_results', 'user_quiz_results', \Drupal::currentUser()->id());
 }
 
 /**
@@ -423,5 +431,17 @@ function quiz_maker_entity_presave(EntityInterface $entity) {
         }
       }
     }
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view_table().
+ */
+function quiz_maker_preprocess_views_view_table(&$variables): void {
+  $view = $variables['view'];
+  if ($view->id() === 'quiz_results' && $view->current_display === 'user_quiz_results') {
+    $variables['attributes'] = [
+      'class' => ['info-table'],
+    ];
   }
 }

@@ -9,7 +9,7 @@ entity.quiz.edit_form:
   base_route: entity.quiz.canonical
 
 quiz.results:
-  route_name: quiz.results
+  route_name: view.quiz_results.result_list
   title: Results
   base_route: entity.quiz.canonical
 

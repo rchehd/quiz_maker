@@ -34,8 +34,6 @@ final class QuizMakerController extends ControllerBase {
    */
   public function manageQuestions(QuizInterface $quiz): array {
 
-    $questions = $quiz->getQuestions();
-
     $build['content'] = [
       '#type' => 'item',
       '#markup' => $this->t('Manage questions!'),
@@ -47,14 +45,14 @@ final class QuizMakerController extends ControllerBase {
   /**
    * Builds the response.
    */
-  public function manageResults(QuizInterface $quiz): array {
+  public function getResults(QuizInterface $quiz): array {
 
     $build['content'] = [
       '#type' => 'item',
       '#markup' => $this->t('Manage results!'),
     ];
 
-    return $build;
+    return $this->redirect('');
   }
 
   /**

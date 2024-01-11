@@ -97,9 +97,9 @@
 .info-table,
 .info-table th,
 .info-table td {
-  border: thin dashed;
-  border-collapse: collapse;
-  padding: 5px;
+  border: thin dashed !important;
+  border-collapse: collapse !important;
+  padding: 5px !important;
 }
 
 .quiz-info-value {

@@ -35,7 +35,7 @@ class MultipleChoiceQuestion extends Question {
           '#type' => 'checkboxes',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
-          '#default_value' => $questionResponse?->getResponseData(),
+          '#default_value' => $questionResponse?->getResponseData() ?? [],
           '#disabled' => !$allow_change_response
         ]
       ];
