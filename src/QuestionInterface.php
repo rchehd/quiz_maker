@@ -26,12 +26,12 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
   public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array;
 
   /**
-   * Question form validation
+   * Question form validation.
    *
    * @param array $form
-   *    The form elements.
+   *   The form elements.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *    The form state.
+   *   The form state.
    */
   public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void;
 

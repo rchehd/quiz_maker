@@ -79,14 +79,25 @@ final class QuestionResponseFormatter extends FormatterBase {
     return $field_definition->getName() === 'field_question_response';
   }
 
+  /**
+   * Get question result.
+   *
+   * @param \Drupal\quiz_maker\QuestionInterface $question
+   *   The question.
+   * @param \Drupal\quiz_maker\QuestionResponseInterface $response
+   *   The response.
+   *
+   * @return array
+   *   The render array.
+   */
   protected function getQuestionResult(QuestionInterface $question, QuestionResponseInterface $response): array {
-
     $result_view = [
       '#type' => 'container',
       '#attributes' => [
         'class' => ['question-result']
       ]
     ];
+
     $result_view['question'] = [
       '#type' => 'html_tag',
       '#tag' => 'h4',
@@ -118,7 +129,7 @@ final class QuestionResponseFormatter extends FormatterBase {
     $result_view['score'] = [
       '#type' => 'html_tag',
       '#tag' => 'div',
-      '#value' => $this->t('Score: @value', ['@value' =>  $response->getScore()]),
+      '#value' => $this->t('Score: @value', ['@value' => $response->getScore()]),
       '#attributes' => [
         'class' => ['question-score']
       ]
@@ -127,7 +138,13 @@ final class QuestionResponseFormatter extends FormatterBase {
     return $result_view;
   }
 
-  private function getListStyle() {
+  /**
+   * Get list style.
+   *
+   * @return string
+   *   Style.
+   */
+  private function getListStyle(): string {
     $style = $this->getSetting('list_style');
     return match($style) {
       'Number with dot' => 'response-list-number-with-dot',
@@ -137,6 +154,5 @@ final class QuestionResponseFormatter extends FormatterBase {
       'Dot' => 'response-list-dot',
     };
   }
-
 
 }

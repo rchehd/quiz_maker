@@ -44,6 +44,4 @@ final class MatchingAnswer extends QuestionAnswer {
     return self::NEUTRAL;
   }
 
-
-
 }

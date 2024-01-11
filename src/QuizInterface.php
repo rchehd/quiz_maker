@@ -23,21 +23,6 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
   public function getQuestions(): array|bool;
 
   /**
-   * Get quiz completed results.
-   *
-   * @param \Drupal\Core\Session\AccountInterface|null $user
-   *   The author (optional).
-   * @param string $state
-   *   Quiz result state, by default - "completed".
-   * @param array $conditions
-   *   Array of additional conditions.
-   *
-   * @return \Drupal\quiz_maker\QuizResultInterface[]
-   *   Array of Quiz Results or empty array.
-   */
-  public function getResults(AccountInterface $user = NULL, string $state = QuizResultType::COMPLETED, array $conditions = []): array;
-
-  /**
    * Is quiz passed?
    *
    * @param \Drupal\Core\Session\AccountInterface $user
@@ -60,7 +45,7 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
    * Check if quiz allows to skip questions.
    *
    * @return bool
-   *  TRUE if allowed, otherwise FALSE.
+   *   TRUE if allowed, otherwise FALSE.
    */
   public function allowSkipping(): bool;
 
@@ -68,7 +53,7 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
    * Check if quiz allows to backward navigation.
    *
    * @return bool
-   *  TRUE if allowed, otherwise FALSE.
+   *   TRUE if allowed, otherwise FALSE.
    */
   public function allowBackwardNavigation(): bool;
 
@@ -76,7 +61,7 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
    * Check if quiz allows to change answer.
    *
    * @return bool
-   *  TRUE if allowed, otherwise FALSE.
+   *   TRUE if allowed, otherwise FALSE.
    */
   public function allowChangeAnswer(): bool;
 
@@ -105,14 +90,19 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
   public function getAllowedAttempts(): ?int;
 
   /**
-   * Check if user has access to take quiz.
+   * Get access period.
    *
-   * @param \Drupal\Core\Session\AccountInterface $user
-   *   The user.
-   *
-   * @return bool
-   *   TRUE if allowed, otherwise FALSE.
+   * @return array
+   *   Array with two keys: "start_date" and "and_date".
    */
-  public function allowToTake(AccountInterface $user): bool;
+  public function getAccessPeriod(): array;
+
+  /**
+   * Get result type.
+   *
+   * @return string
+   *   The result type id.
+   */
+  public function getResultType(): string;
 
 }

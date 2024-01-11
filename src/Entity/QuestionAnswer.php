@@ -68,17 +68,17 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
   use EntityOwnerTrait;
 
   /**
-   * "Correct" answer status.
+   * The "Correct" answer status.
    */
   const CORRECT = 'correct';
 
   /**
-   * "In-correct" answer status.
+   * The "In-correct" answer status.
    */
   const IN_CORRECT = 'in-correct';
 
   /**
-   * "Neutral" answer status.
+   * The "Neutral" answer status.
    */
   const NEUTRAL = 'neutral';
 

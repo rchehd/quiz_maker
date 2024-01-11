@@ -33,7 +33,7 @@ interface QuestionAnswerInterface extends ContentEntityInterface, EntityOwnerInt
    * Get response status.
    *
    * @param \Drupal\quiz_maker\QuestionResponseInterface $response
-   *   The response
+   *   The response.
    *
    * @return string
    *   The answer status:

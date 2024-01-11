@@ -224,7 +224,6 @@ class QuizTakeForm extends FormBase {
    *
    * @return mixed
    *   The form array.
-   *
    */
   public function updateQuestionForm(array &$form, FormStateInterface $form_state, Request $request): mixed {
     return $form['question'];

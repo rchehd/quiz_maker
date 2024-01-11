@@ -226,7 +226,7 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
    */
   public function getCorrectAnswers(): array {
     $answers = $this->get('field_answers')->referencedEntities();
-    return array_filter($answers, function($answer) {
+    return array_filter($answers, function ($answer) {
       return $answer->isCorrect();
     });
   }
@@ -251,7 +251,7 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
   public function addAnswer(QuestionAnswerInterface $answer): void {
     $answers = $this->getAnswers();
     if ($answers) {
-      $answer_ids = array_map(function($answer) {
+      $answer_ids = array_map(function ($answer) {
         return $answer->id();
       }, $answers);
     }

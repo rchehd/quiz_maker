@@ -67,7 +67,7 @@ class SingleChoiceQuestion extends Question {
    */
   public function isResponseCorrect(array $response_data): bool {
     $correct_answers = $this->getCorrectAnswers();
-    $correct_answers_ids = array_map(function($correct_answer) {
+    $correct_answers_ids = array_map(function ($correct_answer) {
       return $correct_answer->id();
     }, $correct_answers);
     $answers_ids = $response_data['response'];

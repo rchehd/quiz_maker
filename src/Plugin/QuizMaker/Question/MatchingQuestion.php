@@ -86,6 +86,8 @@ class MatchingQuestion extends Question {
    *   The matching answer function: 'getMatchingQuestion' or 'getMatchingAnswer'.
    * @param mixed $title
    *   The table title.
+   * @param bool $allow_change_response
+   *   Allow to change response.
    *
    * @return array
    *   The table.

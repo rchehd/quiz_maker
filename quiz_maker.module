@@ -346,8 +346,8 @@ function template_preprocess_question_response(array &$variables): void {
 function quiz_maker_preprocess_quiz_result(array &$variables) {
   /** @var \Drupal\quiz_maker\QuizResultInterface $quiz_result */
   $quiz_result = $variables['elements']['#quiz_result'];
-  $variables['take_quiz'] = get_quiz_take_link($quiz_result->getQuiz(), 'Take quiz again');
-  $variables['back_to_quiz'] = get_quiz_link($quiz_result->getQuiz(), 'Go back to quiz');
+  $variables['take_quiz'] = quiz_maker_get_quiz_take_link($quiz_result->getQuiz(), 'Take quiz again');
+  $variables['back_to_quiz'] = quiz_maker_get_quiz_link($quiz_result->getQuiz(), 'Go back to quiz');
 }
 
 /**
@@ -362,7 +362,7 @@ function quiz_maker_preprocess_quiz(array &$variables) {
   if (!empty($quiz_manager->getDraftResults(\Drupal::currentUser(), $quiz))) {
     $label = 'Continue quiz';
   }
-  $variables['take_quiz'] = get_quiz_take_link($quiz, $label);
+  $variables['take_quiz'] = quiz_maker_get_quiz_take_link($quiz, $label);
   $variables['quiz_results'] = views_embed_view('quiz_results', 'user_quiz_results', \Drupal::currentUser()->id());
 }
 
@@ -371,11 +371,18 @@ function quiz_maker_preprocess_quiz(array &$variables) {
  *
  * @param \Drupal\quiz_maker\QuizInterface $quiz
  *   The quiz.
+ * @param string $label
+ *   The label.
  *
  * @return array
  *   The link.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+ * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
-function get_quiz_take_link(QuizInterface $quiz, string $label): array {
+function quiz_maker_get_quiz_take_link(QuizInterface $quiz, string $label): array {
+  /** @var \Drupal\quiz_maker\Service\QuizManager $quiz_manager */
+  $quiz_manager = \Drupal::service('quiz_maker.manager');
   return [
     '#type' => 'link',
     '#title' => t($label),
@@ -383,7 +390,7 @@ function get_quiz_take_link(QuizInterface $quiz, string $label): array {
     '#attributes' => [
       'class' => ['button', 'button--primary'],
     ],
-    '#access' => $quiz->allowToTake(\Drupal::currentUser()),
+    '#access' => $quiz_manager->allowTakeQuiz($quiz, \Drupal::currentUser()),
   ];
 }
 
@@ -396,7 +403,7 @@ function get_quiz_take_link(QuizInterface $quiz, string $label): array {
  * @return array
  *   The link.
  */
-function get_quiz_link(QuizInterface $quiz, string $label): array {
+function quiz_maker_get_quiz_link(QuizInterface $quiz, string $label): array {
   return [
     '#type' => 'link',
     '#title' => t($label),

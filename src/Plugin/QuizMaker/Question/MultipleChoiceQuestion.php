@@ -67,11 +67,11 @@ class MultipleChoiceQuestion extends Question {
    */
   public function isResponseCorrect(array $response_data): bool {
     $correct_answers = $this->getCorrectAnswers();
-    $correct_answers_ids = array_map(function($correct_answer) {
+    $correct_answers_ids = array_map(function ($correct_answer) {
       return $correct_answer->id();
     }, $correct_answers);
     $answers_ids = array_values($response_data['response']);
-    $answers_ids = array_filter($answers_ids, function($answers_id) {
+    $answers_ids = array_filter($answers_ids, function ($answers_id) {
       return is_string($answers_id);
     });
     return $correct_answers_ids === $answers_ids;

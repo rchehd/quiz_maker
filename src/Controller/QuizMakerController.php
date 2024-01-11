@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\quiz_maker\QuizInterface;
+use Drupal\quiz_maker\Service\QuizManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,7 +22,8 @@ final class QuizMakerController extends ControllerBase {
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
-    AccountInterface $currentUser
+    AccountInterface $currentUser,
+    protected QuizManager $quizManager
   ) {}
 
   /**
@@ -31,6 +33,7 @@ final class QuizMakerController extends ControllerBase {
     return new self(
       $container->get('entity_type.manager'),
       $container->get('current_user'),
+      $container->get('quiz_maker.manager'),
     );
   }
 
@@ -51,11 +54,16 @@ final class QuizMakerController extends ControllerBase {
    * Access to take quiz.
    *
    * @param \Drupal\quiz_maker\QuizInterface $quiz
+   *   The quiz.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function quizTakeAccess(QuizInterface $quiz): AccessResultInterface {
-    return AccessResult::forbiddenIf(!$quiz->allowToTake($this->currentUser()));
+    return AccessResult::forbiddenIf(!$this->quizManager->allowTakeQuiz($quiz, $this->currentUser()));
   }
 
 }

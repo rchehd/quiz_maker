@@ -176,6 +176,8 @@ final class QuizManager {
    *   The quiz.
    *
    * @return int
+   *   The count of attempts.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
@@ -187,6 +189,75 @@ final class QuizManager {
     ]);
 
     return count($results);
+  }
+
+  /**
+   * Get quiz completed results.
+   *
+   * @param \Drupal\quiz_maker\QuizInterface $quiz
+   *   The quiz.
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The author.
+   * @param array $conditions
+   *   Array of additional conditions (optional).
+   *
+   * @return \Drupal\quiz_maker\QuizResultInterface[]
+   *   Array of Quiz Results or empty array.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getQuizResults(QuizInterface $quiz, AccountInterface $user, array $conditions = []): array {
+    $result_type = $quiz->getResultType();
+    $result_storage = $this->entityTypeManager->getStorage('quiz_result');
+    $query = $result_storage->getQuery();
+    $query->accessCheck(FALSE);
+    $query->condition('bundle', $result_type);
+    $query->condition('uid', $user->id());
+
+    if ($conditions) {
+      foreach ($conditions as $key => $value) {
+        $query->condition($key, $value);
+      }
+    }
+
+    $result_ids = $query->execute();
+
+    if ($result_ids) {
+      return $result_storage->loadMultiple($result_ids);
+    }
+    return [];
+  }
+
+  /**
+   * Check if user has access to take quiz.
+   *
+   * @param \Drupal\quiz_maker\QuizInterface $quiz
+   *   The quiz.
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user.
+   *
+   * @return bool
+   *   TRUE if allowed, otherwise FALSE.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function allowTakeQuiz(QuizInterface $quiz, AccountInterface $user): bool {
+    $quiz_attempts = $quiz->getAllowedAttempts();
+    $access_period = $quiz->getAccessPeriod();
+    // Do not allow to take quiz if user used all the attempts.
+    $completed_results = $this->getQuizResults($quiz, $user, ['state' => QuizResultType::COMPLETED]);
+    if ($quiz_attempts && $quiz_attempts <= $completed_results) {
+      return FALSE;
+    }
+    // Do not allow to take quiz if access period is expired.
+    $now = $this->time->getCurrentTime();
+    if ($access_period && ($now < $access_period['start_date'] || $now > $access_period['end_date'])) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
 }

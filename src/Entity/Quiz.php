@@ -193,35 +193,6 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
-  public function getResults(AccountInterface $user = NULL, string $state = QuizResultType::COMPLETED, array $conditions = []): array {
-    $result_type = $this->get('field_result_type')->getValue();
-    $result_storage = \Drupal::entityTypeManager()->getStorage('quiz_result');
-    $query = $result_storage->getQuery();
-    $query->accessCheck(FALSE);
-    $query->condition('bundle', $result_type);
-    $query->condition('state', $state);
-
-    if ($user) {
-      $query->condition('uid', $user->id());
-    }
-
-    if ($conditions) {
-      foreach ($conditions as $key => $value) {
-        $query->condition($key, $value);
-      }
-    }
-
-    $result_ids = $query->execute();
-
-    if ($result_ids) {
-      return $result_storage->loadMultiple($result_ids);
-    }
-    return [];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public function isPassed(AccountInterface $user): bool {
     $completed_results = $this->getResults($user, QuizResultType::COMPLETED, [
       'passed' => 1,
@@ -276,8 +247,8 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     $questions = $this->getQuestions();
     $max_score = 0;
     foreach ($questions as $question) {
-      /** @var QuestionInterface $question */
-      $max_score+=$question->getMaxScore();
+      /** @var \Drupal\quiz_maker\QuestionInterface $question */
+      $max_score += $question->getMaxScore();
     }
     return $max_score;
   }
@@ -292,15 +263,23 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
-  public function allowToTake(AccountInterface $user): bool {
-    $quiz_attempts = $this->getAllowedAttempts();
-    // Do not allow to take quiz if user used all the attempts.
-    $completed_results = $this->getResults($user);
-    if ($quiz_attempts && $quiz_attempts <= $completed_results) {
-      return FALSE;
+  public function getAccessPeriod(): array {
+    $access_period = $this->get('field_access_period')->getValue();
+    if ($access_period) {
+      $access_period = reset($access_period);
+      return [
+        'start_date' => strtotime($access_period['value']),
+        'end_date' => strtotime($access_period['end_value']),
+      ];
     }
+    return [];
+  }
 
-    return TRUE;
+  /**
+   * {@inheritDoc}
+   */
+  public function getResultType(): string {
+    return $this->get('field_result_type')->target_id;
   }
 
 }

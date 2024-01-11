@@ -52,7 +52,7 @@ interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerI
   public function setResponseData(array $data): void;
 
   /**
-   * Get response data
+   * Get response data.
    *
    * @return mixed
    *   The response data.
