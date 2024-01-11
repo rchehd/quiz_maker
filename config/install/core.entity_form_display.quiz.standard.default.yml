@@ -4,9 +4,7 @@ dependencies:
   config:
     - field.field.quiz.standard.field_access_period
     - field.field.quiz.standard.field_allow_changing_answers
-    - field.field.quiz.standard.field_allow_changing_blank
     - field.field.quiz.standard.field_allow_jumping
-    - field.field.quiz.standard.field_allow_resume
     - field.field.quiz.standard.field_allow_skipping
     - field.field.quiz.standard.field_attempts
     - field.field.quiz.standard.field_backwards_navigation
@@ -91,7 +89,7 @@ third_party_settings:
         description: ''
         required_fields: true
 _core:
-  default_config_hash: hg4SmIeDcBsR2QAuAPA0qm2mHmUi_C8T3xb2h4_r5wg
+  default_config_hash: t5htf3tEBRQ5G5rMkCPgPr8Oj0cf9dFX8sfYNY8x7RM
 id: quiz.standard.default
 targetEntityType: quiz
 bundle: standard
@@ -173,23 +171,9 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
-  field_allow_changing_blank:
-    type: boolean_checkbox
-    weight: 14
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
   field_allow_jumping:
     type: boolean_checkbox
     weight: 12
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_allow_resume:
-    type: boolean_checkbox
-    weight: 11
     region: content
     settings:
       display_label: true

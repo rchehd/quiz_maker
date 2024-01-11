@@ -46,6 +46,7 @@ quiz.take:
     _title: 'Manage results'
   requirements:
     _permission: 'take quiz'
+    _custom_access: '\Drupal\quiz_maker\Controller\QuizMakerController::quizTakeAccess'
   options:
 #    _admin_route: true
     parameters:

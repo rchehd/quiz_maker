@@ -2,8 +2,11 @@
 
 namespace Drupal\quiz_maker\Controller;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\quiz_maker\QuizInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,6 +21,7 @@ final class QuizMakerController extends ControllerBase {
    */
   public function __construct(
     EntityTypeManagerInterface $entityTypeManager,
+    AccountInterface $currentUser
   ) {}
 
   /**
@@ -26,33 +30,8 @@ final class QuizMakerController extends ControllerBase {
   public static function create(ContainerInterface $container): self {
     return new self(
       $container->get('entity_type.manager'),
+      $container->get('current_user'),
     );
-  }
-
-  /**
-   * Builds the response.
-   */
-  public function manageQuestions(QuizInterface $quiz): array {
-
-    $build['content'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('Manage questions!'),
-    ];
-
-    return $build;
-  }
-
-  /**
-   * Builds the response.
-   */
-  public function getResults(QuizInterface $quiz): array {
-
-    $build['content'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('Manage results!'),
-    ];
-
-    return $this->redirect('');
   }
 
   /**
@@ -66,6 +45,17 @@ final class QuizMakerController extends ControllerBase {
    */
   public function getQuizTakeFormTitle(QuizInterface $quiz): string|TranslatableMarkup|null {
     return $quiz->label();
+  }
+
+  /**
+   * Access to take quiz.
+   *
+   * @param \Drupal\quiz_maker\QuizInterface $quiz
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   */
+  public function quizTakeAccess(QuizInterface $quiz): AccessResultInterface {
+    return AccessResult::forbiddenIf(!$quiz->allowToTake($this->currentUser()));
   }
 
 }

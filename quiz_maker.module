@@ -383,6 +383,7 @@ function get_quiz_take_link(QuizInterface $quiz, string $label): array {
     '#attributes' => [
       'class' => ['button', 'button--primary'],
     ],
+    '#access' => $quiz->allowToTake(\Drupal::currentUser()),
   ];
 }
 

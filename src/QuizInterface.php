@@ -5,6 +5,7 @@ namespace Drupal\quiz_maker;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\quiz_maker\Entity\QuizResultType;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\UserInterface;
 
@@ -12,22 +13,6 @@ use Drupal\user\UserInterface;
  * Provides an interface defining a quiz entity type.
  */
 interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
-
-  /**
-   * Add question to quiz.
-   *
-   * @param \Drupal\quiz_maker\QuestionInterface $question
-   *   The question.
-   */
-  public function addQuestion(QuestionInterface $question): void;
-
-  /**
-   * Delete question.
-   *
-   * @param \Drupal\quiz_maker\QuestionInterface $question
-   *   The question.
-   */
-  public function deleteQuestion(QuestionInterface $question): void;
 
   /**
    * Get questions.
@@ -38,23 +23,19 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
   public function getQuestions(): array|bool;
 
   /**
-   * Get results.
+   * Get quiz completed results.
    *
-   * @return \Drupal\quiz_maker\QuizResultInterface[]|bool
-   *   Array of Quiz Results or FALSE.
+   * @param \Drupal\Core\Session\AccountInterface|null $user
+   *   The author (optional).
+   * @param string $state
+   *   Quiz result state, by default - "completed".
+   * @param array $conditions
+   *   Array of additional conditions.
+   *
+   * @return \Drupal\quiz_maker\QuizResultInterface[]
+   *   Array of Quiz Results or empty array.
    */
-  public function getAllResults(): array|bool;
-
-  /**
-   * Get user result.
-   *
-   * @param \Drupal\Core\Session\AccountInterface $user
-   *   The user.
-   *
-   * @return \Drupal\quiz_maker\QuizResultInterface|null
-   *   The quiz result.
-   */
-  public function getUserResult(AccountInterface $user): ?QuizResultInterface;
+  public function getResults(AccountInterface $user = NULL, string $state = QuizResultType::COMPLETED, array $conditions = []): array;
 
   /**
    * Is quiz passed?
@@ -114,5 +95,24 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
    *   The pass rate.
    */
   public function getPassRate(): int;
+
+  /**
+   * Get quiz allowed attempts.
+   *
+   * @return ?int
+   *   The count of attempts or null if it not set.
+   */
+  public function getAllowedAttempts(): ?int;
+
+  /**
+   * Check if user has access to take quiz.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user.
+   *
+   * @return bool
+   *   TRUE if allowed, otherwise FALSE.
+   */
+  public function allowToTake(AccountInterface $user): bool;
 
 }

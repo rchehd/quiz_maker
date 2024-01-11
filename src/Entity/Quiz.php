@@ -12,6 +12,7 @@ use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\quiz_maker\QuizResultInterface;
 use Drupal\user\EntityOwnerTrait;
+use http\Exception\BadUrlException;
 
 /**
  * Defines the quiz entity class.
@@ -182,20 +183,6 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
-  public function addQuestion(QuestionInterface $question): void {
-    // TODO: Implement addQuestion() method.
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function deleteQuestion(QuestionInterface $question): void {
-    // TODO: Implement deleteQuestion() method.
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public function getQuestions(): array|bool {
     if ($this->hasField('field_questions')) {
       return $this->get('field_questions')->referencedEntities();
@@ -206,21 +193,44 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
-  public function getAllResults(): array|bool {
-    return FALSE;
-  }
+  public function getResults(AccountInterface $user = NULL, string $state = QuizResultType::COMPLETED, array $conditions = []): array {
+    $result_type = $this->get('field_result_type')->getValue();
+    $result_storage = \Drupal::entityTypeManager()->getStorage('quiz_result');
+    $query = $result_storage->getQuery();
+    $query->accessCheck(FALSE);
+    $query->condition('bundle', $result_type);
+    $query->condition('state', $state);
 
-  /**
-   * {@inheritDoc}
-   */
-  public function getUserResult(AccountInterface $user): ?QuizResultInterface {
-    return NULL;
+    if ($user) {
+      $query->condition('uid', $user->id());
+    }
+
+    if ($conditions) {
+      foreach ($conditions as $key => $value) {
+        $query->condition($key, $value);
+      }
+    }
+
+    $result_ids = $query->execute();
+
+    if ($result_ids) {
+      return $result_storage->loadMultiple($result_ids);
+    }
+    return [];
   }
 
   /**
    * {@inheritDoc}
    */
   public function isPassed(AccountInterface $user): bool {
+    $completed_results = $this->getResults($user, QuizResultType::COMPLETED, [
+      'passed' => 1,
+    ]);
+
+    if (count($completed_results)) {
+      return TRUE;
+    }
+
     return FALSE;
   }
 
@@ -255,6 +265,13 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
+  public function getAllowedAttempts(): ?int {
+    return $this->get('field_attempts')->value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function getMaxScore(): int {
     $questions = $this->getQuestions();
     $max_score = 0;
@@ -270,6 +287,20 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
    */
   public function getPassRate(): int {
     return $this->get('field_pass_rate')->value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function allowToTake(AccountInterface $user): bool {
+    $quiz_attempts = $this->getAllowedAttempts();
+    // Do not allow to take quiz if user used all the attempts.
+    $completed_results = $this->getResults($user);
+    if ($quiz_attempts && $quiz_attempts <= $completed_results) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
 }
