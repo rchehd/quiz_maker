@@ -286,18 +286,26 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
-  public function allowTaking(AccountInterface $user): bool {
+  public function allowTaking(AccountInterface $user): bool|string {
     $quiz_attempts = $this->getAllowedAttempts();
     $access_period = $this->getAccessPeriod();
     // Do not allow to take quiz if user used all the attempts.
     $completed_results = $this->getResults($user, ['state' => QuizResultType::COMPLETED]);
     if ($quiz_attempts && $quiz_attempts <= $completed_results) {
-      return FALSE;
+      return t('You used all attempts.');
     }
     // Do not allow to take quiz if access period is expired.
     $now = \Drupal::time()->getCurrentTime();
     if ($access_period && ($now < $access_period['start_date'] || $now > $access_period['end_date'])) {
-      return FALSE;
+      return t('Quiz not available because of access period.');
+    }
+
+    $reviewed_result = $this->getResults($user, [
+      'state' => QuizResultType::ON_REVIEW,
+    ]);
+
+    if ($reviewed_result) {
+      return t('Your last quiz result is on the assessment now, please wait for the completion of the assessment to do the next attempt.');
     }
 
     return TRUE;

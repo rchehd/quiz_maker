@@ -19,6 +19,7 @@
     {{ title_suffix }}
   {% endif %}
   {% if content %}
+    {% if is_quiz_completed %}
     <table class="info-table">
       <tr>
         <th>
@@ -63,5 +64,10 @@
       {{ take_quiz }}
       {{ back_to_quiz }}
     </div>
+    {% else %}
+      <div>
+        <p>{{ 'This result is on assessment.' }}</p>
+      </div>
+    {% endif %}
   {% endif %}
 </article>

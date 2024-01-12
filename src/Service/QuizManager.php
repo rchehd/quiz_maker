@@ -141,10 +141,11 @@ class QuizManager {
    */
   public function finishQuiz(QuizResultInterface $result): void {
     $score = $this->calculateScore($result);
+    $state = $result->getQuiz()->requireManualAssessment() ? QuizResultType::ON_REVIEW : QuizResultType::COMPLETED;
     try {
       $result->setScore($score)
         ->setPassed($score >= $result->getQuiz()->getPassRate())
-        ->setState(QuizResultType::COMPLETED)
+        ->setState($state)
         ->setFinishedTime($this->time->getCurrentTime())
         ->save();
     }

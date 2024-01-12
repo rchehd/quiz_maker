@@ -330,6 +330,13 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
   /**
    * {@inheritDoc}
    */
+  public function getState(): string {
+    return $this->get('state')->value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function setPassed(bool $is_passed): QuizResultInterface {
     $this->set('passed', $is_passed ? 1 : 0);
     return $this;

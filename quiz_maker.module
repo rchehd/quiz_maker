@@ -351,21 +351,29 @@ function quiz_maker_preprocess_quiz_result(array &$variables): void {
   $quiz_result = $variables['elements']['#quiz_result'];
   $variables['take_quiz'] = quiz_maker_get_quiz_take_link($quiz_result->getQuiz(), 'Take quiz again');
   $variables['back_to_quiz'] = quiz_maker_get_quiz_link($quiz_result->getQuiz(), 'Go back to quiz');
+  $variables['is_quiz_completed'] = $quiz_result->getState() === QuizResultType::COMPLETED;
 }
 
 /**
  * Implement hook_preprocess_HOOK().
  */
 function quiz_maker_preprocess_quiz(array &$variables): void {
-  /** @var \Drupal\quiz_maker\Service\QuizManager $quiz_manager */
-  $quiz_manager = \Drupal::service('quiz_maker.quiz_manager');
-  /** @var \Drupal\quiz_maker\QuizInterface $quiz_result */
+  /** @var \Drupal\quiz_maker\QuizInterface $quiz */
   $quiz = $variables['elements']['#quiz'];
   $label = 'Take quiz';
   if (!empty($quiz->getResults(\Drupal::currentUser(), ['state' => QuizResultType::DRAFT]))) {
     $label = 'Continue quiz';
   }
-  $variables['take_quiz'] = quiz_maker_get_quiz_take_link($quiz, $label);
+  if (is_string($quiz->allowTaking(\Drupal::currentUser()))) {
+    $variables['take_quiz'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => $quiz->allowTaking(\Drupal::currentUser()),
+    ];
+  }
+  else {
+    $variables['take_quiz'] = quiz_maker_get_quiz_take_link($quiz, $label);
+  }
   $variables['quiz_results'] = views_embed_view('quiz_results', 'user_quiz_results', \Drupal::currentUser()->id());
 }
 
@@ -388,7 +396,7 @@ function quiz_maker_get_quiz_take_link(QuizInterface $quiz, string $label): arra
     '#attributes' => [
       'class' => ['button', 'button--primary'],
     ],
-    '#access' => $quiz->allowTaking(\Drupal::currentUser()),
+    '#access' => is_bool($quiz->allowTaking(\Drupal::currentUser())) ? $quiz->allowTaking(\Drupal::currentUser()) : FALSE,
   ];
 }
 

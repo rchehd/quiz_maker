@@ -43,7 +43,6 @@ quiz.take:
   defaults:
     _form: '\Drupal\quiz_maker\Form\QuizTakeForm'
     _title_callback: '\Drupal\quiz_maker\Controller\QuizMakerController::getQuizTakeFormTitle'
-    _title: 'Manage results'
   requirements:
     _permission: 'take quiz'
     _custom_access: '\Drupal\quiz_maker\Controller\QuizMakerController::quizTakeAccess'

@@ -67,6 +67,14 @@ interface QuizResultInterface extends ContentEntityInterface, EntityOwnerInterfa
   public function getActiveQuestion(): ?QuestionInterface;
 
   /**
+   * Get result state.
+   *
+   * @return string
+   *   The state.
+   */
+  public function getState(): string;
+
+  /**
    * Is passed?
    *
    * @return bool
