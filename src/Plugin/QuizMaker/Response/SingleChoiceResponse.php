@@ -16,12 +16,4 @@ use Drupal\quiz_maker\QuestionInterface;
  */
 class SingleChoiceResponse extends QuestionResponse {
 
-  /**
-   * {@inheritDoc}
-   */
-  public function getResponseData(): mixed {
-    $data = $this->get('response')->response;
-    return $data;
-  }
-
 }

@@ -23,57 +23,6 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
   public function getQuestions(): array|bool;
 
   /**
-   * Is quiz passed?
-   *
-   * @param \Drupal\Core\Session\AccountInterface $user
-   *   The user.
-   *
-   * @return bool
-   *   TRUE if passed, otherwise FALSE.
-   */
-  public function isPassed(AccountInterface $user): bool;
-
-  /**
-   * Require manually evaluation?
-   *
-   * @return bool
-   *   TRUE if required, otherwise FALSE.
-   */
-  public function requiresManualEvaluation(): bool;
-
-  /**
-   * Check if quiz allows to skip questions.
-   *
-   * @return bool
-   *   TRUE if allowed, otherwise FALSE.
-   */
-  public function allowSkipping(): bool;
-
-  /**
-   * Check if quiz allows to backward navigation.
-   *
-   * @return bool
-   *   TRUE if allowed, otherwise FALSE.
-   */
-  public function allowBackwardNavigation(): bool;
-
-  /**
-   * Check if quiz allows to change answer.
-   *
-   * @return bool
-   *   TRUE if allowed, otherwise FALSE.
-   */
-  public function allowChangeAnswer(): bool;
-
-  /**
-   * Get maximum possible score od quiz.
-   *
-   * @return int
-   *   The score.
-   */
-  public function getMaxScore(): int;
-
-  /**
    * Get pass rate.
    *
    * @return int
@@ -104,5 +53,80 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
    *   The result type id.
    */
   public function getResultType(): string;
+
+  /**
+   * Get user draft results.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user.
+   * @param array $conditions
+   *   The conditions.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface[]|\Drupal\quiz_maker\QuizResultInterface[]
+   *   The array of quiz result entities.
+   */
+  public function getResults(AccountInterface $user, array $conditions = []): array;
+
+  /**
+   * Get quiz max score.
+   *
+   * @return int
+   *   The score.
+   */
+  public function getMaxScore(): int;
+
+  /**
+   * Get quiz attempts count.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user.
+   *
+   * @return int
+   *   The count of completed attempts.
+   */
+  public function getCompletedAttempts(AccountInterface $user): int;
+
+  /**
+   * Check if quiz require to manually assessment.
+   *
+   * @return bool
+   *   TRUE if require, otherwise FALSE.
+   */
+  public function requireManualAssessment(): bool;
+
+  /**
+   * Check if quiz allows to skip questions.
+   *
+   * @return bool
+   *   TRUE if allowed, otherwise FALSE.
+   */
+  public function allowSkipping(): bool;
+
+  /**
+   * Check if quiz allows to backward navigation.
+   *
+   * @return bool
+   *   TRUE if allowed, otherwise FALSE.
+   */
+  public function allowBackwardNavigation(): bool;
+
+  /**
+   * Check if quiz allows to change answer.
+   *
+   * @return bool
+   *   TRUE if allowed, otherwise FALSE.
+   */
+  public function allowChangeAnswer(): bool;
+
+  /**
+   * Check if user has access to take quiz.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user.
+   *
+   * @return bool
+   *   TRUE if allowed, otherwise FALSE.
+   */
+  public function allowTaking(AccountInterface $user): bool;
 
 }

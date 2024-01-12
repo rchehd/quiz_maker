@@ -29,22 +29,6 @@ interface QuizResultInterface extends ContentEntityInterface, EntityOwnerInterfa
   public function getUser(): AccountInterface;
 
   /**
-   * Get result status.
-   *
-   * @return string
-   *   The status.
-   */
-  public function getStatus(): string;
-
-  /**
-   * Get pass rate (can be without set pass rate).
-   *
-   * @return int|null
-   *   The score.
-   */
-  public function getPassRate(): ?int;
-
-  /**
    * Get score.
    *
    * @return int
@@ -53,20 +37,12 @@ interface QuizResultInterface extends ContentEntityInterface, EntityOwnerInterfa
   public function getScore(): int;
 
   /**
-   * Is passed?
-   *
-   * @return bool
-   *   TRUE if passed, otherwise FALSE.
-   */
-  public function isPassed(): bool;
-
-  /**
    * Get all answers.
    *
-   * @return ?\Drupal\quiz_maker\QuestionResponseInterface[]
-   *   Array of answers of FALSE.
+   * @return \Drupal\quiz_maker\QuestionResponseInterface[]
+   *   Array of answers or empty array.
    */
-  public function getResponses(): ?array;
+  public function getResponses(): array;
 
   /**
    * Get question response by question.
@@ -80,14 +56,6 @@ interface QuizResultInterface extends ContentEntityInterface, EntityOwnerInterfa
   public function getResponse(QuestionInterface $question): ?QuestionResponseInterface;
 
   /**
-   * Add question response to quiz result.
-   *
-   * @param \Drupal\quiz_maker\QuestionResponseInterface $response
-   *   The question response.
-   */
-  public function addResponse(QuestionResponseInterface $response): void;
-
-  /**
    * Get active question that need to be answered.
    *
    * User can answer only several question, and then continue taking quiz from
@@ -99,24 +67,63 @@ interface QuizResultInterface extends ContentEntityInterface, EntityOwnerInterfa
   public function getActiveQuestion(): ?QuestionInterface;
 
   /**
-   * Calculate result score.
+   * Is passed?
+   *
+   * @return bool
+   *   TRUE if passed, otherwise FALSE.
    */
-  public function calculateScore(): void;
+  public function isPassed(): bool;
 
   /**
-   * Set quiz status.
+   * Set score.
    *
-   * @param string $status
-   *   The status.
+   * @param int $score
+   *   The score.
+   *
+   * @return \Drupal\quiz_maker\QuizResultInterface
+   *   The quiz result object.
    */
-  public function setStatus(string $status): void;
+  public function setScore(int $score): QuizResultInterface;
+
+  /**
+   * Set passed value.
+   *
+   * @param bool $is_passed
+   *   The score.
+   *
+   * @return \Drupal\quiz_maker\QuizResultInterface
+   *   The quiz result object.
+   */
+  public function setPassed(bool $is_passed): QuizResultInterface;
+
+  /**
+   * Add question response to quiz result.
+   *
+   * @param \Drupal\quiz_maker\QuestionResponseInterface $response
+   *   The question response.
+   */
+  public function addResponse(QuestionResponseInterface $response): QuizResultInterface;
+
+  /**
+   * Set quiz result state.
+   *
+   * @param string $state
+   *   The state.
+   *
+   * @return \Drupal\quiz_maker\QuizResultInterface
+   *   The quiz result object.
+   */
+  public function setState(string $state): QuizResultInterface;
 
   /**
    * Set finished time.
    *
    * @param int $timestamp
    *   The timestamp.
+   *
+   * @return \Drupal\quiz_maker\QuizResultInterface
+   *   The quiz result object.
    */
-  public function setFinishedTime(int $timestamp): void;
+  public function setFinishedTime(int $timestamp): QuizResultInterface;
 
 }

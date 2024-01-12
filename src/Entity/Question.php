@@ -215,7 +215,7 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
    * {@inheritDoc}
    */
   public function getAnswers(): ?array {
-    if ($this->hasReferencedAnswers()) {
+    if ($this->hasField('field_answers')) {
       return $this->get('field_answers')->referencedEntities();
     }
     return NULL;
@@ -243,6 +243,17 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
    */
   public function getDefaultAnswersData(): array {
     return [];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponseType(): ?string {
+    if ($this->hasField('field_response')) {
+      $target_bundles = $this->get('field_response')->getFieldDefinition()->getSetting('handler_settings')['target_bundles'];
+      return reset($target_bundles);
+    }
+    return NULL;
   }
 
   /**

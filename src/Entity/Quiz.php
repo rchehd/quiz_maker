@@ -2,17 +2,16 @@
 
 namespace Drupal\quiz_maker\Entity;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuizInterface;
-use Drupal\quiz_maker\QuizResultInterface;
 use Drupal\user\EntityOwnerTrait;
-use http\Exception\BadUrlException;
 
 /**
  * Defines the quiz entity class.
@@ -193,23 +192,74 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
-  public function isPassed(AccountInterface $user): bool {
-    $completed_results = $this->getResults($user, QuizResultType::COMPLETED, [
-      'passed' => 1,
-    ]);
+  public function getResults(AccountInterface $user, array $conditions = []): array {
+    $result_type = $this->getResultType();
+    try {
+      $result_storage = \Drupal::entityTypeManager()->getStorage('quiz_result');
+      $query = $result_storage->getQuery();
+      $query->accessCheck(FALSE)
+        ->condition('bundle', $result_type)
+        ->condition('uid', $user->id());
 
-    if (count($completed_results)) {
-      return TRUE;
+      if ($conditions) {
+        foreach ($conditions as $key => $value) {
+          $query->condition($key, $value);
+        }
+      }
+
+      $result_ids = $query->execute();
+
+      if ($result_ids) {
+        return $result_storage->loadMultiple($result_ids);
+      }
+
+    }
+    catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
+      \Drupal::logger('quiz_maker')->error($e->getMessage());
+      return [];
     }
 
-    return FALSE;
+    return [];
   }
 
   /**
    * {@inheritDoc}
    */
-  public function requiresManualEvaluation(): bool {
-    return FALSE;
+  public function getMaxScore(): int {
+    $questions = $this->getQuestions();
+    $max_score = 0;
+    foreach ($questions as $question) {
+      /** @var \Drupal\quiz_maker\QuestionInterface $question */
+      $max_score += $question->getMaxScore();
+    }
+    return $max_score;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getCompletedAttempts(AccountInterface $user): int {
+    try {
+      $results = \Drupal::entityTypeManager()->getStorage('quiz_result')
+        ->loadByProperties([
+          'uid' => $user->id(),
+          'field_quiz' => $this->id(),
+          'state' => QuizResultType::COMPLETED,
+        ]);
+    }
+    catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
+      \Drupal::logger('quiz_maker')->error($e->getMessage());
+      return 0;
+    }
+
+    return count($results);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function requireManualAssessment(): bool {
+    return (bool) $this->get('field_manual_assessment')->getString();
   }
 
   /**
@@ -236,6 +286,26 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
+  public function allowTaking(AccountInterface $user): bool {
+    $quiz_attempts = $this->getAllowedAttempts();
+    $access_period = $this->getAccessPeriod();
+    // Do not allow to take quiz if user used all the attempts.
+    $completed_results = $this->getResults($user, ['state' => QuizResultType::COMPLETED]);
+    if ($quiz_attempts && $quiz_attempts <= $completed_results) {
+      return FALSE;
+    }
+    // Do not allow to take quiz if access period is expired.
+    $now = \Drupal::time()->getCurrentTime();
+    if ($access_period && ($now < $access_period['start_date'] || $now > $access_period['end_date'])) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function getAllowedAttempts(): ?int {
     return $this->get('field_attempts')->value;
   }
@@ -243,21 +313,15 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
-  public function getMaxScore(): int {
-    $questions = $this->getQuestions();
-    $max_score = 0;
-    foreach ($questions as $question) {
-      /** @var \Drupal\quiz_maker\QuestionInterface $question */
-      $max_score += $question->getMaxScore();
-    }
-    return $max_score;
+  public function getPassRate(): int {
+    return $this->get('field_pass_rate')->value;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function getPassRate(): int {
-    return $this->get('field_pass_rate')->value;
+  public function getResultType(): string {
+    return $this->get('field_result_type')->target_id;
   }
 
   /**
@@ -273,13 +337,6 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       ];
     }
     return [];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getResultType(): string {
-    return $this->get('field_result_type')->target_id;
   }
 
 }

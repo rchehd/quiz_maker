@@ -28,28 +28,12 @@ interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerI
   public function getQuiz(): ?QuizInterface;
 
   /**
-   * TRUE if response was correct.
-   *
-   * @return bool
-   *   TRUE if correct, otherwise FALSE.
-   */
-  public function isCorrect(): bool;
-
-  /**
    * Get response score.
    *
    * @return int
    *   The score.
    */
   public function getScore(): int;
-
-  /**
-   * Set response data.
-   *
-   * @param array $data
-   *   The data.
-   */
-  public function setResponseData(array $data): void;
 
   /**
    * Get response data.
@@ -60,28 +44,56 @@ interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerI
   public function getResponseData(): mixed;
 
   /**
+   * TRUE if response was correct.
+   *
+   * @return bool
+   *   TRUE if correct, otherwise FALSE.
+   */
+  public function isCorrect(): bool;
+
+  /**
+   * Set response data.
+   *
+   * @param array $data
+   *   The data.
+   *
+   * @return \Drupal\quiz_maker\QuestionResponseInterface
+   *   The response object.
+   */
+  public function setResponseData(array $data): QuestionResponseInterface;
+
+  /**
    * Set is_correct value.
    *
    * @param bool $value
    *   The value.
+   *
+   * @return \Drupal\quiz_maker\QuestionResponseInterface
+   *   The response object.
    */
-  public function setCorrect(bool $value): void;
+  public function setCorrect(bool $value): QuestionResponseInterface;
 
   /**
    * Set quiz reference.
    *
    * @param \Drupal\quiz_maker\QuizInterface $quiz
    *   The quiz.
+   *
+   * @return \Drupal\quiz_maker\QuestionResponseInterface
+   *   The response object.
    */
-  public function setQuiz(QuizInterface $quiz): void;
+  public function setQuiz(QuizInterface $quiz): QuestionResponseInterface;
 
   /**
    * Set question reference.
    *
    * @param \Drupal\quiz_maker\QuestionInterface $question
    *   The question.
+   *
+   * @return \Drupal\quiz_maker\QuestionResponseInterface
+   *   The response object.
    */
-  public function setQuestion(QuestionInterface $question): void;
+  public function setQuestion(QuestionInterface $question): QuestionResponseInterface;
 
   /**
    * Calculate and set score.
@@ -90,7 +102,10 @@ interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerI
    *   The question.
    * @param bool $value
    *   TRUE id response is correct, otherwise FALSE.
+   *
+   * @return \Drupal\quiz_maker\QuestionResponseInterface
+   *   The response object.
    */
-  public function setScore(QuestionInterface $question, bool $value): void;
+  public function setScore(QuestionInterface $question, bool $value): QuestionResponseInterface;
 
 }

@@ -15,7 +15,7 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   description = @Translation("Matching answer.")
  * )
  */
-final class MatchingAnswer extends QuestionAnswer {
+class MatchingAnswer extends QuestionAnswer {
 
   /**
    * Get matching question.

@@ -5,13 +5,16 @@
  * Primary module hooks for Quiz Maker module.
  */
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
+use Drupal\quiz_maker\Entity\QuizResultType;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\user\UserInterface;
-use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_page_attachments().
@@ -343,7 +346,7 @@ function template_preprocess_question_response(array &$variables): void {
 /**
  * Implement hook_preprocess_HOOK().
  */
-function quiz_maker_preprocess_quiz_result(array &$variables) {
+function quiz_maker_preprocess_quiz_result(array &$variables): void {
   /** @var \Drupal\quiz_maker\QuizResultInterface $quiz_result */
   $quiz_result = $variables['elements']['#quiz_result'];
   $variables['take_quiz'] = quiz_maker_get_quiz_take_link($quiz_result->getQuiz(), 'Take quiz again');
@@ -353,13 +356,13 @@ function quiz_maker_preprocess_quiz_result(array &$variables) {
 /**
  * Implement hook_preprocess_HOOK().
  */
-function quiz_maker_preprocess_quiz(array &$variables) {
+function quiz_maker_preprocess_quiz(array &$variables): void {
   /** @var \Drupal\quiz_maker\Service\QuizManager $quiz_manager */
-  $quiz_manager = \Drupal::service('quiz_maker.manager');
+  $quiz_manager = \Drupal::service('quiz_maker.quiz_manager');
   /** @var \Drupal\quiz_maker\QuizInterface $quiz_result */
   $quiz = $variables['elements']['#quiz'];
   $label = 'Take quiz';
-  if (!empty($quiz_manager->getDraftResults(\Drupal::currentUser(), $quiz))) {
+  if (!empty($quiz->getResults(\Drupal::currentUser(), ['state' => QuizResultType::DRAFT]))) {
     $label = 'Continue quiz';
   }
   $variables['take_quiz'] = quiz_maker_get_quiz_take_link($quiz, $label);
@@ -376,13 +379,8 @@ function quiz_maker_preprocess_quiz(array &$variables) {
  *
  * @return array
  *   The link.
- *
- * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
- * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  */
 function quiz_maker_get_quiz_take_link(QuizInterface $quiz, string $label): array {
-  /** @var \Drupal\quiz_maker\Service\QuizManager $quiz_manager */
-  $quiz_manager = \Drupal::service('quiz_maker.manager');
   return [
     '#type' => 'link',
     '#title' => t($label),
@@ -390,7 +388,7 @@ function quiz_maker_get_quiz_take_link(QuizInterface $quiz, string $label): arra
     '#attributes' => [
       'class' => ['button', 'button--primary'],
     ],
-    '#access' => $quiz_manager->allowTakeQuiz($quiz, \Drupal::currentUser()),
+    '#access' => $quiz->allowTaking(\Drupal::currentUser()),
   ];
 }
 
@@ -417,7 +415,7 @@ function quiz_maker_get_quiz_link(QuizInterface $quiz, string $label): array {
 /**
  * Implements hook_entity_presave().
  */
-function quiz_maker_entity_presave(EntityInterface $entity) {
+function quiz_maker_entity_presave(EntityInterface $entity): void {
   // Add default answers to question if it has.
   if ($entity instanceof QuestionInterface) {
     if (!$entity->getAnswers()) {
@@ -425,16 +423,21 @@ function quiz_maker_entity_presave(EntityInterface $entity) {
       foreach ($bundles as $bundle) {
         $default_answers_data = $entity->getDefaultAnswersData();
         foreach ($default_answers_data as $answer_data) {
-          /** @var \Drupal\quiz_maker\QuestionAnswerInterface $answer */
-          $answer = \Drupal::entityTypeManager()->getStorage('question_answer')->create(
-            [
-              'bundle' => $bundle,
-              'label' => $answer_data['label'],
-              'field_answer' => $answer_data['answer'],
-              'field_is_correct' => $answer_data['is_correct'],
-            ]
-          );
-          $answer->save();
+          try {
+            /** @var \Drupal\quiz_maker\QuestionAnswerInterface $answer */
+            $answer = \Drupal::entityTypeManager()->getStorage('question_answer')->create(
+              [
+                'bundle' => $bundle,
+                'label' => $answer_data['label'],
+                'field_answer' => $answer_data['answer'],
+                'field_is_correct' => $answer_data['is_correct'],
+              ]
+            );
+            $answer->save();
+          }
+          catch (InvalidPluginDefinitionException | PluginNotFoundException | EntityStorageException $e) {
+            \Drupal::logger('quiz_maker')->error($e->getMessage());
+          }
           $entity->addAnswer($answer);
         }
       }

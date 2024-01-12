@@ -15,7 +15,7 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   description = @Translation("Multiple choice answer.")
  * )
  */
-final class MultipleChoiceAnswer extends QuestionAnswer {
+class MultipleChoiceAnswer extends QuestionAnswer {
 
   /**
    * {@inheritDoc}

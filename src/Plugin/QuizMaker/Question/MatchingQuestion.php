@@ -71,13 +71,6 @@ class MatchingQuestion extends Question {
   }
 
   /**
-   * {@inheritDoc}
-   */
-  public function hasReferencedAnswers(): bool {
-    return TRUE;
-  }
-
-  /**
    * Get Matching table.
    *
    * @param \Drupal\quiz_maker\Plugin\QuizMaker\Answer\MatchingAnswer[] $answers

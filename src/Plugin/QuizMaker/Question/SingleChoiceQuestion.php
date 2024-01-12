@@ -74,11 +74,4 @@ class SingleChoiceQuestion extends Question {
     return reset($correct_answers_ids) === $answers_ids;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public function hasReferencedAnswers(): bool {
-    return TRUE;
-  }
-
 }

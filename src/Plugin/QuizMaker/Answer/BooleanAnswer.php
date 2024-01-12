@@ -15,7 +15,7 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   description = @Translation("Boolean answer.")
  * )
  */
-final class BooleanAnswer extends QuestionAnswer {
+class BooleanAnswer extends QuestionAnswer {
 
   /**
    * {@inheritDoc}

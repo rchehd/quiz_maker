@@ -11,6 +11,10 @@ services:
     class: Drupal\quiz_maker\Service\QuizMakerQuestionResponsePluginManager
     parent: default_plugin_manager
 
-  quiz_maker.manager:
+  quiz_maker.quiz_manager:
     class: Drupal\quiz_maker\Service\QuizManager
-    arguments: ['@entity_type.manager', '@request_stack', '@datetime.time']
+    arguments:
+      - '@entity_type.manager'
+      - '@request_stack'
+      - '@datetime.time'
+      - '@logger.factory'

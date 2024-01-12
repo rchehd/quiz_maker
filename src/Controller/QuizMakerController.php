@@ -33,7 +33,7 @@ final class QuizMakerController extends ControllerBase {
     return new self(
       $container->get('entity_type.manager'),
       $container->get('current_user'),
-      $container->get('quiz_maker.manager'),
+      $container->get('quiz_maker.quiz_manager'),
     );
   }
 
@@ -58,12 +58,9 @@ final class QuizMakerController extends ControllerBase {
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function quizTakeAccess(QuizInterface $quiz): AccessResultInterface {
-    return AccessResult::forbiddenIf(!$this->quizManager->allowTakeQuiz($quiz, $this->currentUser()));
+    return AccessResult::forbiddenIf(!$quiz->allowTaking($this->currentUser()));
   }
 
 }

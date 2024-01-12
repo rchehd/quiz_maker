@@ -64,7 +64,7 @@ class QuizTakeForm extends FormBase {
     return new static(
       $container->get('request_stack'),
       $container->get('entity_type.manager'),
-      $container->get('quiz_maker.manager'),
+      $container->get('quiz_maker.quiz_manager'),
       $container->get('current_user'),
     );
   }
@@ -81,7 +81,7 @@ class QuizTakeForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, QuizInterface $quiz = NULL) {
     // Create or get draft quiz result.
-    $this->quizResult = $this->quizManager->createQuizResult($this->currentUser, $quiz);
+    $this->quizResult = $this->quizManager->startQuiz($this->currentUser, $quiz);
 
     $form['question'] = [
       '#type' => 'container',
@@ -190,7 +190,7 @@ class QuizTakeForm extends FormBase {
     $current_question = $this->getCurrentQuestion();
     $response_data = $current_question->getResponse($form, $form_state);
     if ($response_data) {
-      $this->quizManager->updateQuizResult($this->quizResult, $current_question, $response_data);
+      $this->quizManager->updateQuiz($this->quizResult, $current_question, $response_data);
       $this->quizManager->finishQuiz($this->quizResult);
     }
 
@@ -236,16 +236,12 @@ class QuizTakeForm extends FormBase {
    *   The form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function getNextQuestion(array &$form, FormStateInterface $form_state): void {
     $current_question = $this->getCurrentQuestion();
     $response_data = $current_question?->getResponse($form, $form_state);
     if (isset($response_data['response'])) {
-      $this->quizManager->updateQuizResult($this->quizResult, $current_question, $response_data);
+      $this->quizManager->updateQuiz($this->quizResult, $current_question, $response_data);
     }
     $this->questionNumber++;
     $form_state->setRebuild(TRUE);

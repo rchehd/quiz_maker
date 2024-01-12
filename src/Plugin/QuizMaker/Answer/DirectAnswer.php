@@ -15,7 +15,7 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   description = @Translation("Direct answer.")
  * )
  */
-final class DirectAnswer extends QuestionAnswer {
+class DirectAnswer extends QuestionAnswer {
 
   /**
    * {@inheritDoc}

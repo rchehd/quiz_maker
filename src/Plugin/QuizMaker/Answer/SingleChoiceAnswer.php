@@ -15,7 +15,7 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   description = @Translation("Single choice answer.")
  * )
  */
-final class SingleChoiceAnswer extends QuestionAnswer {
+class SingleChoiceAnswer extends QuestionAnswer {
 
   /**
    * {@inheritDoc}

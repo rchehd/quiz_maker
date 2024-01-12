@@ -3,13 +3,16 @@
 namespace Drupal\quiz_maker\Service;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\QuizResultType;
-use Drupal\quiz_maker\Entity\QuizType;
 use Drupal\quiz_maker\QuestionInterface;
-use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\quiz_maker\QuizResultInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -17,9 +20,16 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Quiz manager service.
  */
-final class QuizManager {
+class QuizManager {
 
   use StringTranslationTrait;
+
+  /**
+   * The logger channel.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
+  protected LoggerChannelInterface $logger;
 
   /**
    * Constructs a QuizManager object.
@@ -27,8 +37,11 @@ final class QuizManager {
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected RequestStack $requestStack,
-    protected TimeInterface $time
-  ) {}
+    protected TimeInterface $time,
+    protected LoggerChannelFactoryInterface $loggerChannelFactory
+  ) {
+    $this->logger = $loggerChannelFactory->get('quiz_maker');
+  }
 
   /**
    * Create quiz result.
@@ -40,58 +53,37 @@ final class QuizManager {
    *
    * @return \Drupal\quiz_maker\QuizResultInterface|null
    *   The quiz result or null.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function createQuizResult(AccountInterface $user, QuizInterface $quiz): ?QuizResultInterface {
-    $draft_results = $this->getDraftResults($user, $quiz);
+  public function startQuiz(AccountInterface $user, QuizInterface $quiz): ?QuizResultInterface {
+    $draft_results = $quiz->getResults($user, [
+      'state' => QuizResultType::DRAFT,
+    ]);
     if ($draft_results) {
       // Return the newest draft result.
       return end($draft_results);
     }
     $quiz_result_type = $quiz->get('field_result_type')->target_id;
-    $quiz_result = $this->entityTypeManager->getStorage('quiz_result')->create([
-      'bundle' => $quiz_result_type,
-      'label' => $this->t('Result of "@quiz_label"', ['@quiz_label' => $quiz->label()]),
-      'state' => QuizResultType::DRAFT,
-      'field_quiz' => $quiz->id(),
-      'uid' => $user->id(),
-      'attempt' => $this->getQuizAttempts($user, $quiz) + 1,
-    ]);
-
-    $quiz_result->save();
+    try {
+      $quiz_result = $this->entityTypeManager->getStorage('quiz_result')->create([
+        'bundle' => $quiz_result_type,
+        'label' => $this->t('Result of "@quiz_label"', ['@quiz_label' => $quiz->label()]),
+        'state' => QuizResultType::DRAFT,
+        'field_quiz' => $quiz->id(),
+        'uid' => $user->id(),
+        'attempt' => $quiz->getCompletedAttempts($user) + 1,
+      ]);
+      $quiz_result->save();
+    }
+    catch (InvalidPluginDefinitionException | PluginNotFoundException | EntityStorageException $e) {
+      $this->logger->error($e->getMessage());
+      return NULL;
+    }
 
     if ($quiz_result instanceof QuizResultInterface) {
       return $quiz_result;
     }
 
     return NULL;
-  }
-
-  /**
-   * Get user draft results.
-   *
-   * @param \Drupal\Core\Session\AccountInterface $user
-   *   The user.
-   * @param \Drupal\quiz_maker\QuizInterface $quiz
-   *   The quiz.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface[]|\Drupal\quiz_maker\QuizResultInterface[]
-   *   The array if quiz result entities.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function getDraftResults(AccountInterface $user, QuizInterface $quiz): array {
-    $quiz_result_type = $quiz->get('field_result_type')->target_id;
-    return $this->entityTypeManager->getStorage('quiz_result')->loadByProperties([
-      'bundle' => $quiz_result_type,
-      'state' => QuizResultType::DRAFT,
-      'field_quiz' => $quiz->id(),
-      'uid' => $user->id(),
-    ]);
   }
 
   /**
@@ -103,34 +95,40 @@ final class QuizManager {
    *   The question.
    * @param array $response_data
    *   The response data.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function updateQuizResult(QuizResultInterface $result, QuestionInterface $question, array $response_data): void {
+  public function updateQuiz(QuizResultInterface $result, QuestionInterface $question, array $response_data): void {
     // Get question response from result, if it doesn't exist - create new response,
     // otherwise - update current response.
     $response = $result->getResponse($question);
     if (!$response) {
       /** @var \Drupal\quiz_maker\QuestionResponseInterface $response */
-      $response = $this->entityTypeManager->getStorage('question_response')->create([
-        'bundle' => $this->getQuestionResponseType($question),
-        'label' => $this->t('Response of "@question_label"', ['@question_label' => $question->label()]),
-      ]);
-      $response->setQuiz($result->getQuiz());
-      $response->setQuestion($question);
-      $response->setResponseData($response_data);
-      $response->setCorrect($question->isResponseCorrect($response_data));
-      $response->setScore($question, $question->isResponseCorrect($response_data));
-      $response->save();
-      $result->addResponse($response);
+      try {
+        $response = $this->entityTypeManager->getStorage('question_response')->create([
+          'bundle' => $question->getResponseType(),
+          'label' => $this->t('Response of "@question_label"', ['@question_label' => $question->label()]),
+        ]);
+        $response->setQuiz($result->getQuiz())
+          ->setQuestion($question)
+          ->setResponseData($response_data)
+          ->setCorrect($question->isResponseCorrect($response_data))
+          ->setScore($question, $question->isResponseCorrect($response_data))
+          ->save();
+        $result->addResponse($response)->save();
+      }
+      catch (InvalidPluginDefinitionException | PluginNotFoundException | EntityStorageException $e) {
+        $this->logger->error($e->getMessage());
+      }
     }
     else {
-      $response->setResponseData($response_data);
-      $response->setCorrect($question->isResponseCorrect($response_data));
-      $response->setScore($question, $question->isResponseCorrect($response_data));
-      $response->save();
+      try {
+        $response->setResponseData($response_data)
+          ->setCorrect($question->isResponseCorrect($response_data))
+          ->setScore($question, $question->isResponseCorrect($response_data))
+          ->save();
+      }
+      catch (EntityStorageException $e) {
+        $this->logger->error($e->getMessage());
+      }
     }
 
   }
@@ -140,124 +138,34 @@ final class QuizManager {
    *
    * @param \Drupal\quiz_maker\QuizResultInterface $result
    *   The quiz result.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function finishQuiz(QuizResultInterface $result): void {
-    $result->calculateScore();
-    $result->setStatus(QuizResultType::COMPLETED);
-    $result->setFinishedTime($this->time->getCurrentTime());
-    $result->save();
+    $score = $this->calculateScore($result);
+    try {
+      $result->setScore($score)
+        ->setPassed($score >= $result->getQuiz()->getPassRate())
+        ->setState(QuizResultType::COMPLETED)
+        ->setFinishedTime($this->time->getCurrentTime())
+        ->save();
+    }
+    catch (EntityStorageException $e) {
+      $this->logger->error($e->getMessage());
+    }
   }
 
   /**
-   * Get question response type.
+   * Calculate quiz result score.
    *
-   * @param \Drupal\quiz_maker\QuestionInterface $question
-   *   The question.
-   *
-   * @return false|mixed|null
-   *   The response type.
+   * @param \Drupal\quiz_maker\QuizResultInterface $quiz_result
+   *   The quiz result.
    */
-  public function getQuestionResponseType(QuestionInterface $question): mixed {
-    if ($question->hasField('field_response')) {
-      $target_bundles = $question->get('field_response')->getFieldDefinition()->getSetting('handler_settings')['target_bundles'];
-      return reset($target_bundles);
+  public function calculateScore(QuizResultInterface $quiz_result): int {
+    $responses = $quiz_result->getResponses();
+    $score = 0;
+    foreach ($responses as $response) {
+      $score = $score + $response->getScore();
     }
-    return NULL;
-  }
-
-  /**
-   * Get quiz attempts count.
-   *
-   * @param \Drupal\Core\Session\AccountInterface $user
-   *   The user.
-   * @param \Drupal\quiz_maker\QuizInterface $quiz
-   *   The quiz.
-   *
-   * @return int
-   *   The count of attempts.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function getQuizAttempts(AccountInterface $user, QuizInterface $quiz): int {
-    $results = $this->entityTypeManager->getStorage('quiz_result')->loadByProperties([
-      'uid' => $user->id(),
-      'field_quiz' => $quiz->id(),
-      'state' => QuizResultType::COMPLETED,
-    ]);
-
-    return count($results);
-  }
-
-  /**
-   * Get quiz completed results.
-   *
-   * @param \Drupal\quiz_maker\QuizInterface $quiz
-   *   The quiz.
-   * @param \Drupal\Core\Session\AccountInterface $user
-   *   The author.
-   * @param array $conditions
-   *   Array of additional conditions (optional).
-   *
-   * @return \Drupal\quiz_maker\QuizResultInterface[]
-   *   Array of Quiz Results or empty array.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function getQuizResults(QuizInterface $quiz, AccountInterface $user, array $conditions = []): array {
-    $result_type = $quiz->getResultType();
-    $result_storage = $this->entityTypeManager->getStorage('quiz_result');
-    $query = $result_storage->getQuery();
-    $query->accessCheck(FALSE);
-    $query->condition('bundle', $result_type);
-    $query->condition('uid', $user->id());
-
-    if ($conditions) {
-      foreach ($conditions as $key => $value) {
-        $query->condition($key, $value);
-      }
-    }
-
-    $result_ids = $query->execute();
-
-    if ($result_ids) {
-      return $result_storage->loadMultiple($result_ids);
-    }
-    return [];
-  }
-
-  /**
-   * Check if user has access to take quiz.
-   *
-   * @param \Drupal\quiz_maker\QuizInterface $quiz
-   *   The quiz.
-   * @param \Drupal\Core\Session\AccountInterface $user
-   *   The user.
-   *
-   * @return bool
-   *   TRUE if allowed, otherwise FALSE.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function allowTakeQuiz(QuizInterface $quiz, AccountInterface $user): bool {
-    $quiz_attempts = $quiz->getAllowedAttempts();
-    $access_period = $quiz->getAccessPeriod();
-    // Do not allow to take quiz if user used all the attempts.
-    $completed_results = $this->getQuizResults($quiz, $user, ['state' => QuizResultType::COMPLETED]);
-    if ($quiz_attempts && $quiz_attempts <= $completed_results) {
-      return FALSE;
-    }
-    // Do not allow to take quiz if access period is expired.
-    $now = $this->time->getCurrentTime();
-    if ($access_period && ($now < $access_period['start_date'] || $now > $access_period['end_date'])) {
-      return FALSE;
-    }
-
-    return TRUE;
+    return round(($score / $quiz_result->getQuiz()->getMaxScore()) * 100);
   }
 
 }

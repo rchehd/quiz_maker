@@ -54,13 +54,6 @@ class DirectQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function hasReferencedAnswers(): bool {
-    return FALSE;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public function isResponseCorrect(array $response_data): bool {
     return FALSE;
   }

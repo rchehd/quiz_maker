@@ -249,22 +249,7 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
    * {@inheritDoc}
    */
   public function getUser(): AccountInterface {
-    return \Drupal::currentUser();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getStatus(): string {
-    return 'test';
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getPassRate(): ?int {
-    $quiz = $this->getQuiz();
-    return $quiz->getPassRate();
+    return $this->get('uid')->entity;
   }
 
   /**
@@ -277,8 +262,9 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
   /**
    * {@inheritDoc}
    */
-  public function isPassed(): bool {
-    return $this->get('passed')->value;
+  public function setScore(int $score): QuizResultInterface {
+    $this->set('score', $score);
+    return $this;
   }
 
   /**
@@ -297,11 +283,11 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
   /**
    * {@inheritDoc}
    */
-  public function getResponses(): ?array {
+  public function getResponses(): array {
     if ($this->hasField('field_question_response')) {
       return $this->get('field_question_response')->referencedEntities();
     }
-    return NULL;
+    return [];
   }
 
   /**
@@ -322,26 +308,8 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
   /**
    * {@inheritDoc}
    */
-  public function addResponse(QuestionResponseInterface $response): void {
-    $responses = $this->get('field_question_response')->referencedEntities();
-    if ($responses) {
-      $response_ids = array_map(function ($responses) {
-        return $responses->id();
-      }, $responses);
-    }
-    else {
-      $response_ids = [];
-    }
-    $response_ids[] = $response->id();
-    $this->set('field_question_response', $response_ids);
-    $this->save();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public function getActiveQuestion(): ?QuestionInterface {
-    $responses = $this->get('field_question_response')->referencedEntities();
+    $responses = $this->getResponses();
     $questions = $this->getQuiz()->getQuestions();
     $answered_question_ids = array_map(function ($responses) {
       return $responses->getQuestion()->id();
@@ -362,29 +330,50 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
   /**
    * {@inheritDoc}
    */
-  public function calculateScore(): void {
-    $responses = $this->getResponses();
-    $score = 0;
-    foreach ($responses as $response) {
-      $score = $score + $response->getScore();
-    }
-    $result_score = round(($score / $this->getQuiz()->getMaxScore()) * 100);
-    $this->set('score', $result_score);
-    $this->set('passed', $result_score >= $this->getPassRate() ? 1 : 0);
+  public function setPassed(bool $is_passed): QuizResultInterface {
+    $this->set('passed', $is_passed ? 1 : 0);
+    return $this;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function setStatus(string $status): void {
-    $this->set('state', $status);
+  public function setState(string $state): QuizResultInterface {
+    $this->set('state', $state);
+    return $this;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function setFinishedTime(int $timestamp): void {
+  public function setFinishedTime(int $timestamp): QuizResultInterface {
     $this->set('finished', $timestamp);
+    return $this;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function isPassed(): bool {
+    return (bool) $this->get('passed')->value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function addResponse(QuestionResponseInterface $response): QuizResultInterface {
+    $responses = $this->getResponses();
+    if ($responses) {
+      $response_ids = array_map(function ($responses) {
+        return $responses->id();
+      }, $responses);
+    }
+    else {
+      $response_ids = [];
+    }
+    $response_ids[] = $response->id();
+    $this->set('field_question_response', $response_ids);
+    return $this;
   }
 
 }

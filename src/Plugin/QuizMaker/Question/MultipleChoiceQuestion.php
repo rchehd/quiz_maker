@@ -77,11 +77,4 @@ class MultipleChoiceQuestion extends Question {
     return $correct_answers_ids === $answers_ids;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public function hasReferencedAnswers(): bool {
-    return TRUE;
-  }
-
 }

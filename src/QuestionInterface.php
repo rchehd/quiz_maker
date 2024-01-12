@@ -57,17 +57,6 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
   public function getQuestion(): ?string;
 
   /**
-   * Has referenced answers.
-   *
-   * Check if question has referenced answers or there should be only hardcode
-   * answers build by answering form.
-   *
-   * @return bool
-   *   TRUE when has, otherwise FALSE.
-   */
-  public function hasReferencedAnswers(): bool;
-
-  /**
    * Get question's answers if it has.
    *
    * @return ?array
@@ -118,5 +107,13 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
    *   aren't default answers.
    */
   public function getDefaultAnswersData(): array;
+
+  /**
+   * Get response type.
+   *
+   * @return ?string
+   *   The response type.
+   */
+  public function getResponseType(): ?string;
 
 }
