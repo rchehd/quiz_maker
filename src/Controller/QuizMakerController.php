@@ -60,7 +60,10 @@ final class QuizMakerController extends ControllerBase {
    *   The access result.
    */
   public function quizTakeAccess(QuizInterface $quiz): AccessResultInterface {
-    return AccessResult::forbiddenIf(!$quiz->allowTaking($this->currentUser()));
+    if (!$quiz->allowTaking($this->currentUser())) {
+      return AccessResult::forbidden();
+    }
+    return AccessResult::allowed();
   }
 
 }
