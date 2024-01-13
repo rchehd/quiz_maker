@@ -59,6 +59,7 @@ content:
       display_label: false
     third_party_settings: {  }
 hidden:
+  answers: true
   created: true
   response_type: true
   uid: true

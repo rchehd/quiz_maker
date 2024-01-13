@@ -486,7 +486,7 @@ function quiz_maker_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $for
       $answer_type = $bundles_info[$entity_bundle]['answer_bundle'];
       if ($answer_type) {
         $form['answers']['widget']['actions']['bundle'] = [
-          '#type' => 'value',
+          '#type' => 'hidden',
           '#value' => $answer_type
         ];
       }
