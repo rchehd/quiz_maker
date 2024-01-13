@@ -470,7 +470,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     $access_period = $this->getAccessPeriod();
     // Do not allow to take quiz if user used all the attempts.
     $completed_results = $this->getResults($user, ['state' => QuizResultType::COMPLETED]);
-    if ($quiz_attempts && $quiz_attempts <= $completed_results) {
+    if ($quiz_attempts && $quiz_attempts <= count($completed_results)) {
       return t('You used all attempts.');
     }
     // Do not allow to take quiz if access period is expired.
