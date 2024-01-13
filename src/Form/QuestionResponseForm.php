@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Form controller for the question response entity edit forms.
  */
-final class QuestionResponseForm extends ContentEntityForm {
+class QuestionResponseForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}

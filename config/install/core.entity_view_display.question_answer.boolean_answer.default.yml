@@ -2,14 +2,10 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.question_answer.boolean_answer.field_answer
-    - field.field.question_answer.boolean_answer.field_is_correct
     - quiz_maker.question_answer_type.boolean_answer
   module:
     - text
     - user
-_core:
-  default_config_hash: R9dpnZUj4sBAEql9FUD4H_q7xv1qUe190sCng7EvzxU
 id: question_answer.boolean_answer.default
 targetEntityType: question_answer
 bundle: boolean_answer
@@ -34,14 +30,14 @@ content:
     third_party_settings: {  }
     weight: 20
     region: content
-  field_answer:
+  answer:
     type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
     weight: 22
     region: content
-  field_is_correct:
+  is_correct:
     type: boolean
     label: above
     settings:

@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
@@ -138,6 +139,35 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['responses'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Question response'))
+      ->setSetting('target_type', 'question_response')
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setDisplayOptions('form', [
+        'type' => 'inline_entity_form_complex',
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'question_response_formatter',
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['quiz'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Quiz'))
+      ->setSetting('target_type', 'quiz')
+      ->setCardinality(1)
+      ->setDisplayOptions('form', [
+        'type' => 'inline_entity_form_complex',
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['state'] = BaseFieldDefinition::create('state')
       ->setLabel(t('State'))
       ->setDescription(t('The quiz result state.'))
@@ -242,7 +272,7 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
    * {@inheritDoc}
    */
   public function getQuiz(): QuizInterface {
-    return $this->get('field_quiz')->entity;
+    return $this->get('quiz')->entity;
   }
 
   /**
@@ -284,18 +314,15 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
    * {@inheritDoc}
    */
   public function getResponses(): array {
-    if ($this->hasField('field_question_response')) {
-      return $this->get('field_question_response')->referencedEntities();
-    }
-    return [];
+    return $this->get('responses')->referencedEntities();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getResponse(QuestionInterface $question): ?QuestionResponseInterface {
-    if ($this->hasField('field_question_response')) {
-      $responses = $this->get('field_question_response')->referencedEntities();
+    if ($this->hasField('responses')) {
+      $responses = $this->get('responses')->referencedEntities();
       foreach ($responses as $response) {
         if ($response->get('question_id')->target_id === $question->id()) {
           return $response;
@@ -379,7 +406,7 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
       $response_ids = [];
     }
     $response_ids[] = $response->id();
-    $this->set('field_question_response', $response_ids);
+    $this->set('responses', $response_ids);
     return $this;
   }
 

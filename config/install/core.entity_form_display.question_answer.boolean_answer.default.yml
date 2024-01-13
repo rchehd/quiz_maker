@@ -2,19 +2,15 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.question_answer.boolean_answer.field_answer
-    - field.field.question_answer.boolean_answer.field_is_correct
     - quiz_maker.question_answer_type.boolean_answer
   module:
     - text
-_core:
-  default_config_hash: gEcs6Cwvu6U9J_-eU0_D2_hrbXQUN-ABnxHWLLzeGO4
 id: question_answer.boolean_answer.default
 targetEntityType: question_answer
 bundle: boolean_answer
 mode: default
 content:
-  field_answer:
+  answer:
     type: text_textarea
     weight: 2
     region: content
@@ -22,7 +18,7 @@ content:
       rows: 3
       placeholder: ''
     third_party_settings: {  }
-  field_is_correct:
+  is_correct:
     type: boolean_checkbox
     weight: 1
     region: content

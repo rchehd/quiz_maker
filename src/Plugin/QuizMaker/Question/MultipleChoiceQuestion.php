@@ -14,6 +14,8 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   id = "multiple_choice_question",
  *   label = @Translation("Multiple question"),
  *   description = @Translation("Multiple question."),
+ *   answer_bundle = "multiple_choice_answer",
+ *   response_bundle = "multiple_choice_response",
  * )
  */
 class MultipleChoiceQuestion extends Question {
@@ -24,8 +26,7 @@ class MultipleChoiceQuestion extends Question {
    * {@inheritDoc}
    */
   public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
-    $answers = $this->get('field_answers')->referencedEntities();
-    if ($answers) {
+    if ($answers = $this->getAnswers()) {
       $options = [];
       foreach ($answers as $answer) {
         $options[$answer->id()] = $answer->getAnswer();
@@ -35,7 +36,7 @@ class MultipleChoiceQuestion extends Question {
           '#type' => 'checkboxes',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
-          '#default_value' => $questionResponse?->getResponseData() ?? [],
+          '#default_value' => $questionResponse?->getResponses(),
           '#disabled' => !$allow_change_response
         ]
       ];
@@ -57,24 +58,11 @@ class MultipleChoiceQuestion extends Question {
    * {@inheritDoc}
    */
   public function getResponse(array &$form, FormStateInterface $form_state): array {
-    return [
-      'response' => $form_state->getValue('multiple_choice_answer')
-    ];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function isResponseCorrect(array $response_data): bool {
-    $correct_answers = $this->getCorrectAnswers();
-    $correct_answers_ids = array_map(function ($correct_answer) {
-      return $correct_answer->id();
-    }, $correct_answers);
-    $answers_ids = array_values($response_data['response']);
-    $answers_ids = array_filter($answers_ids, function ($answers_id) {
-      return is_string($answers_id);
+    $responses = $form_state->getValue('multiple_choice_answer');
+    $responses = array_filter($responses, function($response) {
+      return $response != 0;
     });
-    return $correct_answers_ids === $answers_ids;
+    return array_values($responses);
   }
 
 }

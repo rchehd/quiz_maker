@@ -14,6 +14,8 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   id = "boolean_question",
  *   label = @Translation("Boolean question"),
  *   description = @Translation("Boolean question."),
+ *   answer_bundle = "boolean_answer",
+ *   response_bundle = "boolean_response",
  * )
  */
 class BooleanQuestion extends Question {
@@ -24,7 +26,7 @@ class BooleanQuestion extends Question {
    * {@inheritDoc}
    */
   public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
-    $answers = $this->get('field_answers')->referencedEntities();
+    $answers = $this->getAnswers();
     if ($answers) {
       $options = [];
       foreach ($answers as $answer) {
@@ -35,7 +37,7 @@ class BooleanQuestion extends Question {
           '#type' => 'radios',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
-          '#default_value' => $questionResponse?->getResponseData(),
+          '#default_value' => $questionResponse?->getResponses(),
           '#disabled' => !$allow_change_response
         ]
       ];
@@ -58,20 +60,8 @@ class BooleanQuestion extends Question {
    */
   public function getResponse(array &$form, FormStateInterface $form_state): array {
     return [
-      'response' => $form_state->getValue('boolean_answer')
+      $form_state->getValue('boolean_answer')
     ];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function isResponseCorrect(array $response_data): bool {
-    $correct_answers = $this->getCorrectAnswers();
-    $correct_answers_ids = array_map(function ($correct_answer) {
-      return $correct_answer->id();
-    }, $correct_answers);
-    $answers_ids = $response_data['response'];
-    return reset($correct_answers_ids) === $answers_ids;
   }
 
   /**

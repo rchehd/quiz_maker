@@ -10,7 +10,7 @@ use Drupal\quiz_maker\Entity\QuizResultType;
 /**
  * Form handler for quiz result type forms.
  */
-final class QuizResultTypeForm extends BundleEntityFormBase {
+class QuizResultTypeForm extends BundleEntityFormBase {
 
   /**
    * {@inheritdoc}

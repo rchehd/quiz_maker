@@ -2,15 +2,11 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.question_answer.multiple_choice_answer.field_answer
-    - field.field.question_answer.multiple_choice_answer.field_is_correct
     - field.field.question_answer.multiple_choice_answer.field_score
     - quiz_maker.question_answer_type.multiple_choice_answer
   module:
     - text
     - user
-_core:
-  default_config_hash: AdRHOHxEGXWliSsdNUqYe72AMGeq0EykLsxTBSJGcJU
 id: question_answer.multiple_choice_answer.default
 targetEntityType: question_answer
 bundle: multiple_choice_answer
@@ -35,14 +31,14 @@ content:
     third_party_settings: {  }
     weight: 20
     region: content
-  field_answer:
+  answer:
     type: text_default
     label: above
     settings: {  }
     third_party_settings: {  }
     weight: 22
     region: content
-  field_is_correct:
+  is_correct:
     type: boolean
     label: above
     settings:

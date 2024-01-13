@@ -9,7 +9,7 @@ use Drupal\Core\Url;
 /**
  * Form controller for the quiz entity edit forms.
  */
-final class QuizForm extends ContentEntityForm {
+class QuizForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}

@@ -139,9 +139,35 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['data'] = BaseFieldDefinition::create('map')
-      ->setLabel(t('Data'))
-      ->setDescription(t('A serialized array of answer data.'));
+    $fields['answer'] = BaseFieldDefinition::create('text_long')
+        ->setRevisionable(TRUE)
+        ->setTranslatable(TRUE)
+        ->setLabel(t('Answer'))
+        ->setDisplayOptions('form', [
+          'type' => 'text_textarea',
+          'weight' => 10,
+        ])
+        ->setDisplayConfigurable('form', TRUE)
+        ->setDisplayOptions('view', [
+          'type' => 'text_default',
+          'label' => 'above',
+          'weight' => 10,
+        ])
+        ->setDisplayConfigurable('view', TRUE);
+
+    $fields['is_correct'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Is correct'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(FALSE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'weight' => 4,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
@@ -169,20 +195,14 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
    * {@inheritDoc}
    */
   public function isCorrect(): bool {
-    if ($this->hasField('field_is_correct')) {
-      return $this->get('field_is_correct')->value;
-    }
-    return TRUE;
+    return (bool) $this->get('is_correct')->getString();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAnswer(): ?string {
-    if ($this->hasField('field_answer')) {
-      return $this->get('field_answer')->value;
-    }
-    return NULL;
+    return $this->get('answer')->value;
   }
 
 }

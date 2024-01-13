@@ -21,11 +21,11 @@ class SingleChoiceAnswer extends QuestionAnswer {
    * {@inheritDoc}
    */
   public function getResponseStatus(QuestionResponseInterface $response): string {
-    $response_data = $response->getResponseData();
-    if ($this->id() === $response_data && $this->isCorrect()) {
+    $responses = $response->getResponses();
+    if (in_array($this->id(), $responses) && $this->isCorrect()) {
       return self::CORRECT;
     }
-    elseif ($this->id() === $response_data && !$this->isCorrect()) {
+    elseif (in_array($this->id(), $responses) && !$this->isCorrect()) {
       return self::IN_CORRECT;
     }
 

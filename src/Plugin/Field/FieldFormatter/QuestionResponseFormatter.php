@@ -76,7 +76,7 @@ final class QuestionResponseFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
-    return $field_definition->getName() === 'field_question_response';
+    return $field_definition->getName() === 'responses';
   }
 
   /**

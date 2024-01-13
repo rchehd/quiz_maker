@@ -2,16 +2,11 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.question.boolean_question.field_answers
     - field.field.question.boolean_question.field_boolean_state
-    - field.field.question.boolean_question.field_max_score
-    - field.field.question.boolean_question.field_response
-    - field.field.question.boolean_question.field_tag
     - quiz_maker.question_type.boolean_question
   module:
+    - inline_entity_form
     - text
-_core:
-  default_config_hash: NoxPZ-E54nVT2vsORvwzV07jJTQk67-aC10JrPw-6-E
 id: question.boolean_question.default
 targetEntityType: question
 bundle: boolean_question
@@ -23,14 +18,14 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_max_score:
+  max_score:
     type: number
     weight: 3
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-  field_tag:
+  tag:
     type: entity_reference_autocomplete
     weight: 4
     region: content
@@ -65,6 +60,5 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
-  field_answers: true
-  field_response: true
+  response_type: true
   uid: true

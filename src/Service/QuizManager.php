@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
@@ -38,7 +39,8 @@ class QuizManager {
     protected EntityTypeManagerInterface $entityTypeManager,
     protected RequestStack $requestStack,
     protected TimeInterface $time,
-    protected LoggerChannelFactoryInterface $loggerChannelFactory
+    protected LoggerChannelFactoryInterface $loggerChannelFactory,
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo
   ) {
     $this->logger = $loggerChannelFactory->get('quiz_maker');
   }
@@ -62,13 +64,13 @@ class QuizManager {
       // Return the newest draft result.
       return end($draft_results);
     }
-    $quiz_result_type = $quiz->get('field_result_type')->target_id;
+    $quiz_result_type = $quiz->get('result_type')->target_id;
     try {
       $quiz_result = $this->entityTypeManager->getStorage('quiz_result')->create([
         'bundle' => $quiz_result_type,
         'label' => $this->t('Result of "@quiz_label"', ['@quiz_label' => $quiz->label()]),
         'state' => QuizResultType::DRAFT,
-        'field_quiz' => $quiz->id(),
+        'quiz' => $quiz->id(),
         'uid' => $user->id(),
         'attempt' => $quiz->getCompletedAttempts($user) + 1,
       ]);

@@ -241,7 +241,7 @@ class QuizTakeForm extends FormBase {
   public function getNextQuestion(array &$form, FormStateInterface $form_state): void {
     $current_question = $this->getCurrentQuestion();
     $response_data = $current_question?->getResponse($form, $form_state);
-    if (isset($response_data['response'])) {
+    if (isset($response_data)) {
       $this->quizManager->updateQuiz($this->quizResult, $current_question, $response_data);
     }
     $this->questionNumber++;

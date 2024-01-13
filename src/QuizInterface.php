@@ -17,10 +17,10 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
   /**
    * Get questions.
    *
-   * @return \Drupal\quiz_maker\QuestionInterface[]|bool
+   * @return \Drupal\quiz_maker\QuestionInterface[]
    *   Array of Questions or FALSE.
    */
-  public function getQuestions(): array|bool;
+  public function getQuestions(): array;
 
   /**
    * Get pass rate.

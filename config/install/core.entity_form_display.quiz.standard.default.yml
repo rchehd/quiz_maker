@@ -2,16 +2,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.quiz.standard.field_access_period
-    - field.field.quiz.standard.field_allow_changing_answers
-    - field.field.quiz.standard.field_allow_jumping
-    - field.field.quiz.standard.field_allow_skipping
-    - field.field.quiz.standard.field_attempts
-    - field.field.quiz.standard.field_backwards_navigation
-    - field.field.quiz.standard.field_pass_rate
-    - field.field.quiz.standard.field_questions
-    - field.field.quiz.standard.field_result_type
-    - field.field.quiz.standard.field_time_limit
     - quiz_maker.quiz_type.standard
   module:
     - datetime_range
@@ -38,14 +28,14 @@ third_party_settings:
         width_breakpoint: 640
     group_taking_options:
       children:
-        - field_attempts
-        - field_backwards_navigation
-        - field_time_limit
-        - field_allow_skipping
-        - field_allow_resume
-        - field_allow_jumping
-        - field_allow_changing_answers
-        - field_allow_changing_blank
+        - attempts
+        - allow_backwards_navigation
+        - time_limit
+        - allow_skipping
+        - allow_resume
+        - allow_jumping
+        - allow_changing_answers
+        - allow_changing_blank
       label: 'Taking options'
       region: content
       parent_name: group_settings
@@ -60,7 +50,7 @@ third_party_settings:
         required_fields: true
     group_availability_options:
       children:
-        - field_access_period
+        - access_period
       label: 'Availability options'
       region: content
       parent_name: group_settings
@@ -75,7 +65,7 @@ third_party_settings:
         required_fields: true
     group_pass_fail_options:
       children:
-        - field_pass_rate
+        - pass_rate
       label: 'Pass fail options'
       region: content
       parent_name: group_settings
@@ -88,23 +78,28 @@ third_party_settings:
         formatter: closed
         description: ''
         required_fields: true
-_core:
-  default_config_hash: t5htf3tEBRQ5G5rMkCPgPr8Oj0cf9dFX8sfYNY8x7RM
 id: quiz.standard.default
 targetEntityType: quiz
 bundle: standard
 mode: default
 content:
-  allow_change:
-    type: boolean_checkbox
-    weight: 13
+  description:
+    type: text_textarea
+    weight: 1
     region: content
     settings:
-      display_label: true
+      rows: 5
+      placeholder: ''
     third_party_settings: {  }
-  allow_change_blank:
+  access_period:
+    type: daterange_default
+    weight: 8
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  allow_changing_answers:
     type: boolean_checkbox
-    weight: 14
+    weight: 13
     region: content
     settings:
       display_label: true
@@ -112,13 +107,6 @@ content:
   allow_jumping:
     type: boolean_checkbox
     weight: 12
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  allow_resume:
-    type: boolean_checkbox
-    weight: 11
     region: content
     settings:
       display_label: true
@@ -132,81 +120,26 @@ content:
     third_party_settings: {  }
   attempts:
     type: number
-    weight: 8
-    region: content
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-  backwards_navigation:
-    type: boolean_checkbox
-    weight: 19
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  build_on_last:
-    type: options_buttons
-    weight: 15
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  description:
-    type: text_textarea
-    weight: 1
-    region: content
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-  field_access_period:
-    type: daterange_default
-    weight: 8
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  field_allow_changing_answers:
-    type: boolean_checkbox
-    weight: 13
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_allow_jumping:
-    type: boolean_checkbox
-    weight: 12
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_allow_skipping:
-    type: boolean_checkbox
-    weight: 10
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  field_attempts:
-    type: number
     weight: 7
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-  field_backwards_navigation:
+  allow_backwards_navigation:
     type: boolean_checkbox
     weight: 8
     region: content
     settings:
       display_label: true
     third_party_settings: {  }
-  field_pass_rate:
+  pass_rate:
     type: number
     weight: 5
     region: content
     settings:
       placeholder: ''
     third_party_settings: {  }
-  field_questions:
+  questions:
     type: inline_entity_form_complex
     weight: 3
     region: content
@@ -224,13 +157,13 @@ content:
       revision: false
       removed_reference: optional
     third_party_settings: {  }
-  field_result_type:
+  result_type:
     type: options_select
     weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_time_limit:
+  time_limit:
     type: number
     weight: 9
     region: content
@@ -243,53 +176,6 @@ content:
     region: content
     settings:
       size: 60
-      placeholder: ''
-    third_party_settings: {  }
-  mark_doubtful:
-    type: boolean_checkbox
-    weight: 17
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  pass_rate:
-    type: number
-    weight: 4
-    region: content
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-  quiz_date_range:
-    type: daterange_default
-    weight: 18
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  result_type:
-    type: options_select
-    weight: 2
-    region: content
-    settings: {  }
-    third_party_settings: {  }
-  show_passed:
-    type: boolean_checkbox
-    weight: 16
-    region: content
-    settings:
-      display_label: true
-    third_party_settings: {  }
-  status:
-    type: boolean_checkbox
-    weight: 3
-    region: content
-    settings:
-      display_label: false
-    third_party_settings: {  }
-  time_limit:
-    type: number
-    weight: 9
-    region: content
-    settings:
       placeholder: ''
     third_party_settings: {  }
 hidden:

@@ -2,15 +2,10 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.question.direct_question.field_max_score
-    - field.field.question.direct_question.field_response
-    - field.field.question.direct_question.field_tag
     - quiz_maker.question_type.direct_question
   module:
     - text
     - user
-_core:
-  default_config_hash: Sjd8616evhOPgyf4mB_FAQtS_zBVcMrHE72f_GnM61Y
 id: question.direct_question.default
 targetEntityType: question
 bundle: direct_question
@@ -35,7 +30,7 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
-  field_max_score:
+  max_score:
     type: number_integer
     label: above
     settings:
@@ -44,7 +39,7 @@ content:
     third_party_settings: {  }
     weight: 5
     region: content
-  field_tag:
+  tag:
     type: entity_reference_label
     label: above
     settings:
@@ -85,4 +80,4 @@ content:
     weight: 3
     region: content
 hidden:
-  field_response: true
+  response_type: true

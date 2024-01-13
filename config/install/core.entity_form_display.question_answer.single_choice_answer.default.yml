@@ -2,32 +2,21 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.question_answer.single_choice_answer.field_answer
-    - field.field.question_answer.single_choice_answer.field_is_correct
     - quiz_maker.question_answer_type.single_choice_answer
   module:
     - text
-_core:
-  default_config_hash: YA5ZuCxybkBYf91C81mWKBrPgVxwHRcNkQT7XdkxHwc
 id: question_answer.single_choice_answer.default
 targetEntityType: question_answer
 bundle: single_choice_answer
 mode: default
 content:
-  field_answer:
+  answer:
     type: text_textarea
     weight: 5
     region: content
     settings:
       rows: 3
       placeholder: ''
-    third_party_settings: {  }
-  field_is_correct:
-    type: boolean_checkbox
-    weight: 4
-    region: content
-    settings:
-      display_label: true
     third_party_settings: {  }
   is_correct:
     type: boolean_checkbox

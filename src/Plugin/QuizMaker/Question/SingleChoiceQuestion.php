@@ -2,6 +2,8 @@
 
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Question;
 
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
@@ -14,6 +16,8 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   id = "single_choice_question",
  *   label = @Translation("Single choice question"),
  *   description = @Translation("Single choice question."),
+ *   answer_bundle = "single_choice_answer",
+ *   response_bundle = "single_choice_response",
  * )
  */
 class SingleChoiceQuestion extends Question {
@@ -24,18 +28,21 @@ class SingleChoiceQuestion extends Question {
    * {@inheritDoc}
    */
   public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
-    $answers = $this->get('field_answers')->referencedEntities();
-    if ($answers) {
+    if ($answers = $this->getAnswers()) {
       $options = [];
       foreach ($answers as $answer) {
         $options[$answer->id()] = $answer->getAnswer();
+      }
+      $default_answer = $questionResponse?->getResponses();
+      if (!empty($default_answer)) {
+        $default_answer = reset($default_answer);
       }
       return [
         'single_choice_answer' => [
           '#type' => 'radios',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
-          '#default_value' => $questionResponse?->getResponseData(),
+          '#default_value' => $default_answer,
           '#disabled' => !$allow_change_response
         ]
       ];
@@ -58,20 +65,8 @@ class SingleChoiceQuestion extends Question {
    */
   public function getResponse(array &$form, FormStateInterface $form_state): array {
     return [
-      'response' => $form_state->getValue('single_choice_answer')
+      $form_state->getValue('single_choice_answer')
     ];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function isResponseCorrect(array $response_data): bool {
-    $correct_answers = $this->getCorrectAnswers();
-    $correct_answers_ids = array_map(function ($correct_answer) {
-      return $correct_answer->id();
-    }, $correct_answers);
-    $answers_ids = $response_data['response'];
-    return reset($correct_answers_ids) === $answers_ids;
   }
 
 }

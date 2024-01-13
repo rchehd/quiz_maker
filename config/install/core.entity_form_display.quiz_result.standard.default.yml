@@ -2,14 +2,10 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.quiz_result.standard.field_question_response
-    - field.field.quiz_result.standard.field_quiz
     - quiz_maker.quiz_result_type.standard
   module:
     - inline_entity_form
     - text
-_core:
-  default_config_hash: UqaInEI2U5z7tPEhuFh7dPgnHLqh49BEn__VkA9qAgA
 id: quiz_result.standard.default
 targetEntityType: quiz_result
 bundle: standard
@@ -36,7 +32,7 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-  field_question_response:
+  responses:
     type: inline_entity_form_complex
     weight: 6
     region: content
@@ -54,7 +50,7 @@ content:
       revision: false
       removed_reference: optional
     third_party_settings: {  }
-  field_quiz:
+  quiz:
     type: inline_entity_form_complex
     weight: 3
     region: content

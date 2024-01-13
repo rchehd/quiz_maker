@@ -14,6 +14,8 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   id = "direct_question",
  *   label = @Translation("Direct question"),
  *   description = @Translation("Direct question."),
+ *   answer_bundle = "direct_answer",
+ *   response_bundle = "direct_response",
  * )
  */
 class DirectQuestion extends Question {
@@ -54,7 +56,7 @@ class DirectQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function isResponseCorrect(array $response_data): bool {
+  public function isResponseCorrect(array $answers_ids): bool {
     return FALSE;
   }
 

@@ -9,15 +9,7 @@ use Drupal\quiz_maker\Entity\QuestionAnswer;
 /**
  * Form controller for the question entity edit forms.
  */
-final class QuestionForm extends ContentEntityForm {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildForm($form, $form_state);
-    return $form;
-  }
+class QuestionForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}

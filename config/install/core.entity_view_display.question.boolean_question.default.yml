@@ -2,17 +2,11 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.question.boolean_question.field_answers
     - field.field.question.boolean_question.field_boolean_state
-    - field.field.question.boolean_question.field_max_score
-    - field.field.question.boolean_question.field_response
-    - field.field.question.boolean_question.field_tag
     - quiz_maker.question_type.boolean_question
   module:
     - text
     - user
-_core:
-  default_config_hash: iK8q1QT8B-xW0X3kRjRdJQIC8BOq2yZEHBL65jcyQNM
 id: question.boolean_question.default
 targetEntityType: question
 bundle: boolean_question
@@ -37,7 +31,7 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
-  field_answers:
+  answers:
     type: entity_reference_label
     label: above
     settings:
@@ -55,7 +49,7 @@ content:
     third_party_settings: {  }
     weight: 7
     region: content
-  field_max_score:
+  max_score:
     type: number_integer
     label: above
     settings:
@@ -64,7 +58,7 @@ content:
     third_party_settings: {  }
     weight: 5
     region: content
-  field_tag:
+  tag:
     type: entity_reference_label
     label: above
     settings:
@@ -105,4 +99,4 @@ content:
     weight: 3
     region: content
 hidden:
-  field_response: true
+  response_type: true

@@ -2,8 +2,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.quiz_result.standard.field_question_response
-    - field.field.quiz_result.standard.field_quiz
     - quiz_maker.quiz_result_type.standard
   module:
     - quiz_maker
@@ -50,7 +48,7 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
-  field_question_response:
+  responses:
     type: question_response_formatter
     label: above
     settings:
@@ -104,6 +102,6 @@ content:
     weight: 2
     region: content
 hidden:
-  field_quiz: true
+  quiz: true
   state: true
   uid: true

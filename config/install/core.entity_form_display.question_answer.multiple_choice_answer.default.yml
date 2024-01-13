@@ -2,20 +2,16 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.question_answer.multiple_choice_answer.field_answer
-    - field.field.question_answer.multiple_choice_answer.field_is_correct
     - field.field.question_answer.multiple_choice_answer.field_score
     - quiz_maker.question_answer_type.multiple_choice_answer
   module:
     - text
-_core:
-  default_config_hash: PKQGHmMbj3lSeRJPsbFUQ93GtV5_ZWqxTHj9m8GDBU8
 id: question_answer.multiple_choice_answer.default
 targetEntityType: question_answer
 bundle: multiple_choice_answer
 mode: default
 content:
-  field_answer:
+  answer:
     type: text_textarea
     weight: 2
     region: content
@@ -23,7 +19,7 @@ content:
       rows: 3
       placeholder: ''
     third_party_settings: {  }
-  field_is_correct:
+  correct:
     type: boolean_checkbox
     weight: 1
     region: content

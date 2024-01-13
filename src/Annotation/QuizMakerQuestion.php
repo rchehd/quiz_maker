@@ -30,4 +30,18 @@ final class QuizMakerQuestion extends Plugin {
    */
   public readonly string $description;
 
+  /**
+   * The question answer bundle id.
+   *
+   * @ingroup plugin_translatable
+   */
+  public readonly string $answer_bundle;
+
+  /**
+   * The question response bundle id.
+   *
+   * @ingroup plugin_translatable
+   */
+  public readonly string $response_bundle;
+
 }

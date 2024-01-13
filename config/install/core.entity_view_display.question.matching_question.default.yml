@@ -2,16 +2,10 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.question.matching_question.field_answers
-    - field.field.question.matching_question.field_max_score
-    - field.field.question.matching_question.field_response
-    - field.field.question.matching_question.field_tag
     - quiz_maker.question_type.matching_question
   module:
     - text
     - user
-_core:
-  default_config_hash: O_urc5z8KXKul84Opo0hsv_1IEJbA8RMrC3HjjNGghU
 id: question.matching_question.default
 targetEntityType: question
 bundle: matching_question
@@ -36,7 +30,7 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
-  field_answers:
+  answers:
     type: entity_reference_label
     label: above
     settings:
@@ -44,7 +38,7 @@ content:
     third_party_settings: {  }
     weight: 5
     region: content
-  field_max_score:
+  max_score:
     type: number_integer
     label: above
     settings:
@@ -53,7 +47,7 @@ content:
     third_party_settings: {  }
     weight: 6
     region: content
-  field_tag:
+  tag:
     type: entity_reference_label
     label: above
     settings:
@@ -94,4 +88,4 @@ content:
     weight: 3
     region: content
 hidden:
-  field_response: true
+  response_type: true

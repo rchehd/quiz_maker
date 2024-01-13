@@ -9,6 +9,8 @@ use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\quiz_maker\Entity\QuizResultType;
@@ -319,6 +321,10 @@ function quiz_maker_entity_bundle_info_alter(array &$bundles): void {
     foreach ($plugins as $key => $plugin) {
       if (isset($bundles[$plugin_type][$key])) {
         $bundles[$plugin_type][$key]['class'] = $plugin['class'];
+        if ($plugin_type === 'question') {
+          $bundles[$plugin_type][$key]['answer_bundle'] = $plugin['answer_bundle'];
+          $bundles[$plugin_type][$key]['response_bundle'] = $plugin['response_bundle'];
+        }
       }
     }
   }
@@ -427,28 +433,30 @@ function quiz_maker_entity_presave(EntityInterface $entity): void {
   // Add default answers to question if it has.
   if ($entity instanceof QuestionInterface) {
     if (!$entity->getAnswers()) {
-      $bundles = $entity->get('field_answers')->getSetting('handler_settings')['target_bundles'];
-      foreach ($bundles as $bundle) {
-        $default_answers_data = $entity->getDefaultAnswersData();
-        foreach ($default_answers_data as $answer_data) {
-          try {
-            /** @var \Drupal\quiz_maker\QuestionAnswerInterface $answer */
-            $answer = \Drupal::entityTypeManager()->getStorage('question_answer')->create(
-              [
-                'bundle' => $bundle,
-                'label' => $answer_data['label'],
-                'field_answer' => $answer_data['answer'],
-                'field_is_correct' => $answer_data['is_correct'],
-              ]
-            );
-            $answer->save();
-          }
-          catch (InvalidPluginDefinitionException | PluginNotFoundException | EntityStorageException $e) {
-            \Drupal::logger('quiz_maker')->error($e->getMessage());
-          }
-          $entity->addAnswer($answer);
+      /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
+      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
+      $bundles_info = $entity_type_bundle_info->getBundleInfo($entity->getEntityType()->id());
+      $bundle = $bundles_info[$entity->bundle()]['answer_bundle'];
+      $default_answers_data = $entity->getDefaultAnswersData();
+      foreach ($default_answers_data as $answer_data) {
+        try {
+          /** @var \Drupal\quiz_maker\QuestionAnswerInterface $answer */
+          $answer = \Drupal::entityTypeManager()->getStorage('question_answer')->create(
+            [
+              'bundle' => $bundle,
+              'label' => $answer_data['label'],
+              'answer' => $answer_data['answer'],
+              'is_correct' => $answer_data['is_correct'],
+            ]
+          );
+          $answer->save();
         }
+        catch (InvalidPluginDefinitionException | PluginNotFoundException | EntityStorageException $e) {
+          \Drupal::logger('quiz_maker')->error($e->getMessage());
+        }
+        $entity->addAnswer($answer);
       }
+
     }
   }
 }
@@ -462,5 +470,44 @@ function quiz_maker_preprocess_views_view_table(&$variables): void {
     $variables['attributes'] = [
       'class' => ['info-table'],
     ];
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function quiz_maker_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  if (str_contains($form_id, 'question_form') && isset($form['answers'])) {
+    $entity_bundle = $form_state->getformObject()->getEntity()->bundle();
+    /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
+    $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
+    $bundles_info = $entity_type_bundle_info->getBundleInfo('question');
+    if (isset($bundles_info[$entity_bundle])) {
+      $answer_type = $bundles_info[$entity_bundle]['answer_bundle'];
+      if ($answer_type) {
+        $form['answers']['widget']['actions']['bundle'] = [
+          '#type' => 'value',
+          '#value' => $answer_type
+        ];
+      }
+    }
+  }
+}
+
+function quiz_maker_inline_entity_form_entity_form_alter(array &$entity_form, FormStateInterface &$form_state) {
+  if ($entity_form['#entity_type'] === 'question') {
+    $entity_bundle = $entity_form['#bundle'];
+    /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
+    $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
+    $bundles_info = $entity_type_bundle_info->getBundleInfo('question');
+    if (isset($bundles_info[$entity_bundle])) {
+      $answer_type = $bundles_info[$entity_bundle]['answer_bundle'];
+      if ($answer_type) {
+        $entity_form['answers']['widget']['actions']['bundle'] = [
+          '#type' => 'hidden',
+          '#value' => $answer_type
+        ];
+      }
+    }
   }
 }

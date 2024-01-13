@@ -2,13 +2,10 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.question_answer.direct_answer.field_answer
     - quiz_maker.question_answer_type.direct_answer
   module:
     - text
     - user
-_core:
-  default_config_hash: jcg3RcsZFwMr2sus2lQpQYIrHp_dE64OO2KYnUbm338
 id: question_answer.direct_answer.default
 targetEntityType: question_answer
 bundle: direct_answer
@@ -33,7 +30,7 @@ content:
     third_party_settings: {  }
     weight: 20
     region: content
-  field_answer:
+  answer:
     type: text_default
     label: above
     settings: {  }

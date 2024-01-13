@@ -10,7 +10,7 @@ use Drupal\quiz_maker\Entity\QuestionType;
 /**
  * Form handler for question type forms.
  */
-final class QuestionTypeForm extends BundleEntityFormBase {
+class QuestionTypeForm extends BundleEntityFormBase {
 
   /**
    * {@inheritdoc}

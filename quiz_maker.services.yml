@@ -18,3 +18,4 @@ services:
       - '@request_stack'
       - '@datetime.time'
       - '@logger.factory'
+      - '@entity_type.bundle.info'

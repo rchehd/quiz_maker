@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\user\EntityOwnerTrait;
@@ -106,13 +107,13 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -5,
+        'weight' => 0,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'string',
-        'weight' => -5,
+        'weight' => 0,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
@@ -122,13 +123,13 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       ->setLabel(t('Description'))
       ->setDisplayOptions('form', [
         'type' => 'text_textarea',
-        'weight' => 10,
+        'weight' => 1,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'type' => 'text_default',
         'label' => 'above',
-        'weight' => 10,
+        'weight' => 1,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
@@ -152,6 +153,187 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
         'label' => 'above',
         'type' => 'author',
         'weight' => 15,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['questions'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Questions'))
+      ->setSetting('target_type', 'question')
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setRevisionable(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'placeholder' => '',
+        ],
+        'weight' => 3,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['result_type'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Result type'))
+      ->setSetting('target_type', 'quiz_result_type')
+      ->setCardinality(1)
+      ->setRevisionable(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'settings' => [
+          'match_operator' => 'CONTAINS',
+          'size' => 60,
+          'placeholder' => '',
+        ],
+        'weight' => 2,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['access_period'] = BaseFieldDefinition::create('daterange')
+      ->setLabel(t('Access period'))
+      ->setDescription(t('The date and time during which this Quiz will be available. Leave blank to always be available.'))
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => 12,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'daterange_default',
+        'weight' => 12,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 5,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['allow_changing_answers'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Allow changing answers'))
+      ->setDescription(t('If the user is able to visit a previous question, allow them to change the answer.'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'weight' => 11,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 9,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['allow_jumping'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Allow jumping'))
+      ->setDescription(t('Allow users to jump to any question using a menu or pager in this Quiz.'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 8,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['allow_skipping'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Allow skipping'))
+      ->setDescription(t('Allow users to skip questions in this Quiz.'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'weight' => 9,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 7,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['allow_backwards_navigation'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Allow backwards navigation'))
+      ->setDescription(t('Allow users to go back and revisit questions already answered.'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'weight' => 7,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 3,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['manual_assessment'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Manual assessment'))
+      ->setDescription(t('Enable, if you want to assess and set the score of quiz result manual.<br><strong>Warning: </strong><em>some type of question require manual assessment!</em>'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'weight' => 4,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['attempts'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Attempts'))
+      ->setDescription(t('The number of times a user is allowed to take this Quiz. Anonymous users are only allowed to take Quiz that allow an unlimited number of attempts.'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'number',
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 4,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['pass_rate'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Pass rate'))
+      ->setDescription(t('Minimum grade percentage required to pass this quiz.'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(TRUE)
+      ->setSettings([
+        'min' => 0,
+        'max' => 100,
+        'suffix' => '%',
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'number',
+        'weight' => 5,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 2,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['time_limit'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Time Limit'))
+      ->setDescription(t('Set the maximum allowed time in seconds for this Quiz. Use 0 for no limit.'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(TRUE)
+      ->setSettings([
+        'min' => 0,
+        'suffix' => 'sec',
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'number',
+        'weight' => 8,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 6,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
@@ -182,11 +364,8 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
-  public function getQuestions(): array|bool {
-    if ($this->hasField('field_questions')) {
-      return $this->get('field_questions')->referencedEntities();
-    }
-    return FALSE;
+  public function getQuestions(): array {
+    return $this->get('questions')->referencedEntities();
   }
 
   /**
@@ -243,7 +422,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       $results = \Drupal::entityTypeManager()->getStorage('quiz_result')
         ->loadByProperties([
           'uid' => $user->id(),
-          'field_quiz' => $this->id(),
+          'quiz' => $this->id(),
           'state' => QuizResultType::COMPLETED,
         ]);
     }
@@ -259,28 +438,28 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
    * {@inheritDoc}
    */
   public function requireManualAssessment(): bool {
-    return (bool) $this->get('field_manual_assessment')->getString();
+    return (bool) $this->get('manual_assessment')->getString();
   }
 
   /**
    * {@inheritDoc}
    */
   public function allowSkipping(): bool {
-    return (bool) $this->get('field_allow_skipping')->getString();
+    return (bool) $this->get('allow_skipping')->getString();
   }
 
   /**
    * {@inheritDoc}
    */
   public function allowBackwardNavigation(): bool {
-    return (bool) $this->get('field_backwards_navigation')->getString();
+    return (bool) $this->get('allow_backwards_navigation')->getString();
   }
 
   /**
    * {@inheritDoc}
    */
   public function allowChangeAnswer(): bool {
-    return (bool) $this->get('field_allow_changing_answers')->getString();
+    return (bool) $this->get('allow_changing_answers')->getString();
   }
 
   /**
@@ -315,34 +494,36 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
    * {@inheritDoc}
    */
   public function getAllowedAttempts(): ?int {
-    return $this->get('field_attempts')->value;
+    return $this->get('attempts')->value;
   }
 
   /**
    * {@inheritDoc}
    */
   public function getPassRate(): int {
-    return $this->get('field_pass_rate')->value;
+    return $this->get('pass_rate')->value;
   }
 
   /**
    * {@inheritDoc}
    */
   public function getResultType(): string {
-    return $this->get('field_result_type')->target_id;
+    return $this->get('result_type')->target_id;
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAccessPeriod(): array {
-    $access_period = $this->get('field_access_period')->getValue();
+    $access_period = $this->get('access_period')->getValue();
     if ($access_period) {
       $access_period = reset($access_period);
-      return [
-        'start_date' => strtotime($access_period['value']),
-        'end_date' => strtotime($access_period['end_value']),
-      ];
+      if ($access_period['value'] && $access_period['end_value']) {
+        return [
+          'start_date' => strtotime($access_period['value']),
+          'end_date' => strtotime($access_period['end_value']),
+        ];
+      }
     }
     return [];
   }

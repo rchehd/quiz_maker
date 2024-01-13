@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
@@ -94,7 +95,6 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array {
-
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['label'] = BaseFieldDefinition::create('string')
@@ -177,6 +177,67 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
       ])
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['answers'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Answers'))
+      ->setSetting('target_type', 'question_answer')
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setDisplayOptions('form', [
+        'type' => 'inline_entity_form_complex',
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['response_type'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Response type'))
+      ->setSetting('target_type', 'question_response_type')
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['tag'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Tag'))
+      ->setSetting('target_type', 'taxonomy_term')
+      ->setCardinality(1)
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['max_score'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Max score'))
+      ->setDescription(t('The unscaled calculated max score of this Question.'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(1)
+      ->setSettings([
+        'min' => 1,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'number',
+        'weight' => 8,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'score_field_formatter',
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
       ->setTranslatable(TRUE)
@@ -205,27 +266,21 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
    * {@inheritDoc}
    */
   public function getQuestion(): ?string {
-    if ($this->hasField('question')) {
-      return $this->get('question')->value;
-    }
-    return NULL;
+    return $this->get('question')->value;
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAnswers(): ?array {
-    if ($this->hasField('field_answers')) {
-      return $this->get('field_answers')->referencedEntities();
-    }
-    return NULL;
+    return $this->get('answers')->referencedEntities();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getCorrectAnswers(): array {
-    $answers = $this->get('field_answers')->referencedEntities();
+    $answers = $this->getAnswers();
     return array_filter($answers, function ($answer) {
       return $answer->isCorrect();
     });
@@ -235,7 +290,7 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
    * {@inheritDoc}
    */
   public function getMaxScore(): int {
-    return $this->get('field_max_score')->value;
+    return $this->get('max_score')->value;
   }
 
   /**
@@ -249,11 +304,14 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
    * {@inheritDoc}
    */
   public function getResponseType(): ?string {
-    if ($this->hasField('field_response')) {
-      $target_bundles = $this->get('field_response')->getFieldDefinition()->getSetting('handler_settings')['target_bundles'];
-      return reset($target_bundles);
-    }
-    return NULL;
+    return $this->getBundleInfoValue('response_bundle');
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getAnswerType(): ?string {
+    return $this->getBundleInfoValue('answer_bundle');
   }
 
   /**
@@ -272,9 +330,37 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
 
     if (!in_array($answer->id(), $answer_ids)) {
       $answer_ids[] = $answer->id();
-      $this->set('field_answers', $answer_ids);
+      $this->set('answers', $answer_ids);
     }
 
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function isResponseCorrect(array $answers_ids): bool {
+    $correct_answers = $this->getCorrectAnswers();
+    $correct_answers_ids = array_map(function ($correct_answer) {
+      return $correct_answer->id();
+    }, $correct_answers);
+    return $correct_answers_ids === $answers_ids;
+  }
+
+  /**
+   * Get bundle info value.
+   *
+   * @param string $value_name
+   *   The info value name.
+   *
+   * @return ?string
+   *   The value.
+   */
+  protected function getBundleInfoValue(string $value_name): ?string {
+    /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
+    $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
+    $bundles_info = $entity_type_bundle_info->getBundleInfo($this->entityTypeId);
+    $info = $bundles_info[$this->bundle()] ?? [];
+    return $info[$value_name] ?? NULL;
   }
 
 }

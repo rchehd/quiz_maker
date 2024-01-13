@@ -2,16 +2,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.quiz.standard.field_access_period
-    - field.field.quiz.standard.field_allow_changing_answers
-    - field.field.quiz.standard.field_allow_jumping
-    - field.field.quiz.standard.field_allow_skipping
-    - field.field.quiz.standard.field_attempts
-    - field.field.quiz.standard.field_backwards_navigation
-    - field.field.quiz.standard.field_pass_rate
-    - field.field.quiz.standard.field_questions
-    - field.field.quiz.standard.field_result_type
-    - field.field.quiz.standard.field_time_limit
     - quiz_maker.quiz_type.standard
   module:
     - datetime_range
@@ -30,7 +20,7 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
-  field_access_period:
+  access_period:
     type: daterange_default
     label: inline
     settings:
@@ -40,7 +30,7 @@ content:
     third_party_settings: {  }
     weight: 4
     region: content
-  field_allow_changing_answers:
+  allow_changing_answers:
     type: boolean
     label: inline
     settings:
@@ -50,7 +40,7 @@ content:
     third_party_settings: {  }
     weight: 9
     region: content
-  field_allow_jumping:
+  allow_jumping:
     type: boolean
     label: inline
     settings:
@@ -60,7 +50,7 @@ content:
     third_party_settings: {  }
     weight: 8
     region: content
-  field_allow_skipping:
+  allow_skipping:
     type: boolean
     label: inline
     settings:
@@ -70,7 +60,7 @@ content:
     third_party_settings: {  }
     weight: 6
     region: content
-  field_attempts:
+  attempts:
     type: number_integer
     label: inline
     settings:
@@ -79,7 +69,7 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
-  field_backwards_navigation:
+  allow_backwards_navigation:
     type: boolean
     label: inline
     settings:
@@ -89,7 +79,7 @@ content:
     third_party_settings: {  }
     weight: 2
     region: content
-  field_pass_rate:
+  pass_rate:
     type: number_integer
     label: inline
     settings:
@@ -98,7 +88,7 @@ content:
     third_party_settings: {  }
     weight: 1
     region: content
-  field_time_limit:
+  time_limit:
     type: number_integer
     label: inline
     settings:
@@ -109,7 +99,7 @@ content:
     region: content
 hidden:
   created: true
-  field_questions: true
-  field_result_type: true
+  questions: true
+  result_type: true
   label: true
   uid: true

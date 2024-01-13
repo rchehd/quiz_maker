@@ -83,13 +83,13 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
   /**
    * Check if response is correct.
    *
-   * @param array $response_data
-   *   The response data.
+   * @param array $answers_ids
+   *   The response answers ids.
    *
    * @return bool
    *   TRUE if correct, otherwise FALSE.
    */
-  public function isResponseCorrect(array $response_data): bool;
+  public function isResponseCorrect(array $answers_ids): bool;
 
   /**
    * Get max score.
@@ -115,5 +115,14 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
    *   The response type.
    */
   public function getResponseType(): ?string;
+
+
+  /**
+   * Get answer type.
+   *
+   * @return ?string
+   *   The answer type.
+   */
+  public function getAnswerType(): ?string;
 
 }

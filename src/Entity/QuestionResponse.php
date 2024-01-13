@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
@@ -90,65 +91,14 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',
-        'weight' => -5,
+        'weight' => 0,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'string',
-        'weight' => -5,
+        'weight' => 0,
       ])
-      ->setDisplayConfigurable('view', TRUE);
-
-    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Author'))
-      ->setSetting('target_type', 'user')
-      ->setDefaultValueCallback(self::class . '::getDefaultEntityOwner')
-      ->setDisplayOptions('form', [
-        'type' => 'entity_reference_autocomplete',
-        'settings' => [
-          'match_operator' => 'CONTAINS',
-          'size' => 60,
-          'placeholder' => '',
-        ],
-        'weight' => 15,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayOptions('view', [
-        'label' => 'above',
-        'type' => 'author',
-        'weight' => 15,
-      ])
-      ->setDisplayConfigurable('view', TRUE);
-
-    $fields['question_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Question'))
-      ->setSetting('target_type', 'question')
-      ->setDisplayOptions('form', [
-        'type' => 'entity_reference_autocomplete',
-        'settings' => [
-          'match_operator' => 'CONTAINS',
-          'size' => 60,
-          'placeholder' => '',
-        ],
-        'weight' => 15,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
-      ->setDisplayConfigurable('view', TRUE);
-
-    $fields['quiz_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Quiz'))
-      ->setSetting('target_type', 'quiz')
-      ->setDisplayOptions('form', [
-        'type' => 'entity_reference_autocomplete',
-        'settings' => [
-          'match_operator' => 'CONTAINS',
-          'size' => 60,
-          'placeholder' => '',
-        ],
-        'weight' => 15,
-      ])
-      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['is_correct'] = BaseFieldDefinition::create('boolean')
@@ -157,36 +107,83 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
       ->setSetting('on_label', 'Is correct')
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
-        'settings' => [
-          'display_label' => FALSE,
-        ],
-        'weight' => 0,
+        'weight' => 2,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'type' => 'boolean',
         'label' => 'above',
-        'weight' => 0,
-        'settings' => [
-          'format' => 'enabled-disabled',
-        ],
+        'weight' => 2,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['response'] = BaseFieldDefinition::create('map')
-      ->setLabel(t('Data'))
-      ->setDescription(t('A serialized array of response data.'));
+    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Author'))
+      ->setSetting('target_type', 'user')
+      ->setDefaultValueCallback(self::class . '::getDefaultEntityOwner')
+      ->setDisplayOptions('form', [
+        'type' => 'inline_entity_form_complex',
+        'weight' => 3,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'label' => 'above',
+        'type' => 'author',
+        'weight' => 3,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['question_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Question'))
+      ->setSetting('target_type', 'question')
+      ->setDisplayOptions('form', [
+        'type' => 'inline_entity_form_complex',
+        'weight' => 4,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 4,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['quiz_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Quiz'))
+      ->setSetting('target_type', 'quiz')
+      ->setDisplayOptions('form', [
+        'type' => 'inline_entity_form_complex',
+        'weight' => 5,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 5,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['responses'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Chosen answers'))
+      ->setSetting('target_type', 'question_answer')
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setDisplayOptions('form', [
+        'type' => 'inline_entity_form_complex',
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['score'] = BaseFieldDefinition::create('integer')
       ->setLabel('Score')
       ->setDisplayOptions('form', [
         'type' => 'number',
+        'weight' => 7,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'label' => 'inline',
-        'type' => 'number_integer',
-        'weight' => 0,
+        'type' => 'score_field_formatter',
+        'weight' => 7,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
@@ -196,12 +193,12 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'timestamp',
-        'weight' => 20,
+        'weight' => 8,
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('form', [
         'type' => 'datetime_timestamp',
-        'weight' => 20,
+        'weight' => 8,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
@@ -244,7 +241,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
    * {@inheritDoc}
    */
   public function setResponseData(array $data): QuestionResponseInterface {
-    $this->set('response', $data);
+    $this->set('responses', $data);
     return $this;
   }
 
@@ -289,8 +286,15 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
   /**
    * {@inheritDoc}
    */
-  public function getResponseData(): mixed {
-    return $this->get('response')->response;
+  public function getResponses(): array {
+    $responses = $this->get('responses')->referencedEntities();
+    if ($responses) {
+      return array_map(function($response) {
+        return $response->id();
+      }, $responses);
+    }
+
+    return [];
   }
 
 }

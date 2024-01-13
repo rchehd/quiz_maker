@@ -36,12 +36,12 @@ interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerI
   public function getScore(): int;
 
   /**
-   * Get response data.
+   * Get response ids.
    *
-   * @return mixed
-   *   The response data.
+   * @return array
+   *   The response ids.
    */
-  public function getResponseData(): mixed;
+  public function getResponses(): array;
 
   /**
    * TRUE if response was correct.

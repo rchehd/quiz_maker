@@ -15,6 +15,8 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   id = "matching_question",
  *   label = @Translation("Matching question"),
  *   description = @Translation("Matching question."),
+ *   answer_bundle = "matching_answer",
+ *   response_bundle = "matching_choice_response",
  * )
  */
 class MatchingQuestion extends Question {
@@ -25,7 +27,7 @@ class MatchingQuestion extends Question {
    * {@inheritDoc}
    */
   public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
-    $answers = $this->get('field_answers')->referencedEntities();
+    $answers = $this->get('answers')->referencedEntities();
     if ($answers) {
       $answer_form = [
         '#type' => 'container',
@@ -130,7 +132,7 @@ class MatchingQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function isResponseCorrect(array $response_data): bool {
+  public function isResponseCorrect(array $answers_ids): bool {
     return FALSE;
   }
 

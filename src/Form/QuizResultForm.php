@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Form controller for the quiz result entity edit forms.
  */
-final class QuizResultForm extends ContentEntityForm {
+class QuizResultForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}

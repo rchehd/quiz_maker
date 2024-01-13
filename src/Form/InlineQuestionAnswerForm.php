@@ -13,19 +13,10 @@ class InlineQuestionAnswerForm extends EntityInlineForm {
   /**
    * {@inheritdoc}
    */
-  public function entityForm(array $entity_form, FormStateInterface $form_state) {
-    $form = parent::entityForm($entity_form, $form_state);
-
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getTableFields($bundles) {
     $fields = parent::getTableFields($bundles);
 
-    $fields['field_is_correct'] = [
+    $fields['is_correct'] = [
       'type' => 'field',
       'label' => $this->t('Is correct'),
       'weight' => 3,
