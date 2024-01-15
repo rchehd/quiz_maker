@@ -66,7 +66,10 @@
     </div>
     {% else %}
       <div>
-        <p>{{ 'This result is on assessment.' }}</p>
+        <p>{{ 'This result is on assessment. It will appear in your results list after assessment.' }}</p>
+      </div>
+      <div class="quiz-result-links">
+        {{ back_to_quiz }}
       </div>
     {% endif %}
   {% endif %}

@@ -11,6 +11,13 @@ quiz_maker.admin.structure:
   parent: quiz_maker.admin
   weight: 4
 
+# Quiz master structure.
+quiz_maker.admin.results:
+  title: Results
+  route_name: quiz_maker.admin.results
+  parent: quiz_maker.admin
+  weight: 3
+
 # Entity types collection.
 entity.quiz_type.collection:
   title: 'Quiz types'
@@ -66,19 +73,19 @@ entity.question_answer.collection:
   title: 'Question Answers'
   description: 'List of question answers.'
   route_name: view.question_answers.answer_list
-  parent: quiz_maker.admin
+  parent: entity.question.collection
   weight: 2
 
 entity.quiz_result.collection:
   title: 'Quiz Results'
   description: 'List of quiz results.'
   route_name: view.quiz_results.result_list
-  parent: quiz_maker.admin
+  parent: quiz_maker.admin.results
   weight: 3
 
 entity.question_response.collection:
   title: 'Question Responses'
   description: 'List of question responses.'
   route_name: entity.question_response.collection
-  parent: quiz_maker.admin
+  parent: quiz_maker.admin.results
   weight: 4

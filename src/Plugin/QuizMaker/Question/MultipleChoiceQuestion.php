@@ -59,7 +59,7 @@ class MultipleChoiceQuestion extends Question {
    */
   public function getResponse(array &$form, FormStateInterface $form_state): array {
     $responses = $form_state->getValue('multiple_choice_answer');
-    $responses = array_filter($responses, function($response) {
+    $responses = array_filter($responses, function ($response) {
       return $response != 0;
     });
     return array_values($responses);

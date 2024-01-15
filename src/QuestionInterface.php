@@ -116,7 +116,6 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
    */
   public function getResponseType(): ?string;
 
-
   /**
    * Get answer type.
    *

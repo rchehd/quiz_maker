@@ -14,6 +14,14 @@ quiz_maker.admin.structure:
   requirements:
     _permission: 'administer quiz'
 
+quiz_maker.admin.results:
+  path: '/admin/quiz_maker/results'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Results'
+  requirements:
+    _permission: 'administer quiz_result'
+
 # Question management tab
 quiz.questions:
   path: 'quiz/{quiz}/questions'

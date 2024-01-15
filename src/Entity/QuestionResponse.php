@@ -289,7 +289,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
   public function getResponses(): array {
     $responses = $this->get('responses')->referencedEntities();
     if ($responses) {
-      return array_map(function($response) {
+      return array_map(function ($response) {
         return $response->id();
       }, $responses);
     }

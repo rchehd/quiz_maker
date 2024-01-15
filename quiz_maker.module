@@ -476,7 +476,7 @@ function quiz_maker_preprocess_views_view_table(&$variables): void {
 /**
  * Implements hook_form_alter().
  */
-function quiz_maker_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+function quiz_maker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (str_contains($form_id, 'question_form') && isset($form['answers'])) {
     $entity_bundle = $form_state->getformObject()->getEntity()->bundle();
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
@@ -494,6 +494,9 @@ function quiz_maker_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $for
   }
 }
 
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ */
 function quiz_maker_inline_entity_form_entity_form_alter(array &$entity_form, FormStateInterface &$form_state) {
   if ($entity_form['#entity_type'] === 'question') {
     $entity_bundle = $entity_form['#bundle'];
@@ -510,4 +513,42 @@ function quiz_maker_inline_entity_form_entity_form_alter(array &$entity_form, Fo
       }
     }
   }
+}
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function quiz_maker_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
+  $entity_reference_fields = [
+    'quiz' => [
+      'field_name' => 'questions',
+      'target_entity_id' => 'question'
+    ],
+    'question' => [
+      'field_name' => 'answers',
+      'target_entity_id' => 'question_answer'
+    ],
+    'quiz_result' => [
+      'field_name' => 'responses',
+      'target_entity_id' => 'question_response'
+    ],
+  ];
+
+  if (in_array($entity_type->id(), array_keys($entity_reference_fields))) {
+    $data = $entity_reference_fields[$entity_type->id()];
+    /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
+    $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
+    $target_bundles = $entity_type_bundle_info->getBundleInfo($data['target_entity_id']);
+    $bundles = $entity_type_bundle_info->getBundleInfo($entity_type->id());
+    $bundles = array_keys($bundles);
+    $result = [];
+    foreach ($target_bundles as $key => $bundle) {
+      $result[$key] = $key;
+    }
+    $default_bundle = reset($bundles);
+    $fields[$data['field_name']]
+      ->setTargetBundle($default_bundle)
+      ->setSetting('handler_settings', ['target_bundles' => $result]);
+  }
+
 }

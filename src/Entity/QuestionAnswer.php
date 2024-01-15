@@ -140,20 +140,20 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['answer'] = BaseFieldDefinition::create('text_long')
-        ->setRevisionable(TRUE)
-        ->setTranslatable(TRUE)
-        ->setLabel(t('Answer'))
-        ->setDisplayOptions('form', [
-          'type' => 'text_textarea',
-          'weight' => 10,
-        ])
-        ->setDisplayConfigurable('form', TRUE)
-        ->setDisplayOptions('view', [
-          'type' => 'text_default',
-          'label' => 'above',
-          'weight' => 10,
-        ])
-        ->setDisplayConfigurable('view', TRUE);
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE)
+      ->setLabel(t('Answer'))
+      ->setDisplayOptions('form', [
+        'type' => 'text_textarea',
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'text_default',
+        'label' => 'above',
+        'weight' => 10,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
 
     $fields['is_correct'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Is correct'))
