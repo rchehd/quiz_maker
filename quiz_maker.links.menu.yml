@@ -83,6 +83,14 @@ entity.quiz_result.collection:
   parent: quiz_maker.admin.results
   weight: 3
 
+entity.quiz_result.on_review:
+  title: 'On review'
+  description: 'List of quiz results on review.'
+  route_name: view.quiz_results_on_review.result_list
+  parent: quiz_maker.admin.results
+  class: '\Drupal\quiz_maker\Plugin\Menu\QuizResultsOnReview'
+  weight: 2
+
 entity.question_response.collection:
   title: 'Question Responses'
   description: 'List of question responses.'
