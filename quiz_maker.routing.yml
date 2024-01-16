@@ -59,3 +59,16 @@ quiz.take:
     parameters:
       quiz:
         type: 'entity:quiz'
+
+quiz_maker.quiz_result_review:
+  path: '/quiz-maker/{quiz_result}/review'
+  defaults:
+    _title: 'Quiz Result Review'
+    _form: 'Drupal\quiz_maker\Form\QuizResultReviewForm'
+  requirements:
+    _permission: 'review quiz_result'
+  options:
+    #    _admin_route: true
+    parameters:
+      quiz:
+        type: 'entity:quiz_result'

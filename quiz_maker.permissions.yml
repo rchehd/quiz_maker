@@ -39,6 +39,10 @@ administer quiz_result:
   title: 'Administer quiz result'
   description: 'Maintain quiz result entities.'
   restrict access: true
+review quiz_result:
+  title: 'Review quiz result'
+  description: 'Review quiz results.'
+  restrict access: true
 view quiz_result:
   title: 'View quiz result'
 edit quiz_result:

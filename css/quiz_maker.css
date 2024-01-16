@@ -39,8 +39,10 @@
 }
 
 .in-correct,
-.correct {
+.correct,
+.chosen {
   position: relative;
+  font-weight: bold;
 }
 
 .in-correct::after {
@@ -60,6 +62,20 @@
 .correct::after {
   content: '';
   background-image: url("../icons/check-mark.svg");
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-size: contain;
+  background-position: right;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.chosen::after {
+  content: '';
+  background-image: url("../icons/check-mark-black.svg");
   position: absolute;
   top: 0;
   right: 0;
@@ -140,4 +156,23 @@
 
 .response-list-dot {
   list-style-type: disc;
+}
+
+.question-result-row {
+  border: thin dashed;
+  padding-left: 36px;
+  padding-right: 36px;
+  margin-bottom: 36px;
+}
+
+.correct-answers {
+  border-bottom: dashed;
+  padding-bottom: 30px;
+  border-width: thin;
+}
+
+.quiz-result-form-data {
+  padding-bottom: 30px;
+  padding-top: 30px;
+  border-width: thin;
 }

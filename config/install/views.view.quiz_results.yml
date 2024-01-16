@@ -6,8 +6,6 @@ dependencies:
     - quiz_maker
     - user
     - views_bulk_operations
-_core:
-  default_config_hash: wrm4DBtxDJCwuhZtEyovl3n6_wjVGdnw1YI0_ayiaYI
 id: quiz_results
 label: 'Quiz Results'
 module: views
@@ -22,7 +20,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Results'
+      title: Results
       fields:
         views_bulk_operations_bulk_form:
           id: views_bulk_operations_bulk_form
@@ -203,7 +201,8 @@ display:
           hide_alter_empty: true
           click_sort_column: value
           type: string
-          settings: {  }
+          settings:
+            link_to_entity: true
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -647,8 +646,8 @@ display:
           entity_type: quiz_result
           entity_field: state
           plugin_id: string
-          operator: '='
-          value: completed
+          operator: word
+          value: 'completed, evaluated'
           group: 1
           exposed: false
           expose:
@@ -872,6 +871,51 @@ display:
                 title: Draft
                 operator: '='
                 value: draft
+              3:
+                title: Evaluated
+                operator: '='
+                value: evaluated
+        state_1:
+          id: state_1
+          table: quiz_result
+          field: state
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: quiz_result
+          entity_field: state
+          plugin_id: string
+          operator: '!='
+          value: on_review
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
       filter_groups:
         operator: AND
         groups:

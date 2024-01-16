@@ -272,9 +272,9 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
   /**
    * {@inheritDoc}
    */
-  public function setScore(QuestionInterface $question, bool $value): QuestionResponseInterface {
+  public function setScore(QuestionInterface $question, bool $value, int $score = NULL): QuestionResponseInterface {
     if ($value) {
-      $this->set('score', $question->getMaxScore());
+      $this->set('score', $score ?? $question->getMaxScore());
     }
     else {
       $this->set('score', 0);

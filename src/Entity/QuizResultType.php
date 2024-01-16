@@ -68,6 +68,11 @@ final class QuizResultType extends ConfigEntityBundleBase {
   const COMPLETED = 'completed';
 
   /**
+   * Quiz result state - evaluated.
+   */
+  const EVALUATED = 'evaluated';
+
+  /**
    * The machine name of this quiz result type.
    */
   protected string $id;
@@ -92,7 +97,7 @@ final class QuizResultType extends ConfigEntityBundleBase {
    * @return string
    *   The quiz result type workflow ID.
    */
-  public function getWorkflowId() {
+  public function getWorkflowId(): string {
     return $this->workflow;
   }
 

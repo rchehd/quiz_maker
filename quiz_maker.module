@@ -16,6 +16,7 @@ use Drupal\Core\Url;
 use Drupal\quiz_maker\Entity\QuizResultType;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuizInterface;
+use Drupal\quiz_maker\QuizResultInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -357,7 +358,10 @@ function quiz_maker_preprocess_quiz_result(array &$variables): void {
   $quiz_result = $variables['elements']['#quiz_result'];
   $variables['take_quiz'] = quiz_maker_get_quiz_take_link($quiz_result->getQuiz(), 'Take quiz again');
   $variables['back_to_quiz'] = quiz_maker_get_quiz_link($quiz_result->getQuiz(), 'Go back to quiz');
-  $variables['is_quiz_completed'] = $quiz_result->getState() === QuizResultType::COMPLETED;
+  $variables['is_quiz_completed'] = in_array(
+    $quiz_result->getState(),
+    [QuizResultType::COMPLETED, QuizResultType::EVALUATED]
+  );
 }
 
 /**
@@ -551,4 +555,19 @@ function quiz_maker_entity_base_field_info_alter(&$fields, EntityTypeInterface $
       ->setSetting('handler_settings', ['target_bundles' => $result]);
   }
 
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function quiz_maker_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  if ($entity instanceof QuizResultInterface && $entity->getState() === QuizResultType::ON_REVIEW
+  ) {
+    $reviewUrl = Url::fromRoute('quiz_maker.quiz_result_review', ['quiz_result' => $entity->id()]);
+    $operations['review'] = [
+      'title' => t('Review'),
+      'weight' => -1,
+      'url' => $reviewUrl,
+    ];
+  }
 }

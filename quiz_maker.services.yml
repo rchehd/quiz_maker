@@ -19,3 +19,8 @@ services:
       - '@datetime.time'
       - '@logger.factory'
       - '@entity_type.bundle.info'
+  quiz_maker.quiz_helper:
+    class: Drupal\quiz_maker\Service\QuizHelper
+    arguments:
+      - '@entity_type.manager'
+      - '@logger.factory'
