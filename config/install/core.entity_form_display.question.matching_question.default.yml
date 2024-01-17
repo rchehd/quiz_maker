@@ -1,4 +1,3 @@
-uuid: 82963d56-16c4-4b24-8b90-f4e5c8f785a3
 langcode: en
 status: true
 dependencies:
@@ -8,8 +7,6 @@ dependencies:
   module:
     - inline_entity_form
     - text
-_core:
-  default_config_hash: gFHEfqv6R0F6jLGUbfNg9m_sNQc4mUpguOCYqpst5Lg
 id: question.matching_question.default
 targetEntityType: question
 bundle: matching_question
