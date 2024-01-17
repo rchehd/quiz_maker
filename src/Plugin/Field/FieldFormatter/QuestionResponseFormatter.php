@@ -60,7 +60,7 @@ final class QuestionResponseFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings(): array {
-    $setting = ['list_style' => 'Numeric with dot'];
+    $setting = ['list_style' => 0];
     return $setting + parent::defaultSettings();
   }
 
@@ -72,11 +72,11 @@ final class QuestionResponseFormatter extends FormatterBase {
       '#type' => 'radios',
       '#title' => $this->t('List style'),
       '#options' => [
-        'Number with dot' => $this->t('Number with dot (ex. "@example")', ['@example' => '1.']),
-        'Number with bracket' => $this->t('Number with bracket (ex. "@example")', ['@example' => '1)']),
-        'Letter with dot' => $this->t('Letter with dot (ex. "@example")', ['@example' => 'a.']),
-        'Letter with bracket' => $this->t('Letter with bracket (ex. "@example")', ['@example' => 'a)']),
-        'Dot' => $this->t('Dot (ex. "@example")', ['@example' => '•']),
+        0 => $this->t('Number with dot (ex. "@example")', ['@example' => '1.']),
+        1 => $this->t('Number with bracket (ex. "@example")', ['@example' => '1)']),
+        2 => $this->t('Letter with dot (ex. "@example")', ['@example' => 'a.']),
+        3 => $this->t('Letter with bracket (ex. "@example")', ['@example' => 'a)']),
+        4 => $this->t('Dot (ex. "@example")', ['@example' => '•']),
       ],
       '#default_value' => $this->getSetting('list_style'),
     ];
@@ -106,7 +106,7 @@ final class QuestionResponseFormatter extends FormatterBase {
         $response,
         0,
         TRUE,
-        $this->getSetting('list_style')
+        (int) $this->getSetting('list_style')
       );
     }
     return $element;

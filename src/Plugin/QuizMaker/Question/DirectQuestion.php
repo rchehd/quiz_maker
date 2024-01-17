@@ -25,7 +25,7 @@ class DirectQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
+  public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
     return [
       'direct_answer' => [
         '#type' => 'textarea',

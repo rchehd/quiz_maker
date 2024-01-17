@@ -48,18 +48,18 @@ class QuizHelper {
    *     - 1: 'chosen/not-chosen'.
    * @param bool $show_score
    *   TRUE when need to show score, otherwise FALSE.
-   * @param string $list_style
+   * @param ?int $list_style
    *   One of styles:
-   *     - 'Number with bracket' (default),
-   *     - 'Number with dot',
-   *     - 'Letter with dot',
-   *     - 'Letter with bracket',
-   *     - 'Dot'.
+   *     - 0: 'Number with bracket',
+   *     - 1: 'Number with dot',
+   *     - 2: 'Letter with dot',
+   *     - 3: 'Letter with bracket',
+   *     - 4: 'Dot'.
    *
    * @return array
    *   The render array.
    */
-  public function getQuestionResultView(QuestionInterface $question, QuestionResponseInterface $response, int $mark_mode = 0, bool $show_score = TRUE, string $list_style = 'Number with bracket'): array {
+  public function getQuestionResultView(QuestionInterface $question, QuestionResponseInterface $response, int $mark_mode = 0, bool $show_score = TRUE, int $list_style = NULL): array {
     $result_view = [
       '#type' => 'container',
       '#attributes' => [
@@ -87,7 +87,7 @@ class QuizHelper {
         $result_view['answers'][$answer->id()] = [
           '#type' => 'html_tag',
           '#tag' => 'li',
-          '#value' => $answer->getAnswer(),
+          '#value' => $answer->getAnswer($response),
           '#attributes' => [
             'class' => match($mark_mode) {
               0 => [$answer->getResponseStatus($response)],
@@ -118,19 +118,20 @@ class QuizHelper {
   /**
    * Get list style.
    *
-   * @param string $style
+   * @param ?int $style
    *   The style.
    *
    * @return string
    *   Style.
    */
-  public function getListStyle(string $style): string {
+  public function getListStyle(int $style = NULL): string {
     return match($style) {
-      'Number with bracket' => 'response-list-number-with-bracket',
-      'Number with dot' => 'response-list-number-with-dot',
-      'Letter with dot' => 'response-list-letter-with-dot',
-      'Letter with bracket' => 'response-list-letter-with-bracket',
-      'Dot' => 'response-list-dot',
+      0 => 'response-list-number-with-bracket',
+      2 => 'response-list-number-with-dot',
+      3 => 'response-list-letter-with-dot',
+      4 => 'response-list-letter-with-bracket',
+      5 => 'response-list-dot',
+      default => 'response-list-non-style'
     };
   }
 

@@ -121,7 +121,7 @@ class QuizResultReviewForm extends FormBase {
           '#type' => 'html_tag',
           '#tag' => 'ol',
           '#attributes' => [
-            'class' => ['question-answers', $this->quizHelper->getListStyle('Dot')]
+            'class' => ['question-answers', $this->quizHelper->getListStyle()]
           ]
         ];
 

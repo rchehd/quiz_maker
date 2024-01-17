@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\quiz_maker\Entity\QuizResultType;
+use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\quiz_maker\QuizResultInterface;
@@ -38,6 +39,12 @@ function quiz_maker_theme(): array {
     'question_answer' => ['render element' => 'elements'],
     'quiz_result' => ['render element' => 'elements'],
     'question_response' => ['render element' => 'elements'],
+    'question_matching_answer' => [
+      'variables' => [
+        'matching_question' => NULL,
+        'matching_answer' => NULL,
+      ]
+    ],
   ];
 }
 
@@ -462,6 +469,10 @@ function quiz_maker_entity_presave(EntityInterface $entity): void {
       }
 
     }
+  }
+
+  if ($entity instanceof QuestionAnswerInterface && $entity->bundle() === 'matching_answer') {
+    $entity->setCorrect(TRUE);
   }
 }
 

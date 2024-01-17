@@ -25,7 +25,7 @@ class MultipleChoiceQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
+  public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
     if ($answers = $this->getAnswers()) {
       $options = [];
       foreach ($answers as $answer) {
@@ -36,7 +36,7 @@ class MultipleChoiceQuestion extends Question {
           '#type' => 'checkboxes',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
-          '#default_value' => $questionResponse?->getResponses(),
+          '#default_value' => $question_response?->getResponses(),
           '#disabled' => !$allow_change_response
         ]
       ];

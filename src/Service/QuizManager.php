@@ -64,7 +64,7 @@ class QuizManager {
       // Return the newest draft result.
       return end($draft_results);
     }
-    $quiz_result_type = $quiz->get('result_type')->target_id;
+    $quiz_result_type = $quiz->getResultType();
     try {
       $quiz_result = $this->entityTypeManager->getStorage('quiz_result')->create([
         'bundle' => $quiz_result_type,
@@ -113,7 +113,7 @@ class QuizManager {
           ->setQuestion($question)
           ->setResponseData($response_data)
           ->setCorrect($question->isResponseCorrect($response_data))
-          ->setScore($question, $question->isResponseCorrect($response_data))
+          ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
           ->save();
         $result->addResponse($response)->save();
       }
@@ -125,7 +125,7 @@ class QuizManager {
       try {
         $response->setResponseData($response_data)
           ->setCorrect($question->isResponseCorrect($response_data))
-          ->setScore($question, $question->isResponseCorrect($response_data))
+          ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
           ->save();
       }
       catch (EntityStorageException $e) {

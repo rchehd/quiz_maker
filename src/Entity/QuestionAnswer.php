@@ -201,7 +201,14 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
   /**
    * {@inheritDoc}
    */
-  public function getAnswer(): ?string {
+  public function setCorrect(bool $value): void {
+    $this->set('is_correct', $value);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getAnswer(QuestionResponseInterface $response = NULL): ?string {
     return $this->get('answer')->value;
   }
 

@@ -27,13 +27,13 @@ class SingleChoiceQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
+  public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
     if ($answers = $this->getAnswers()) {
       $options = [];
       foreach ($answers as $answer) {
         $options[$answer->id()] = $answer->getAnswer();
       }
-      $default_answer = $questionResponse?->getResponses();
+      $default_answer = $question_response?->getResponses();
       if (!empty($default_answer)) {
         $default_answer = reset($default_answer);
       }

@@ -22,12 +22,23 @@ interface QuestionAnswerInterface extends ContentEntityInterface, EntityOwnerInt
   public function isCorrect(): bool;
 
   /**
+   * Set "is correct" value.
+   *
+   * @param bool $value
+   *   The value.
+   */
+  public function setCorrect(bool $value): void;
+
+  /**
    * Return answer text if it exists.
+   *
+   * @param \Drupal\quiz_maker\QuestionResponseInterface|null $response
+   *   The answer response.
    *
    * @return string|null
    *   The answer text or null.
    */
-  public function getAnswer(): ?string;
+  public function getAnswer(QuestionResponseInterface $response = NULL): ?string;
 
   /**
    * Get response status.

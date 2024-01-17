@@ -15,7 +15,7 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
   /**
    * Get Answering form.
    *
-   * @param \Drupal\quiz_maker\QuestionResponseInterface|null $questionResponse
+   * @param \Drupal\quiz_maker\QuestionResponseInterface|null $question_response
    *   Question response. Used for set default value for answering form.
    * @param bool $allow_change_response
    *   TRUE if question allow to change response, otherwise FALSE.
@@ -23,7 +23,7 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
    * @return array
    *   Form array.
    */
-  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array;
+  public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array;
 
   /**
    * Question form validation.

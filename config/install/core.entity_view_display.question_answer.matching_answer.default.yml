@@ -4,6 +4,7 @@ dependencies:
   config:
     - field.field.question_answer.matching_answer.field_matching_answer
     - field.field.question_answer.matching_answer.field_matching_question
+    - field.field.question_answer.matching_answer.field_score
     - quiz_maker.question_answer_type.matching_answer
   module:
     - text
@@ -13,6 +14,13 @@ targetEntityType: question_answer
 bundle: matching_answer
 mode: default
 content:
+  answer:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 10
+    region: content
   created:
     type: timestamp
     label: above
@@ -45,6 +53,25 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 21
+    region: content
+  field_score:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 23
+    region: content
+  is_correct:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 10
     region: content
   label:
     type: string

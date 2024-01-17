@@ -158,6 +158,10 @@
   list-style-type: disc;
 }
 
+.response-list-non-style {
+  list-style-type: none !important;
+}
+
 .question-result-row {
   border: thin dashed;
   padding-left: 36px;
@@ -175,4 +179,17 @@
   padding-bottom: 30px;
   padding-top: 30px;
   border-width: thin;
+}
+.matching-answer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.matching-answer img {
+  max-height: 20px;
+}
+.matching-answer>p,
+.matching-answer>p {
+  margin: 0;
 }

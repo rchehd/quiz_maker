@@ -1,11 +1,15 @@
+uuid: 82963d56-16c4-4b24-8b90-f4e5c8f785a3
 langcode: en
 status: true
 dependencies:
   config:
+    - field.field.question.matching_question.field_simple_scoring
     - quiz_maker.question_type.matching_question
   module:
     - inline_entity_form
     - text
+_core:
+  default_config_hash: gFHEfqv6R0F6jLGUbfNg9m_sNQc4mUpguOCYqpst5Lg
 id: question.matching_question.default
 targetEntityType: question
 bundle: matching_question
@@ -29,22 +33,12 @@ content:
       revision: false
       removed_reference: optional
     third_party_settings: {  }
-  max_score:
-    type: number
-    weight: 3
-    region: content
-    settings:
-      placeholder: ''
-    third_party_settings: {  }
-  tag:
-    type: entity_reference_autocomplete
+  field_simple_scoring:
+    type: boolean_checkbox
     weight: 4
     region: content
     settings:
-      match_operator: CONTAINS
-      match_limit: 10
-      size: 60
-      placeholder: ''
+      display_label: true
     third_party_settings: {  }
   label:
     type: string_textfield
@@ -52,6 +46,13 @@ content:
     region: content
     settings:
       size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  max_score:
+    type: number
+    weight: 3
+    region: content
+    settings:
       placeholder: ''
     third_party_settings: {  }
   question:
@@ -68,6 +69,16 @@ content:
     region: content
     settings:
       display_label: false
+    third_party_settings: {  }
+  tag:
+    type: entity_reference_autocomplete
+    weight: 6
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
 hidden:
   created: true

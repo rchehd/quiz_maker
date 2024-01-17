@@ -3,6 +3,7 @@
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Question;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
 use Drupal\quiz_maker\Plugin\QuizMaker\Answer\MatchingAnswer;
@@ -26,8 +27,8 @@ class MatchingQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
-    $answers = $this->get('answers')->referencedEntities();
+  public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
+    $answers = $this->getAnswers();
     if ($answers) {
       $answer_form = [
         '#type' => 'container',
@@ -47,8 +48,21 @@ class MatchingQuestion extends Question {
           'class' => ['answer-table']
         ]
       ];
-      $answer_form['question_table']['form'] = $this->getMatchingTable($answers, 'getMatchingQuestion', $this->t('Question'), $allow_change_response);
-      $answer_form['answer_table']['form'] = $this->getMatchingTable($answers, 'getMatchingAnswer', $this->t('Answer'), $allow_change_response);
+      // The column of questions (non-draggable).
+      $answer_form['question_table']['question_column'] = $this->getMatchingTable($answers, 'getMatchingQuestion', $this->t('Question'), FALSE, FALSE);
+
+      // The matching column of answers(draggable).
+      // If question already has response - get answers from response,
+      // otherwise get original answers and shuffle it.
+      if ($question_response) {
+        $answers = \Drupal::entityTypeManager()->getStorage('question_answer')->loadMultiple($question_response->getResponses());
+      }
+      else {
+        $answers = $this->getAnswers();
+        shuffle($answers);
+      }
+
+      $answer_form['answer_table']['answer_column'] = $this->getMatchingTable($answers, 'getMatchingAnswer', $this->t('Answer'), $allow_change_response);
 
       return $answer_form;
     }
@@ -67,9 +81,7 @@ class MatchingQuestion extends Question {
    * {@inheritDoc}
    */
   public function getResponse(array &$form, FormStateInterface $form_state): array {
-    return [
-      'response' => $form_state->getValue('question_table')
-    ];
+    return array_keys($form_state->getValue('answer_column'));
   }
 
   /**
@@ -83,26 +95,31 @@ class MatchingQuestion extends Question {
    *   The table title.
    * @param bool $allow_change_response
    *   Allow to change response.
+   * @param bool $draggable
+   *   TRUE if table should be draggable.
    *
    * @return array
    *   The table.
    */
-  private function getMatchingTable(array $answers, string $answer_function, mixed $title, bool $allow_change_response = TRUE): array {
+  private function getMatchingTable(array $answers, string $answer_function, mixed $title, bool $allow_change_response = TRUE, bool $draggable = TRUE): array {
     $table = [
       '#type' => 'table',
       '#header' => [
         $title,
-        $this->t('Weight'),
       ],
-      '#tabledrag' => [
+      '#disabled' => !$allow_change_response
+    ];
+
+    if ($draggable && $allow_change_response) {
+      $table['#header'][] = $this->t('Weight');
+      $table['#tabledrag'] = [
         [
           'action' => 'order',
           'relationship' => 'sibling',
           'group' => 'table-sort-weight',
         ],
-      ],
-      '#disabled' => !$allow_change_response
-    ];
+      ];
+    }
 
     $i = 0;
     foreach ($answers as $answer) {
@@ -112,28 +129,37 @@ class MatchingQuestion extends Question {
           '#tag' => 'span',
           '#value' => $answer->{$answer_function}(),
         ],
-        'weight' => [
+        '#attributes' => [
+          'class' => ['draggable'],
+        ]
+      ];
+      if ($draggable) {
+        $row['weight'] = [
           '#type' => 'weight',
           '#title' => $this->t('Weight for @title', ['@title' => $answer->label()]),
           '#title_display' => 'invisible',
           '#default_value' => $i,
           '#attributes' => ['class' => ['table-sort-weight']],
-        ],
-        '#attributes' => [
-          'class' => ['draggable'],
-        ]
-      ];
+        ];
+      }
       $table[$answer->id()] = $row;
       $i++;
     }
+
     return $table;
   }
 
   /**
-   * {@inheritDoc}
+   * TRUE if question score should calculate by simple way.
+   *
+   * Explanation: Calculate the answer score considering an exact match or a
+   * partial match (every matching have wight in answer).
+   *
+   * @return bool
+   *   TRUE if simple scoring, otherwise FALSE.
    */
-  public function isResponseCorrect(array $answers_ids): bool {
-    return FALSE;
+  public function isSimpleScore(): bool {
+    return (bool) $this->get('field_simple_scoring')->getString();
   }
 
 }

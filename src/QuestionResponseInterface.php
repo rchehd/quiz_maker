@@ -104,10 +104,12 @@ interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerI
    *   TRUE id response is correct, otherwise FALSE.
    * @param ?int $score
    *   The score.
+   * @param array $response_data
+   *   The response data.
    *
    * @return \Drupal\quiz_maker\QuestionResponseInterface
    *   The response object.
    */
-  public function setScore(QuestionInterface $question, bool $value, int $score = NULL): QuestionResponseInterface;
+  public function setScore(QuestionInterface $question, bool $value, int $score = NULL, array $response_data = []): QuestionResponseInterface;
 
 }

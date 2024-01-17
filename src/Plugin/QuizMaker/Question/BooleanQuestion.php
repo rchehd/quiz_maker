@@ -25,7 +25,7 @@ class BooleanQuestion extends Question {
   /**
    * {@inheritDoc}
    */
-  public function getAnsweringForm(QuestionResponseInterface $questionResponse = NULL, bool $allow_change_response = TRUE): array {
+  public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
     $answers = $this->getAnswers();
     if ($answers) {
       $options = [];
@@ -37,7 +37,7 @@ class BooleanQuestion extends Question {
           '#type' => 'radios',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
-          '#default_value' => $questionResponse?->getResponses(),
+          '#default_value' => $question_response?->getResponses(),
           '#disabled' => !$allow_change_response
         ]
       ];

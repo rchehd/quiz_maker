@@ -4,6 +4,7 @@ dependencies:
   config:
     - field.field.question_answer.matching_answer.field_matching_answer
     - field.field.question_answer.matching_answer.field_matching_question
+    - field.field.question_answer.matching_answer.field_score
     - quiz_maker.question_answer_type.matching_answer
   module:
     - text
@@ -28,6 +29,13 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
+  field_score:
+    type: number
+    weight: 3
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
   label:
     type: string_textfield
     weight: 0
@@ -37,5 +45,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
 hidden:
+  answer: true
   created: true
+  is_correct: true
   uid: true
