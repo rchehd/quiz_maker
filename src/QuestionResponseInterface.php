@@ -30,10 +30,10 @@ interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerI
   /**
    * Get response score.
    *
-   * @return int
+   * @return float
    *   The score.
    */
-  public function getScore(): int;
+  public function getScore(): float;
 
   /**
    * Get response ids.
@@ -102,7 +102,7 @@ interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerI
    *   The question.
    * @param bool $value
    *   TRUE id response is correct, otherwise FALSE.
-   * @param ?int $score
+   * @param ?float $score
    *   The score.
    * @param array $response_data
    *   The response data.
@@ -110,6 +110,6 @@ interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerI
    * @return \Drupal\quiz_maker\QuestionResponseInterface
    *   The response object.
    */
-  public function setScore(QuestionInterface $question, bool $value, int $score = NULL, array $response_data = []): QuestionResponseInterface;
+  public function setScore(QuestionInterface $question, bool $value, float $score = NULL, array $response_data = []): QuestionResponseInterface;
 
 }

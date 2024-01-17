@@ -173,7 +173,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['score'] = BaseFieldDefinition::create('integer')
+    $fields['score'] = BaseFieldDefinition::create('float')
       ->setLabel('Score')
       ->setDisplayOptions('form', [
         'type' => 'number',
@@ -233,7 +233,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
   /**
    * {@inheritDoc}
    */
-  public function getScore(): int {
+  public function getScore(): float {
     return $this->get('score')->value;
   }
 
@@ -272,7 +272,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
   /**
    * {@inheritDoc}
    */
-  public function setScore(QuestionInterface $question, bool $value, int $score = NULL, array $response_data = []): QuestionResponseInterface {
+  public function setScore(QuestionInterface $question, bool $value, float $score = NULL, array $response_data = []): QuestionResponseInterface {
     if ($value) {
       $this->set('score', $score ?? $question->getMaxScore());
     }
