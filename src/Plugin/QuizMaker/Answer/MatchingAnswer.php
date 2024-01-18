@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\quiz_maker\Entity\QuestionAnswer;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\Trait\SimpleScoringAnswerTrait;
 
 /**
  * Plugin implementation of the question.
@@ -17,6 +18,8 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  * )
  */
 class MatchingAnswer extends QuestionAnswer {
+
+  use SimpleScoringAnswerTrait;
 
   /**
    * {@inheritDoc}
@@ -121,16 +124,6 @@ class MatchingAnswer extends QuestionAnswer {
       return $answer->id();
     }, $answers);
     return array_search($this->id(), $answer_ids);
-  }
-
-  /**
-   * Get answer score.
-   *
-   * @return ?int
-   *   The score.
-   */
-  public function getScore(): ?int {
-    return $this->get('field_score')->value;
   }
 
 }

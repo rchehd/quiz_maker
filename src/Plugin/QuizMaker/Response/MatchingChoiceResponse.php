@@ -3,8 +3,7 @@
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Response;
 
 use Drupal\quiz_maker\Entity\QuestionResponse;
-use Drupal\quiz_maker\QuestionInterface;
-use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\Trait\SimpleScoringResponseTrait;
 
 /**
  * Plugin implementation of the question.
@@ -17,33 +16,13 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  */
 class MatchingChoiceResponse extends QuestionResponse {
 
+  use SimpleScoringResponseTrait;
+
   /**
    * {@inheritDoc}
    */
-  public function setScore(QuestionInterface $question, bool $value, float $score = NULL, array $response_data = []): QuestionResponseInterface {
-    $is_simple_score = $question->isSimpleScore();
-    // When simple scoring disabled, we need to calculate score of every
-    // right matching.
-    if (!$is_simple_score && $response_data) {
-      $answers = $question->getAnswers();
-      $total_score = 0;
-      $max_score = 0;
-      // Add score for avery guessed matching.
-      for ($i = 0; $i < count($answers); $i++) {
-        $max_score += $answers[$i]->getScore();
-        if ($response_data[$i] === (int) $answers[$i]->id()) {
-          $total_score += $answers[$i]->getScore();
-        }
-      }
-      // Calculate the fraction from the question max score.
-      $total_score = round(($total_score/$max_score) * $question->getMaxScore(), 2);
-      $result = parent::setScore($question, TRUE, $total_score, $response_data);
-    }
-    else {
-      $result = parent::setScore($question, $value);
-    }
-
-    return $result;
+  protected function isResponseCorrect(int $response_id, int $answer_id, array $response_ids, array $answer_ids): bool {
+    return $response_id === $answer_id;
   }
 
 }

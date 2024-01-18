@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\Trait\SimpleScoringQuestionTrait;
 
 /**
  * Plugin implementation of the question.
@@ -21,6 +22,7 @@ use Drupal\quiz_maker\QuestionResponseInterface;
 class MultipleChoiceQuestion extends Question {
 
   use StringTranslationTrait;
+  use SimpleScoringQuestionTrait;
 
   /**
    * {@inheritDoc}
@@ -36,7 +38,7 @@ class MultipleChoiceQuestion extends Question {
           '#type' => 'checkboxes',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
-          '#default_value' => $question_response?->getResponses(),
+          '#default_value' => $question_response?->getResponses() ?? [],
           '#disabled' => !$allow_change_response
         ]
       ];

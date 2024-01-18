@@ -8,6 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
 use Drupal\quiz_maker\Plugin\QuizMaker\Answer\MatchingAnswer;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\Trait\SimpleScoringQuestionTrait;
 
 /**
  * Plugin implementation of the question.
@@ -23,6 +24,7 @@ use Drupal\quiz_maker\QuestionResponseInterface;
 class MatchingQuestion extends Question {
 
   use StringTranslationTrait;
+  use SimpleScoringQuestionTrait;
 
   /**
    * {@inheritDoc}
@@ -147,19 +149,6 @@ class MatchingQuestion extends Question {
     }
 
     return $table;
-  }
-
-  /**
-   * TRUE if question score should calculate by simple way.
-   *
-   * Explanation: Calculate the answer score considering an exact match or a
-   * partial match (every matching have wight in answer).
-   *
-   * @return bool
-   *   TRUE if simple scoring, otherwise FALSE.
-   */
-  public function isSimpleScore(): bool {
-    return (bool) $this->get('field_simple_scoring')->getString();
   }
 
 }

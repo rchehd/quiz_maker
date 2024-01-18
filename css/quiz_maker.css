@@ -45,6 +45,14 @@
   font-weight: bold;
 }
 
+.in-correct {
+  color: #dd2f44;
+}
+
+.correct {
+  color: #1b9116;
+}
+
 .in-correct::after {
   content: '';
   background-image: url("../icons/cross-mark.svg");
@@ -192,4 +200,13 @@
 .matching-answer>p,
 .matching-answer>p {
   margin: 0;
+}
+
+.question-answers li>p {
+  margin: 0;
+}
+
+.question-answers li {
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
