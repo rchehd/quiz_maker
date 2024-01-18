@@ -10,7 +10,7 @@ field_name: field_simple_scoring
 entity_type: question
 bundle: multiple_choice_question
 label: 'Simple scoring'
-description: 'Turn it on if you want to evaluate the whole question, if not, turn it off and each answer will be evaluated separately.'
+description: 'Turn it off if need to evaluate answers separately. Explanation:  the question score will be calculated as the sum of the score of the right answers divided by the sum of the score of all answers and multiplied by the question max score.'
 required: false
 translatable: false
 default_value:

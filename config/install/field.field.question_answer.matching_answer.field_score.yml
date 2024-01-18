@@ -9,7 +9,7 @@ field_name: field_score
 entity_type: question_answer
 bundle: matching_answer
 label: Score
-description: 'Used if you disable simple scoring.'
+description: 'The weight in the question max score.'
 required: false
 translatable: false
 default_value:
