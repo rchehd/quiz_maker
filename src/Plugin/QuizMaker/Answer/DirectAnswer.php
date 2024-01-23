@@ -20,8 +20,33 @@ class DirectAnswer extends QuestionAnswer {
   /**
    * {@inheritDoc}
    */
+  public function getAnswer(QuestionResponseInterface $response = NULL): ?string {
+    if ($response) {
+      return $response?->getUserResponse();
+    }
+    return parent::getAnswer();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function getResponseStatus(QuestionResponseInterface $response): string {
-    return self::NEUTRAL;
+    $responses = $response->getResponses();
+    $answer_position = array_search($this->id(), $responses);
+    $answer_original_position = $this->getAnswerOriginalWeight($response->getQuestion());
+    if ($answer_position === $answer_original_position) {
+      return self::CORRECT;
+    }
+    else {
+      return self::IN_CORRECT;
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function isAlwaysCorrect(): bool {
+    return TRUE;
   }
 
 }

@@ -26,10 +26,17 @@ class DirectQuestion extends Question {
    * {@inheritDoc}
    */
   public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
+    $default_answer = $question_response?->getResponses();
+    if ($default_answer) {
+      /** @var \Drupal\quiz_maker\QuestionAnswerInterface $answer */
+      $default_value = reset($default_answer);
+    }
+
     return [
       'direct_answer' => [
         '#type' => 'textarea',
         '#title' => $this->t('Write an answer'),
+        '#default_value' => $default_value ?? NULL,
         '#disabled' => !$allow_change_response
       ]
     ];
@@ -49,7 +56,7 @@ class DirectQuestion extends Question {
    */
   public function getResponse(array &$form, FormStateInterface $form_state): array {
     return [
-      'response' => $form_state->getValue('direct_answer')
+      $form_state->getValue('direct_answer')
     ];
   }
 
@@ -57,7 +64,21 @@ class DirectQuestion extends Question {
    * {@inheritDoc}
    */
   public function isResponseCorrect(array $answers_ids): bool {
-    return FALSE;
+    $correct_answers = $this->getCorrectAnswers();
+    $correct_answer = reset($correct_answers);
+    $response = reset($answers_ids);
+    $result = similar_text($correct_answer->getAnswer(), $response, $perc);
+    return $perc >= $this->getSimilarity();
+  }
+
+  /**
+   * Get answer similarity.
+   *
+   * @return float
+   *   The similarity.
+   */
+  public function getSimilarity(): float {
+    return $this->get('field_similarity')->value;
   }
 
 }

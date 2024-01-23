@@ -24,8 +24,7 @@ class MatchingAnswer extends QuestionAnswer {
   /**
    * {@inheritDoc}
    */
-  public function isCorrect(): bool {
-    // Matching answer is always TRUE, because it will shuffle only for user.
+  public function isAlwaysCorrect(): bool {
     return TRUE;
   }
 

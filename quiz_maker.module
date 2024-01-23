@@ -471,8 +471,13 @@ function quiz_maker_entity_presave(EntityInterface $entity): void {
     }
   }
 
-  if ($entity instanceof QuestionAnswerInterface && $entity->bundle() === 'matching_answer') {
-    $entity->setCorrect(TRUE);
+  if ($entity instanceof QuestionAnswerInterface) {
+    if ($entity->isAlwaysCorrect()) {
+      $entity->setCorrect(TRUE);
+    }
+    if ($entity->isAlwaysInCorrect()) {
+      $entity->setCorrect(FALSE);
+    }
   }
 }
 

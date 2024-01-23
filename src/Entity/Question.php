@@ -343,7 +343,6 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
     $correct_answers_ids = array_map(function ($correct_answer) {
       return $correct_answer->id();
     }, $correct_answers);
-    ;
     return array_map('intval', $correct_answers_ids) === array_map('intval', $answers_ids);
   }
 

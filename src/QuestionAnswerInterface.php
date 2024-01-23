@@ -54,4 +54,20 @@ interface QuestionAnswerInterface extends ContentEntityInterface, EntityOwnerInt
    */
   public function getResponseStatus(QuestionResponseInterface $response): string;
 
+  /**
+   * Should answer should be always correct.
+   *
+   * @return bool
+   *   TRUE if it should, otherwise FALSE.
+   */
+  public function isAlwaysCorrect(): bool;
+
+  /**
+   * Should answer should be always in-correct.
+   *
+   * @return bool
+   *   TRUE if it should, otherwise FALSE.
+   */
+  public function isAlwaysInCorrect(): bool;
+
 }

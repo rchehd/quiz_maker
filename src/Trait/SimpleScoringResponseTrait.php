@@ -34,7 +34,7 @@ trait SimpleScoringResponseTrait {
         }
       }
       // Calculate the fraction from the question max score.
-      $total_score = round(($total_score/$max_score) * $question->getMaxScore(), 2);
+      $total_score = round(($total_score / $max_score) * $question->getMaxScore(), 2);
       $result = parent::setScore($question, TRUE, $total_score, $response_data);
     }
     else {

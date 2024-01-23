@@ -212,4 +212,18 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
     return $this->get('answer')->value;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function isAlwaysCorrect(): bool {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function isAlwaysInCorrect(): bool {
+    return FALSE;
+  }
+
 }
