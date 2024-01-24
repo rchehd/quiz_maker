@@ -129,4 +129,12 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
    */
   public function allowTaking(AccountInterface $user): bool|string;
 
+  /**
+   * Get a time limit for quiz-taking attempts.
+   *
+   * @return ?int
+   *   The time in seconds or NULL if not set.
+   */
+  public function getTimeLimit(): ?int;
+
 }

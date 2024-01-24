@@ -86,7 +86,7 @@ class QuizHelper {
       if ($answer instanceof QuestionAnswerInterface) {
         $result_view['answers'][$answer->id()] = [
           '#type' => 'html_tag',
-          '#tag' => 'li',
+          '#tag' => $answer->getViewHtmlTag(),
           '#value' => $answer->getAnswer($response),
           '#attributes' => [
             'class' => match($mark_mode) {

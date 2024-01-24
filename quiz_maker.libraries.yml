@@ -2,3 +2,7 @@ styles:
   css:
     theme:
       css/quiz_maker.css: {}
+
+quiz_timer:
+  js:
+    js/quiz_timer.js: {}

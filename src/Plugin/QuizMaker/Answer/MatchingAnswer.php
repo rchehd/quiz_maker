@@ -53,6 +53,9 @@ class MatchingAnswer extends QuestionAnswer {
    */
   public function getResponseStatus(QuestionResponseInterface $response): string {
     $responses = $response->getResponses();
+    if (!$responses) {
+      return self::NEUTRAL;
+    }
     $answer_position = array_search($this->id(), $responses);
     $answer_original_position = $this->getAnswerOriginalWeight($response->getQuestion());
     if ($answer_position === $answer_original_position) {
@@ -99,10 +102,12 @@ class MatchingAnswer extends QuestionAnswer {
    */
   private function getChosenMatchingAnswer(QuestionInterface $question, array $response_answers): ?string {
     $answer_number = $this->getAnswerOriginalWeight($question);
-    $answer_id = $response_answers[$answer_number];
-    foreach ($question->getAnswers() as $answer) {
-      if ($answer->id() === $answer_id) {
-        return $answer->getMatchingAnswer();
+    if (isset($response_answers[$answer_number])) {
+      $answer_id = $response_answers[$answer_number];
+      foreach ($question->getAnswers() as $answer) {
+        if ($answer->id() === $answer_id) {
+          return $answer->getMatchingAnswer();
+        }
       }
     }
     return NULL;

@@ -22,7 +22,7 @@ class DirectAnswer extends QuestionAnswer {
    */
   public function getAnswer(QuestionResponseInterface $response = NULL): ?string {
     if ($response) {
-      return $response?->getUserResponse();
+      return $response?->getUserResponse() ?? t('Empty answer');
     }
     return parent::getAnswer();
   }
@@ -31,10 +31,11 @@ class DirectAnswer extends QuestionAnswer {
    * {@inheritDoc}
    */
   public function getResponseStatus(QuestionResponseInterface $response): string {
-    $responses = $response->getResponses();
-    $answer_position = array_search($this->id(), $responses);
-    $answer_original_position = $this->getAnswerOriginalWeight($response->getQuestion());
-    if ($answer_position === $answer_original_position) {
+    if (!$response->getResponses()) {
+      return self::NEUTRAL;
+    }
+    $question = $response->getQuestion();
+    if ($question->isResponseCorrect($response->getResponses())) {
       return self::CORRECT;
     }
     else {
@@ -47,6 +48,13 @@ class DirectAnswer extends QuestionAnswer {
    */
   public function isAlwaysCorrect(): bool {
     return TRUE;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getViewHtmlTag(): string {
+    return 'div';
   }
 
 }

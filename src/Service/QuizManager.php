@@ -14,6 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\QuizResultType;
 use Drupal\quiz_maker\QuestionInterface;
+use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\quiz_maker\QuizResultInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -103,22 +104,14 @@ class QuizManager {
     // otherwise - update current response.
     $response = $result->getResponse($question);
     if (!$response) {
-      /** @var \Drupal\quiz_maker\QuestionResponseInterface $response */
-      try {
-        $response = $this->entityTypeManager->getStorage('question_response')->create([
-          'bundle' => $question->getResponseType(),
-          'label' => $this->t('Response of "@question_label"', ['@question_label' => $question->label()]),
-        ]);
-        $response->setQuiz($result->getQuiz())
-          ->setQuestion($question)
-          ->setResponseData($response_data)
-          ->setCorrect($question->isResponseCorrect($response_data))
-          ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
-          ->save();
-        $result->addResponse($response)->save();
-      }
-      catch (InvalidPluginDefinitionException | PluginNotFoundException | EntityStorageException $e) {
-        $this->logger->error($e->getMessage());
+      $response = $this->createResponse($result, $question, $response_data);
+      if ($response) {
+        try {
+          $result->addResponse($response)->save();
+        }
+        catch (EntityStorageException $e) {
+          $this->logger->error($e->getMessage());
+        }
       }
     }
     else {
@@ -142,6 +135,23 @@ class QuizManager {
    *   The quiz result.
    */
   public function finishQuiz(QuizResultInterface $result): void {
+    $questions = $result->getQuiz()->getQuestions();
+    // Create empty responses if question was skipped by user.
+    foreach ($questions as $question) {
+      $response = $result->getResponse($question);
+      if (!$response) {
+        $response = $this->createResponse($result, $question, []);
+        if ($response) {
+          try {
+            $result->addResponse($response)->save();
+          }
+          catch (EntityStorageException $e) {
+            $this->logger->error($e->getMessage());
+          }
+        }
+      }
+    }
+
     $score = $this->calculateScore($result);
     $state = $result->getQuiz()->requireManualAssessment() ? QuizResultType::ON_REVIEW : QuizResultType::COMPLETED;
     try {
@@ -169,6 +179,41 @@ class QuizManager {
       $score = $score + $response->getScore();
     }
     return round(($score / $quiz_result->getQuiz()->getMaxScore()) * 100);
+  }
+
+  /**
+   * Create question response.
+   *
+   * @param \Drupal\quiz_maker\QuizResultInterface $result
+   *   The quiz result.
+   * @param \Drupal\quiz_maker\QuestionInterface $question
+   *   The question.
+   * @param array $response_data
+   *   The response data.
+   *
+   * @return ?\Drupal\quiz_maker\QuestionResponseInterface
+   *   The response.
+   */
+  protected function createResponse(QuizResultInterface $result, QuestionInterface $question, array $response_data): ?QuestionResponseInterface {
+    try {
+      $response = $this->entityTypeManager->getStorage('question_response')->create([
+        'bundle' => $question->getResponseType(),
+        'label' => $this->t('Response of "@question_label"', ['@question_label' => $question->label()]),
+      ]);
+      $response->setQuiz($result->getQuiz())
+        ->setQuestion($question)
+        ->setResponseData($response_data)
+        ->setCorrect($question->isResponseCorrect($response_data))
+        ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
+        ->save();
+
+      return $response instanceof QuestionResponseInterface ? $response : NULL;
+    }
+    catch (InvalidPluginDefinitionException | PluginNotFoundException | EntityStorageException $e) {
+      $this->logger->error($e->getMessage());
+    }
+
+    return NULL;
   }
 
 }

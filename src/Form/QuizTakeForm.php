@@ -2,6 +2,7 @@
 
 namespace Drupal\quiz_maker\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -46,16 +47,26 @@ class QuizTakeForm extends FormBase {
   protected ?QuizResultInterface $quizResult;
 
   /**
+   * Time when quiz was started.
+   *
+   * @var int
+   *   The timestamp.
+   */
+  protected int $started;
+
+  /**
    * Form constructor.
    */
   public function __construct(
     RequestStack $requestStack,
     protected EntityTypeManagerInterface $entityTypeManager,
     protected QuizManager $quizManager,
-    protected AccountInterface $currentUser
+    protected AccountInterface $currentUser,
+    protected TimeInterface $time
   ) {
     $this->currentRequest = $requestStack->getCurrentRequest();
     $this->questionNumber = -1;
+    $this->started = $this->time->getCurrentTime();
   }
 
   /**
@@ -67,6 +78,7 @@ class QuizTakeForm extends FormBase {
       $container->get('entity_type.manager'),
       $container->get('quiz_maker.quiz_manager'),
       $container->get('current_user'),
+      $container->get('datetime.time'),
     );
   }
 
@@ -89,10 +101,45 @@ class QuizTakeForm extends FormBase {
       '#attributes' => [
         'id' => 'question'
       ],
+      '#weight' => 1,
     ];
 
     if ($quiz) {
       $questions = $quiz->getQuestions();
+      $time_limit = $quiz->getTimeLimit();
+
+      if ($time_limit) {
+
+        $end_time = (int) $this->quizResult->get('created')->value + $time_limit;
+        $time_left = $end_time - $this->time->getCurrentTime();
+        $form['timer_block'] = [
+          '#type' => 'container',
+          '#attributes' => [
+            'id' => 'quiz-timer',
+            'class' => ['quiz-timer']
+          ],
+          '#weight' => 0,
+        ];
+
+        $form['timer_block']['label'] = [
+          '#type' => 'html_tag',
+          '#tag' => 'span',
+          '#value' => $this->t('Time left:')
+        ];
+
+        $form['timer_block']['value'] = [
+          '#type' => 'html_tag',
+          '#tag' => 'span',
+          '#value' => gmdate('H:i:s', $time_left),
+          '#attributes' => [
+            'id' => ['quiz-timer-value']
+          ],
+        ];
+
+        $form['#attached']['drupalSettings']['time_limit'] = $time_limit * 1000;
+        $form['#attached']['drupalSettings']['started_time'] = (int) $this->quizResult->get('created')->value * 1000;
+        $form['#attached']['library'][] = 'quiz_maker/quiz_timer';
+      }
 
       /** @var \Drupal\quiz_maker\QuestionInterface $current_question */
       if ($this->questionNumber == -1) {
@@ -164,11 +211,18 @@ class QuizTakeForm extends FormBase {
         ];
       }
 
-      if ($this->questionNumber === (count($questions) - 1)) {
-        $form['question']['navigation']['actions']['finish'] = [
-          '#type' => 'submit',
-          '#value' => $this->t('Finish'),
-          '#submit' => ['::submitForm'],
+      $form['question']['navigation']['actions']['finish'] = [
+        '#type' => 'submit',
+        '#value' => $this->t('Finish'),
+        '#submit' => ['::submitForm'],
+        '#attributes' => [
+          'id' => ['quiz-finish']
+        ],
+      ];
+
+      if ($this->questionNumber != (count($questions) - 1)) {
+        $form['question']['navigation']['actions']['finish']['#attributes']['class'] = [
+          'hidden'
         ];
       }
 

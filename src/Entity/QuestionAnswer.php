@@ -226,4 +226,11 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
     return FALSE;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function getViewHtmlTag(): string {
+    return 'li';
+  }
+
 }

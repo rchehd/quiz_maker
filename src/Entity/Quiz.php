@@ -528,4 +528,15 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     return [];
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function getTimeLimit(): ?int {
+    if ($this->get('time_limit')->getString()) {
+      return (int) $this->get('time_limit')->getString();
+    }
+
+    return NULL;
+  }
+
 }

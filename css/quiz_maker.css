@@ -210,3 +210,17 @@
   margin-top: 16px;
   margin-bottom: 16px;
 }
+
+#quiz-finish.hidden {
+  display: none !important;
+}
+
+.quiz-timer {
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: large;
+}
+
+.quiz-timer.warning {
+  color: red;
+}

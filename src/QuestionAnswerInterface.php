@@ -70,4 +70,12 @@ interface QuestionAnswerInterface extends ContentEntityInterface, EntityOwnerInt
    */
   public function isAlwaysInCorrect(): bool;
 
+  /**
+   * Get html tag to render answer in result view.
+   *
+   * @return string
+   *   The tag.
+   */
+  public function getViewHtmlTag(): string;
+
 }
