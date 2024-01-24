@@ -2,24 +2,16 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.question.direct_question.field_similarity
-    - quiz_maker.question_type.direct_question
+    - field.field.question_response.direct_response.field_user_response
+    - quiz_maker.question_response_type.direct_response
   module:
-    - text
+    - quiz_maker
     - user
-id: question.direct_question.default
-targetEntityType: question
-bundle: direct_question
+id: question_response.direct_response.default
+targetEntityType: question_response
+bundle: direct_response
 mode: default
 content:
-  answers:
-    type: entity_reference_label
-    label: above
-    settings:
-      link: true
-    third_party_settings: {  }
-    weight: 6
-    region: content
   created:
     type: timestamp
     label: above
@@ -37,18 +29,24 @@ content:
         granularity: 2
         refresh: 60
     third_party_settings: {  }
-    weight: 4
+    weight: 8
     region: content
-  field_similarity:
-    type: number_decimal
+  field_user_response:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  is_correct:
+    type: boolean
     label: above
     settings:
-      thousand_separator: ''
-      decimal_separator: .
-      scale: 2
-      prefix_suffix: true
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
     third_party_settings: {  }
-    weight: 7
+    weight: 2
     region: content
   label:
     type: string
@@ -58,39 +56,37 @@ content:
     third_party_settings: {  }
     weight: 0
     region: content
-  max_score:
-    type: number_integer
+  question_id:
+    type: entity_reference_label
     label: above
     settings:
-      thousand_separator: ''
-      prefix_suffix: true
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  quiz_id:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
     third_party_settings: {  }
     weight: 5
     region: content
-  question:
-    type: text_default
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    weight: 2
-    region: content
-  status:
-    type: boolean
-    label: above
-    settings:
-      format: enabled-disabled
-      format_custom_false: ''
-      format_custom_true: ''
-    third_party_settings: {  }
-    weight: 1
-    region: content
-  tag:
+  responses:
     type: entity_reference_label
     label: above
     settings:
       link: true
     third_party_settings: {  }
     weight: 6
+    region: content
+  score:
+    type: score_field_formatter
+    label: inline
+    settings:
+      suffix: '%'
+    third_party_settings: {  }
+    weight: 7
     region: content
   uid:
     type: author
@@ -99,5 +95,4 @@ content:
     third_party_settings: {  }
     weight: 3
     region: content
-hidden:
-  response_type: true
+hidden: {  }

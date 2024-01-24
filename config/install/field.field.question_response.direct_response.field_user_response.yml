@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.question_response.field_user_response
+    - quiz_maker.question_response_type.direct_response
+id: question_response.direct_response.field_user_response
+field_name: field_user_response
+entity_type: question_response
+bundle: direct_response
+label: 'User response'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

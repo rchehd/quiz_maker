@@ -11,6 +11,13 @@ targetEntityType: question_answer
 bundle: direct_answer
 mode: default
 content:
+  answer:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 22
+    region: content
   created:
     type: timestamp
     label: above
@@ -30,12 +37,15 @@ content:
     third_party_settings: {  }
     weight: 20
     region: content
-  answer:
-    type: text_default
+  is_correct:
+    type: boolean
     label: above
-    settings: {  }
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
     third_party_settings: {  }
-    weight: 22
+    weight: 10
     region: content
   label:
     type: string

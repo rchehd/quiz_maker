@@ -5,21 +5,13 @@ dependencies:
     - quiz_maker.quiz_type.standard
   module:
     - datetime_range
+    - quiz_maker
     - text
-_core:
-  default_config_hash: CKLMWK3L0bEMzr6IMZbulfNfFHqDXKlQfutWFp1A4rE
 id: quiz.standard.default
 targetEntityType: quiz
 bundle: standard
 mode: default
 content:
-  description:
-    type: text_default
-    label: inline
-    settings: {  }
-    third_party_settings: {  }
-    weight: 0
-    region: content
   access_period:
     type: daterange_default
     label: inline
@@ -28,7 +20,17 @@ content:
       format_type: medium
       separator: '-'
     third_party_settings: {  }
-    weight: 4
+    weight: 5
+    region: content
+  allow_backwards_navigation:
+    type: boolean
+    label: inline
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 3
     region: content
   allow_changing_answers:
     type: boolean
@@ -58,7 +60,7 @@ content:
       format_custom_false: ''
       format_custom_true: ''
     third_party_settings: {  }
-    weight: 6
+    weight: 7
     region: content
   attempts:
     type: number_integer
@@ -67,17 +69,14 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    weight: 3
+    weight: 4
     region: content
-  allow_backwards_navigation:
-    type: boolean
+  description:
+    type: text_default
     label: inline
-    settings:
-      format: default
-      format_custom_false: ''
-      format_custom_true: ''
+    settings: {  }
     third_party_settings: {  }
-    weight: 2
+    weight: 0
     region: content
   pass_rate:
     type: number_integer
@@ -86,20 +85,26 @@ content:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
+    weight: 2
+    region: content
+  questions:
+    type: question_count
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
     weight: 1
     region: content
   time_limit:
-    type: number_integer
+    type: time_limit
     label: inline
     settings:
-      thousand_separator: ''
-      prefix_suffix: true
+      time_format: 'H:i:s'
     third_party_settings: {  }
-    weight: 5
+    weight: 6
     region: content
 hidden:
   created: true
-  questions: true
-  result_type: true
   label: true
+  manual_assessment: true
+  result_type: true
   uid: true
