@@ -493,6 +493,13 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
+  public function allowJumping(): bool {
+    return (bool) $this->get('allow_jumping')->getString();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function getAllowedAttempts(): ?int {
     return $this->get('attempts')->value;
   }

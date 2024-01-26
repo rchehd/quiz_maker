@@ -3,11 +3,17 @@
 namespace Drupal\quiz_maker\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element\Radios;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\TempStore\PrivateTempStore;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\Core\TempStore\TempStoreException;
 use Drupal\quiz_maker\Entity\QuizResultType;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
@@ -30,7 +36,7 @@ class QuizTakeForm extends FormBase {
    *
    * @var int
    */
-  protected int $questionNumber;
+  public int $questionNumber;
 
   /**
    * Current request.
@@ -55,6 +61,13 @@ class QuizTakeForm extends FormBase {
   protected int $started;
 
   /**
+   * User quiz tempstore.
+   *
+   * @var \Drupal\Core\TempStore\PrivateTempStore
+   */
+  protected PrivateTempStore $userQuizTempstore;
+
+  /**
    * Form constructor.
    */
   public function __construct(
@@ -62,11 +75,13 @@ class QuizTakeForm extends FormBase {
     protected EntityTypeManagerInterface $entityTypeManager,
     protected QuizManager $quizManager,
     protected AccountInterface $currentUser,
-    protected TimeInterface $time
+    protected TimeInterface $time,
+    protected PrivateTempStoreFactory $privateTempStoreFactory
   ) {
     $this->currentRequest = $requestStack->getCurrentRequest();
     $this->questionNumber = -1;
     $this->started = $this->time->getCurrentTime();
+    $this->userQuizTempstore = $this->privateTempStoreFactory->get('user_quiz_tempstore');
   }
 
   /**
@@ -79,6 +94,7 @@ class QuizTakeForm extends FormBase {
       $container->get('quiz_maker.quiz_manager'),
       $container->get('current_user'),
       $container->get('datetime.time'),
+      $container->get('tempstore.private'),
     );
   }
 
@@ -109,7 +125,6 @@ class QuizTakeForm extends FormBase {
       $time_limit = $quiz->getTimeLimit();
 
       if ($time_limit) {
-
         $end_time = (int) $this->quizResult->get('created')->value + $time_limit;
         $time_left = $end_time - $this->time->getCurrentTime();
         $form['timer_block'] = [
@@ -141,13 +156,19 @@ class QuizTakeForm extends FormBase {
         $form['#attached']['library'][] = 'quiz_maker/quiz_timer';
       }
 
-      /** @var \Drupal\quiz_maker\QuestionInterface $current_question */
+      $form_input = $form_state->getUserInput();
+
       if ($this->questionNumber == -1) {
         // When user open form - it will get the last active question if quiz
         // wasn't finished before.
         $active_question = $this->quizResult->getActiveQuestion();
+        /** @var \Drupal\quiz_maker\QuestionInterface $current_question */
         $current_question = $active_question;
         $this->questionNumber = array_search($active_question, $questions);
+      }
+      elseif (isset($form_input['question_navigation']) && $form_input['question_navigation'] != NULL) {
+        $current_question = $questions[(int) $form_input['question_navigation']];
+        $this->questionNumber = (int) $form_input['question_navigation'];
       }
       else {
         $current_question = $questions[$this->questionNumber];
@@ -155,12 +176,42 @@ class QuizTakeForm extends FormBase {
 
       $form['question']['number'] = [
         '#type' => 'html_tag',
-        '#tag' => 'span',
+        '#tag' => 'div',
         '#value' => $this->t('Question @current/@all', [
           '@current' => $this->questionNumber + 1,
           '@all' => count($questions)
-        ])
+        ]),
+        '#attributes' => [
+          'class' => 'question-number'
+        ]
       ];
+
+      if ($quiz->allowJumping()) {
+        $options = [];
+        $i = 1;
+        foreach ($questions as $question) {
+          $options[] = $i;
+          $i++;
+        }
+
+        $form['question']['question_navigation'] = [
+          '#type' => 'radios',
+          '#options' => $options,
+          '#default_value' => $this->questionNumber,
+          '#prefix' => '<div class="question-navigation">',
+          '#suffix' => '</div>',
+          '#ajax' => [
+            'callback' => '::getQuestion',
+            'wrapper' => 'question',
+            'progress' => 'none',
+          ]
+        ];
+
+        if (!$quiz->requireManualAssessment()) {
+          // Add class to question number if it has response.
+          $form['question']['question_navigation']['#after_build'] = ['::getQuestionNumberClass'];
+        }
+      }
 
       $form['question']['title'] = [
         '#type' => 'html_tag',
@@ -235,6 +286,7 @@ class QuizTakeForm extends FormBase {
       ];
 
     }
+
     return $form;
   }
 
@@ -276,9 +328,6 @@ class QuizTakeForm extends FormBase {
    *   The form state.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
-   *
-   * @return mixed
-   *   The form array.
    */
   public function updateQuestionForm(array &$form, FormStateInterface $form_state, Request $request): mixed {
     return $form['question'];
@@ -299,7 +348,16 @@ class QuizTakeForm extends FormBase {
       $this->quizManager->updateQuiz($this->quizResult, $current_question, $response_data);
     }
     $this->questionNumber++;
+    $user_input = $form_state->getUserInput();
+    $user_input['question_navigation'] = $this->questionNumber;
+    $form_state->setUserInput($user_input);
     $form_state->setRebuild(TRUE);
+  }
+
+  public function getQuestion(array &$form, FormStateInterface $form_state) {
+    $question_number = (int) $form_state->getValue('question_navigation') ;
+    $this->questionNumber = $question_number;
+    return $form['question'];
   }
 
   /**
@@ -312,6 +370,9 @@ class QuizTakeForm extends FormBase {
    */
   public function getPreviousQuestion(array &$form, FormStateInterface $form_state): void {
     $this->questionNumber--;
+    $user_input = $form_state->getUserInput();
+    $user_input['question_navigation'] = $this->questionNumber;
+    $form_state->setUserInput($user_input);
     $form_state->setRebuild(TRUE);
   }
 
@@ -321,13 +382,38 @@ class QuizTakeForm extends FormBase {
    * @return ?\Drupal\quiz_maker\QuestionInterface
    *   The question.
    */
-  private function getCurrentQuestion(): ?QuestionInterface {
+  public function getCurrentQuestion(): ?QuestionInterface {
     $quiz = $this->currentRequest->get('quiz');
     if ($quiz instanceof QuizInterface) {
       $question = $quiz->getQuestions();
       return $question[$this->questionNumber];
     }
     return NULL;
+  }
+
+  /**
+   * Add class to radios of question number.
+   *
+   * @param $element
+   *   The element.
+   * @param $form_state
+   *   the form state.
+   *
+   * @return array
+   *   The element array.
+   */
+  public function getQuestionNumberClass($element, $form_state): array {
+    $question_numbers = array_keys($element['#options']);
+    $questions = $this->quizResult->getQuiz()->getQuestions();
+    foreach ($question_numbers as $question_number) {
+      /** @var \Drupal\quiz_maker\QuestionInterface $question */
+      $question = $questions[$question_number];
+      $question_response = $this->quizResult->getResponse($question);
+      if ($question_response) {
+        $element[$question_number]['#attributes']['class'][] = $question_response->isCorrect() ? 'correct' : 'in-correct';
+      }
+    }
+    return $element;
   }
 
 }

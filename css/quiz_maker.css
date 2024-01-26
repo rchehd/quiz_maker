@@ -224,3 +224,69 @@
 .quiz-timer.warning {
   color: red;
 }
+
+.question-navigation .form-boolean-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.question-navigation .form-boolean-group .form-item-question-navigation {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  position: relative;
+}
+
+.question-navigation .form-boolean-group .form-item-question-navigation input[type="radio"] {
+  position: relative;
+  border-width: 0;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.question-navigation .form-boolean-group .form-item-question-navigation label {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  top: 5%;
+  width: 100%;
+  text-align: center;
+  font-size: small;
+}
+
+.question-navigation .form-boolean-group .form-item-question-navigation input[type="radio"]:checked {
+  background-color: unset !important;
+  background-image: none;
+  background-size: unset;
+  border-color: #0f0f0f;
+  opacity: unset !important;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset !important;
+}
+
+.question-navigation .form-boolean-group .form-item-question-navigation input[type="radio"]:checked + label {
+  font-weight: 600;
+}
+
+.question-navigation .form-boolean-group .form-item-question-navigation input[type="radio"].in-correct {
+  background-color: rgb(247 0 0);
+  opacity: 0.33;
+  box-shadow: rgba(247, 0, 0, 1) 0px 5px 15px;
+}
+
+.question-navigation .form-boolean-group .form-item-question-navigation input[type="radio"].in-correct::after,
+.question-navigation .form-boolean-group .form-item-question-navigation input[type="radio"].correct::after {
+  background-image: unset;
+}
+
+.question-navigation .form-boolean-group .form-item-question-navigation input[type="radio"].correct {
+  background-color: green;
+  opacity: 0.33;
+  box-shadow: rgba(10, 125, 54, 1) 0px 5px 15px; !important;
+}
+
+.question-number {
+  text-align: center;
+  font-size: xx-large;
+  margin-bottom: 36px;
+}
+

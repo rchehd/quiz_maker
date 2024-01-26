@@ -130,6 +130,14 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
   public function allowTaking(AccountInterface $user): bool|string;
 
   /**
+   * Allow jump through questions.
+   *
+   * @return bool
+   *   TRUE if allowed, otherwise FALSE.
+   */
+  public function allowJumping(): bool;
+
+  /**
    * Get a time limit for quiz-taking attempts.
    *
    * @return ?int
