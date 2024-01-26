@@ -186,32 +186,33 @@ class QuizTakeForm extends FormBase {
         ]
       ];
 
-      if ($quiz->allowJumping()) {
-        $options = [];
-        $i = 1;
-        foreach ($questions as $question) {
-          $options[] = $i;
-          $i++;
-        }
 
-        $form['question']['question_navigation'] = [
-          '#type' => 'radios',
-          '#options' => $options,
-          '#default_value' => $this->questionNumber,
-          '#prefix' => '<div class="question-navigation">',
-          '#suffix' => '</div>',
-          '#ajax' => [
-            'callback' => '::getQuestion',
-            'wrapper' => 'question',
-            'progress' => 'none',
-          ]
-        ];
-
-        if (!$quiz->requireManualAssessment()) {
-          // Add class to question number if it has response.
-          $form['question']['question_navigation']['#after_build'] = ['::getQuestionNumberClass'];
-        }
+      $options = [];
+      $i = 1;
+      foreach ($questions as $question) {
+        $options[] = $i;
+        $i++;
       }
+
+      $form['question']['question_navigation'] = [
+        '#type' => 'radios',
+        '#options' => $options,
+        '#default_value' => $this->questionNumber,
+        '#prefix' => '<div class="question-navigation">',
+        '#suffix' => '</div>',
+        '#ajax' => [
+          'callback' => '::getQuestion',
+          'wrapper' => 'question',
+          'progress' => 'none',
+        ],
+        '#disabled' => !$quiz->allowJumping(),
+      ];
+
+      if (!$quiz->requireManualAssessment()) {
+        // Add class to question number if it has response.
+        $form['question']['question_navigation']['#after_build'] = ['::getQuestionNumberClass'];
+      }
+
 
       $form['question']['title'] = [
         '#type' => 'html_tag',

@@ -254,6 +254,10 @@
   font-size: small;
 }
 
+.question-navigation .form-boolean-group .form-item-question-navigation label.is-disabled {
+  color: unset !important;
+}
+
 .question-navigation .form-boolean-group .form-item-question-navigation input[type="radio"]:checked {
   background-color: unset !important;
   background-image: none;
