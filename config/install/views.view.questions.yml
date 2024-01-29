@@ -5,8 +5,6 @@ dependencies:
     - quiz_maker
     - user
     - views_bulk_operations
-_core:
-  default_config_hash: IPucBqQoCORTsl7CNkhV691kE2gdKYEMLRLBroLbhN4
 id: questions
 label: Questions
 module: views
@@ -76,7 +74,7 @@ display:
           batch_size: 10
           form_step: true
           ajax_loader: false
-          buttons: false
+          buttons: true
           action_title: Action
           clear_on_exposed: true
           force_selection_info: false
