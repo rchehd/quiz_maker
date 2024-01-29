@@ -136,19 +136,11 @@ class QuizTakeForm extends FormBase {
           '#weight' => 0,
         ];
 
-        $form['timer_block']['label'] = [
-          '#type' => 'html_tag',
-          '#tag' => 'span',
-          '#value' => $this->t('Time left:')
-        ];
-
         $form['timer_block']['value'] = [
-          '#type' => 'html_tag',
-          '#tag' => 'span',
-          '#value' => gmdate('H:i:s', $time_left),
-          '#attributes' => [
-            'id' => ['quiz-timer-value']
-          ],
+          '#theme' => 'timer',
+          '#hours' => gmdate('H', $time_left),
+          '#minutes' => gmdate('i', $time_left),
+          '#seconds' => gmdate('s', $time_left),
         ];
 
         $form['#attached']['drupalSettings']['time_limit'] = $time_limit * 1000;

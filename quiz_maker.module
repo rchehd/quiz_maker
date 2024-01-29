@@ -45,6 +45,13 @@ function quiz_maker_theme(): array {
         'matching_answer' => NULL,
       ]
     ],
+    'timer' => [
+      'variables' => [
+        'hours' => NULL,
+        'minutes' => NULL,
+        'seconds' => NULL,
+      ]
+    ],
   ];
 }
 

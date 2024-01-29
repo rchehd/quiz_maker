@@ -215,15 +215,6 @@
   display: none !important;
 }
 
-.quiz-timer {
-  margin-bottom: 20px;
-  font-weight: bold;
-  font-size: large;
-}
-
-.quiz-timer.warning {
-  color: red;
-}
 
 .question-navigation .form-boolean-group {
   display: flex;

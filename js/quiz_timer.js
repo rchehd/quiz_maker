@@ -19,9 +19,11 @@
     // Check if the countdown has reached zero
     if (remainingTime <= 0) {
       clearInterval(timerInterval); // Stop the timer
-      document.getElementById('quiz-timer-value').innerHTML = 'Time expired!';
+      document.getElementById('timer-label').innerHTML = 'Time expired!';
+      document.getElementById('timer-label').classList.add('warning');
       document.getElementById('quiz-finish').click();
-    } else {
+    }
+    else {
       // Calculate the remaining hours, minutes, and seconds
       const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
@@ -32,10 +34,18 @@
       const formattedSeconds = seconds.toString().padStart(2, '0');
 
       // Display the remaining time in the 'timer' element
-      document.getElementById('quiz-timer-value').innerHTML = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-      // Add class 'warning' if left less then 10 seconds.
-      if (remainingTime <= 10000) {
-        document.getElementById('quiz-timer').classList.add('warning');
+      document.getElementById('timer-hours').innerHTML = formattedHours;
+      document.getElementById('timer-minutes').innerHTML = formattedMinutes;
+      document.getElementById('timer-seconds').innerHTML = formattedSeconds;
+      // Add class 'warning' if left less then 30 seconds.
+      if (remainingTime <= 30000) {
+        document.getElementById('timer-hours').classList.add('warning');
+        document.getElementById('timer-minutes').classList.add('warning');
+        document.getElementById('timer-seconds').classList.add('warning');
+        let elements = document.getElementsByClassName('figure');
+        for (let element of elements) {
+          element.classList.add('warning');
+        }
       }
     }
   }

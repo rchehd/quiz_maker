@@ -4,5 +4,8 @@ styles:
       css/quiz_maker.css: {}
 
 quiz_timer:
+  css:
+    theme:
+      css/quiz_timer.css: { }
   js:
     js/quiz_timer.js: {}
