@@ -69,8 +69,15 @@ entity.question.collection:
   parent: quiz_maker.admin
   weight: 1
 
-entity.question_answer.collection:
-  title: 'Question Answers'
+questions:
+  title: 'Questions'
+  description: 'List of questions.'
+  route_name: view.questions.question_list
+  parent: entity.question.collection
+  weight: 1
+
+answers:
+  title: 'Answers'
   description: 'List of question answers.'
   route_name: view.question_answers.answer_list
   parent: entity.question.collection

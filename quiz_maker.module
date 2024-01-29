@@ -7,11 +7,13 @@
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\quiz_maker\Entity\QuizResultType;
 use Drupal\quiz_maker\QuestionAnswerInterface;
@@ -592,5 +594,86 @@ function quiz_maker_entity_operation_alter(array &$operations, EntityInterface $
       'weight' => -1,
       'url' => $reviewUrl,
     ];
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function quiz_maker_theme_suggestions_question_answer_alter(array &$suggestions, array $variables) {
+  if (isset($variables['elements']['#question_answer'])) {
+    /** @var \Drupal\quiz_maker\QuestionAnswerInterface $question_answer */
+    $question_answer = $variables['elements']['#question_answer'];
+    if (isset($variables['elements']['#view_mode'])) {
+      $suggestions[] = 'question_answer__' . $variables['elements']['#view_mode'];
+      $suggestions[] = 'question_answer__' . $variables['elements']['#view_mode'] . '__' . $question_answer->bundle();
+      $suggestions[] = 'question_answer__' . $variables['elements']['#view_mode'] . '__' . $question_answer->bundle() . '__' . $question_answer->id();
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function quiz_maker_theme_suggestions_question_alter(array &$suggestions, array $variables) {
+  if (isset($variables['elements']['#question_answer'])) {
+    /** @var \Drupal\quiz_maker\QuestionInterface $question */
+    $question = $variables['elements']['#question'];
+    if (isset($variables['elements']['#view_mode'])) {
+      $suggestions[] = 'question__' . $variables['elements']['#view_mode'];
+      $suggestions[] = 'question__' . $variables['elements']['#view_mode'] . '__' . $question->bundle();
+      $suggestions[] = 'question__' . $variables['elements']['#view_mode'] . '__' . $question->bundle() . '__' . $question->id();
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function quiz_maker_theme_suggestions_question_response_alter(array &$suggestions, array $variables) {
+  if (isset($variables['elements']['#question_response'])) {
+    /** @var \Drupal\quiz_maker\QuestionResponseInterface $question_response */
+    $question_response = $variables['elements']['#question_response'];
+    if (isset($variables['elements']['#view_mode'])) {
+      $suggestions[] = 'question_response__' . $variables['elements']['#view_mode'];
+      $suggestions[] = 'question_response__' . $variables['elements']['#view_mode'] . '__' . $question_response->bundle();
+      $suggestions[] = 'question_response__' . $variables['elements']['#view_mode'] . '__' . $question_response->bundle() . '__' . $question_response->id();
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function quiz_maker_theme_suggestions_quiz_alter(array &$suggestions, array $variables) {
+  if (isset($variables['elements']['#quiz'])) {
+    /** @var \Drupal\quiz_maker\QuizInterface $quiz */
+    $quiz = $variables['elements']['#quiz'];
+    if (isset($variables['elements']['#view_mode'])) {
+      $suggestions[] = 'quiz__' . $variables['elements']['#view_mode'];
+      $suggestions[] = 'quiz__' . $variables['elements']['#view_mode'] . '__' . $quiz->bundle();
+      $suggestions[] = 'quiz__' . $variables['elements']['#view_mode'] . '__' . $quiz->bundle() . '__' . $quiz->id();
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function quiz_maker_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $entity_list = [
+    'question' => ['view'],
+    'question_answer' => ['view'],
+    'question_response' => ['view'],
+  ];
+
+  if (in_array($entity->getEntityType()->id(), array_keys($entity_list))) {
+    $entity_type = $entity->getEntityType()->id();
+    if (isset($entity_list[$entity_type])) {
+      $operations = $entity_list[$entity_type];
+      if (in_array($operation, $operations)) {
+        return AccessResult::forbidden();
+      }
+    }
   }
 }
