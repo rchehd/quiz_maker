@@ -10,6 +10,16 @@ delete quiz:
   title: 'Delete quiz'
 create quiz:
   title: 'Create quiz'
+view all quiz revisions:
+  title: 'View all quiz revisions'
+view quiz revision:
+  title: 'View quiz revision'
+revert quiz revision:
+  title: 'Revert quiz revision'
+revert quiz translation revision:
+  title: 'Revert quiz translation revision'
+delete quiz revision:
+  title: 'Delete quiz revision'
 take quiz:
   title: 'Take quiz'
 

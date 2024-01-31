@@ -178,7 +178,6 @@ class QuizTakeForm extends FormBase {
         ]
       ];
 
-
       $options = [];
       $i = 1;
       foreach ($questions as $question) {
@@ -204,7 +203,6 @@ class QuizTakeForm extends FormBase {
         // Add class to question number if it has response.
         $form['question']['question_navigation']['#after_build'] = ['::getQuestionNumberClass'];
       }
-
 
       $form['question']['title'] = [
         '#type' => 'html_tag',
@@ -347,8 +345,19 @@ class QuizTakeForm extends FormBase {
     $form_state->setRebuild(TRUE);
   }
 
-  public function getQuestion(array &$form, FormStateInterface $form_state) {
-    $question_number = (int) $form_state->getValue('question_navigation') ;
+  /**
+   * Get question.
+   *
+   * @param array $form
+   *   The form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return array
+   *   The form element.
+   */
+  public function getQuestion(array &$form, FormStateInterface $form_state): array {
+    $question_number = (int) $form_state->getValue('question_navigation');
     $this->questionNumber = $question_number;
     return $form['question'];
   }
@@ -387,15 +396,15 @@ class QuizTakeForm extends FormBase {
   /**
    * Add class to radios of question number.
    *
-   * @param $element
+   * @param array $element
    *   The element.
-   * @param $form_state
-   *   the form state.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
    *
    * @return array
    *   The element array.
    */
-  public function getQuestionNumberClass($element, $form_state): array {
+  public function getQuestionNumberClass(array $element, FormStateInterface $form_state): array {
     $question_numbers = array_keys($element['#options']);
     $questions = $this->quizResult->getQuiz()->getQuestions();
     foreach ($question_numbers as $question_number) {

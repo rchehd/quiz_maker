@@ -37,9 +37,12 @@ use Drupal\user\EntityOwnerTrait;
  *       "edit" = "Drupal\quiz_maker\Form\QuizForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm",
+ *       "revision-delete" = "\Drupal\Core\Entity\Form\RevisionDeleteForm::class",
+ *       "revision-revert" = "\Drupal\Core\Entity\Form\RevisionRevertForm::class",
  *     },
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
+ *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class
  *     },
  *   },
  *   base_table = "quiz",
@@ -71,6 +74,10 @@ use Drupal\user\EntityOwnerTrait;
  *     "edit-form" = "/quiz/{quiz}/edit",
  *     "delete-form" = "/quiz/{quiz}/delete",
  *     "delete-multiple-form" = "/admin/quiz-maker/quizzes/delete-multiple",
+ *     "version-history" = "/quiz/{quiz}/revisions",
+ *     "revision" = "/quiz/{quiz}/revision/{quiz_revision}/view",
+ *     "revision-delete-form" = "/quiz/{quiz}/revision/{quiz_revision}/delete",
+ *     "revision-revert-form" = "/quiz/{quiz}/revision/{quiz_revision}/revert",
  *   },
  *   bundle_entity_type = "quiz_type",
  *   field_ui_base_route = "entity.quiz_type.edit_form",
@@ -193,6 +200,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     $fields['access_period'] = BaseFieldDefinition::create('daterange')
       ->setLabel(t('Access period'))
       ->setDescription(t('The date and time during which this Quiz will be available. Leave blank to always be available.'))
+      ->setRevisionable(TRUE)
       ->setDisplayOptions('view', [
         'label' => 'above',
         'type' => 'string',
@@ -507,7 +515,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
-  public function getPassRate(): int {
+  public function getPassRate(): ?int {
     return $this->get('pass_rate')->value;
   }
 

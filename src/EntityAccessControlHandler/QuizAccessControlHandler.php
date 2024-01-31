@@ -24,6 +24,10 @@ final class QuizAccessControlHandler extends EntityAccessControlHandler {
       'view' => AccessResult::allowedIfHasPermissions($account, ['view quiz', 'administer quiz types'], 'OR'),
       'update' => AccessResult::allowedIfHasPermissions($account, ['edit quiz', 'administer quiz types'], 'OR'),
       'delete' => AccessResult::allowedIfHasPermissions($account, ['delete quiz', 'administer quiz types'], 'OR'),
+      'view all revisions' => AccessResult::allowedIfHasPermission($account, 'view all quiz revisions'),
+      'view revision' => AccessResult::allowedIfHasPermission($account, 'view quiz revision'),
+      'revert revision' => AccessResult::allowedIfHasPermission($account, 'revert quiz revision'),
+      'delete revision' => AccessResult::allowedIfHasPermission($account, 'delete quiz revision'),
       default => AccessResult::neutral(),
     };
   }

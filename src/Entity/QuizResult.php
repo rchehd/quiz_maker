@@ -350,7 +350,7 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
           return $question;
         }
       }
-      return NULL;
+      return reset($questions);
     }
   }
 

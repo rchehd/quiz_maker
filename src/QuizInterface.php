@@ -25,10 +25,10 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
   /**
    * Get pass rate.
    *
-   * @return int
+   * @return ?int
    *   The pass rate.
    */
-  public function getPassRate(): int;
+  public function getPassRate(): ?int;
 
   /**
    * Get quiz allowed attempts.

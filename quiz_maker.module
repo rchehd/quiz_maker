@@ -588,11 +588,20 @@ function quiz_maker_entity_base_field_info_alter(&$fields, EntityTypeInterface $
 function quiz_maker_entity_operation_alter(array &$operations, EntityInterface $entity) {
   if ($entity instanceof QuizResultInterface && $entity->getState() === QuizResultType::ON_REVIEW
   ) {
-    $reviewUrl = Url::fromRoute('quiz_maker.quiz_result_review', ['quiz_result' => $entity->id()]);
+    $review_url = Url::fromRoute('quiz_maker.quiz_result_review', ['quiz_result' => $entity->id()]);
     $operations['review'] = [
       'title' => t('Review'),
       'weight' => -1,
-      'url' => $reviewUrl,
+      'url' => $review_url,
+    ];
+  }
+
+  if ($entity instanceof QuizInterface) {
+    $revisions_url = Url::fromRoute('entity.quiz.version_history', ['quiz' => $entity->id()]);
+    $operations['revisions'] = [
+      'title' => t('Revisions'),
+      'weight' => 101,
+      'url' => $revisions_url,
     ];
   }
 }

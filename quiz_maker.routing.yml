@@ -72,3 +72,75 @@ quiz_maker.quiz_result_review:
     parameters:
       quiz:
         type: 'entity:quiz_result'
+
+entity.quiz.version_history:
+  path: '/quiz/{quiz}/revisions'
+  defaults:
+    _title: 'Revisions'
+    _controller: '\Drupal\quiz_maker\Controller\QuizController::revisionOverview'
+  requirements:
+    _permission: 'view all quiz revisions'
+  options:
+    _admin_route: true
+    parameters:
+      quiz:
+        type: 'entity:quiz'
+
+entity.quiz.revision:
+  path: '/quiz/{quiz}/revisions/{quiz_revision}/view'
+  defaults:
+    _controller: '\Drupal\Core\Entity\Controller\EntityRevisionViewController'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
+  requirements:
+    _permission: 'view all quiz revisions'
+  options:
+    parameters:
+      quiz:
+        type: 'entity:quiz'
+      quiz_revision:
+        type: entity_revision:quiz
+
+quiz.revision_revert_confirm:
+  path: '/quiz/{quiz}/revisions/{quiz_revision}/revert'
+  defaults:
+    _form: '\Drupal\entity\Form\RevisionRevertForm'
+    _title: 'Revert to earlier revision'
+  requirements:
+    _permission: 'revert quiz revision'
+  options:
+    _admin_route: true
+    parameters:
+      quiz:
+        type: 'entity:quiz'
+      quiz_revision:
+        type: entity_revision:quiz
+
+quiz.revision_delete_confirm:
+  path: '/quiz/{quiz}/revisions/{quiz_revision}/delete'
+  defaults:
+    _form: '\Drupal\entity\Form\RevisionDeleteForm'
+    _title: 'Delete earlier revision'
+  requirements:
+    _permission: 'delete quiz revision'
+  options:
+    _admin_route: true
+    parameters:
+      quiz:
+        type: 'entity:quiz'
+      quiz_revision:
+        type: entity_revision:quiz
+
+quiz.revision_revert_translation_confirm:
+  path: '/quiz/{quiz}/revisions/{quiz_revision}/revert/{langcode}'
+  defaults:
+    _form: '\Drupal\quiz_maker\Form\QuizRevisionRevertTranslationForm'
+    _title: 'Revert to earlier revision of a translation'
+  requirements:
+    _permission: 'revert quiz translation revision'
+  options:
+    _admin_route: true
+    parameters:
+      quiz:
+        type: 'entity:quiz'
+      quiz_revision:
+        type: entity_revision:quiz
