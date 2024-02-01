@@ -11,7 +11,7 @@ quiz_maker.admin.structure:
   parent: quiz_maker.admin
   weight: 4
 
-# Quiz master structure.
+# Quiz results.
 quiz_maker.admin.results:
   title: Results
   route_name: quiz_maker.admin.results

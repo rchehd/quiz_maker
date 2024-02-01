@@ -8,6 +8,16 @@ entity.quiz.edit_form:
   title: Edit
   base_route: entity.quiz.canonical
 
+entity.question.view:
+  route_name: entity.question.canonical
+  title: View
+  base_route: entity.question.canonical
+
+entity.question.edit_form:
+  route_name: entity.question.edit_form
+  title: Edit
+  base_route: entity.question.canonical
+
 entity.quiz_type.edit:
   route_name: entity.quiz_type.edit_form
   title: Edit

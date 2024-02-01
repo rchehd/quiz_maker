@@ -10,7 +10,7 @@ label: 'Question Answers'
 module: views
 description: ''
 tag: ''
-base_table: question_answer
+base_table: question_answer_field_data
 base_field: id
 display:
   default:
@@ -83,7 +83,7 @@ display:
               action_id: views_bulk_operations_delete_entity
         id:
           id: id
-          table: question_answer
+          table: question_answer_field_data
           field: id
           relationship: none
           group_type: group
@@ -149,12 +149,12 @@ display:
           field_api_classes: false
         label:
           id: label
-          table: question_answer
+          table: question_answer_field_data
           field: label
           relationship: none
           group_type: group
           admin_label: ''
-          entity_type: null
+          entity_type: question_answer
           entity_field: label
           plugin_id: field
           label: Label
@@ -213,7 +213,7 @@ display:
           field_api_classes: false
         bundle:
           id: bundle
-          table: question_answer
+          table: question_answer_field_data
           field: bundle
           relationship: none
           group_type: group
@@ -278,7 +278,7 @@ display:
           field_api_classes: false
         uid:
           id: uid
-          table: question_answer
+          table: question_answer_field_data
           field: uid
           relationship: none
           group_type: group
@@ -343,7 +343,7 @@ display:
           field_api_classes: false
         created:
           id: created
-          table: question_answer
+          table: question_answer_field_data
           field: created
           relationship: none
           group_type: group
@@ -420,7 +420,7 @@ display:
           field_api_classes: false
         changed:
           id: changed
-          table: question_answer
+          table: question_answer_field_data
           field: changed
           relationship: none
           group_type: group
@@ -600,7 +600,7 @@ display:
       filters:
         label:
           id: label
-          table: question_answer
+          table: question_answer_field_data
           field: label
           relationship: none
           group_type: group
@@ -644,7 +644,7 @@ display:
             group_items: {  }
         bundle:
           id: bundle
-          table: question_answer
+          table: question_answer_field_data
           field: bundle
           relationship: none
           group_type: group
@@ -673,6 +673,48 @@ display:
               anonymous: '0'
               content_editor: '0'
               administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+        langcode:
+          id: langcode
+          table: question_answer_field_data
+          field: langcode
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: question_answer
+          entity_field: langcode
+          plugin_id: language
+          operator: in
+          value:
+            '***LANGUAGE_language_interface***': '***LANGUAGE_language_interface***'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
             reduce: false
           is_grouped: false
           group_info:

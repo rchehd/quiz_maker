@@ -53,17 +53,25 @@ class QuizManager {
    *   The user (quiz participant).
    * @param \Drupal\quiz_maker\QuizInterface $quiz
    *   The quiz.
+   * @param string $langcode
+   *   The langcode.
    *
    * @return \Drupal\quiz_maker\QuizResultInterface|null
    *   The quiz result or null.
    */
-  public function startQuiz(AccountInterface $user, QuizInterface $quiz): ?QuizResultInterface {
+  public function startQuiz(AccountInterface $user, QuizInterface $quiz, string $langcode): ?QuizResultInterface {
     $draft_results = $quiz->getResults($user, [
       'state' => QuizResultType::DRAFT,
     ]);
     if ($draft_results) {
       // Return the newest draft result.
-      return end($draft_results);
+      $result = end($draft_results);
+      if ($result->hasTranslation($langcode)) {
+        return $result->getTranslation($langcode);
+      }
+      else {
+        return $result;
+      }
     }
     $quiz_result_type = $quiz->getResultType();
     try {
@@ -74,6 +82,7 @@ class QuizManager {
         'quiz' => $quiz->id(),
         'uid' => $user->id(),
         'attempt' => $quiz->getCompletedAttempts($user) + 1,
+        'langcode' => $langcode,
       ]);
       $quiz_result->save();
     }
@@ -98,13 +107,15 @@ class QuizManager {
    *   The question.
    * @param array $response_data
    *   The response data.
+   * @param string $langcode
+   *   The langcode.
    */
-  public function updateQuiz(QuizResultInterface $result, QuestionInterface $question, array $response_data): void {
+  public function updateQuiz(QuizResultInterface $result, QuestionInterface $question, array $response_data, string $langcode): void {
     // Get question response from result, if it doesn't exist - create new response,
     // otherwise - update current response.
     $response = $result->getResponse($question);
     if (!$response) {
-      $response = $this->createResponse($result, $question, $response_data);
+      $response = $this->createResponse($result, $question, $response_data, $langcode);
       if ($response) {
         try {
           $result->addResponse($response)->save();
@@ -133,14 +144,16 @@ class QuizManager {
    *
    * @param \Drupal\quiz_maker\QuizResultInterface $result
    *   The quiz result.
+   * @param string $langcode
+   *   The langcode.
    */
-  public function finishQuiz(QuizResultInterface $result): void {
+  public function finishQuiz(QuizResultInterface $result, string $langcode): void {
     $questions = $result->getQuiz()->getQuestions();
     // Create empty responses if question was skipped by user.
     foreach ($questions as $question) {
       $response = $result->getResponse($question);
       if (!$response) {
-        $response = $this->createResponse($result, $question, []);
+        $response = $this->createResponse($result, $question, [], $langcode);
         if ($response) {
           try {
             $result->addResponse($response)->save();
@@ -190,15 +203,18 @@ class QuizManager {
    *   The question.
    * @param array $response_data
    *   The response data.
+   * @param string $langcode
+   *   The langcode.
    *
    * @return ?\Drupal\quiz_maker\QuestionResponseInterface
    *   The response.
    */
-  protected function createResponse(QuizResultInterface $result, QuestionInterface $question, array $response_data): ?QuestionResponseInterface {
+  protected function createResponse(QuizResultInterface $result, QuestionInterface $question, array $response_data, string $langcode): ?QuestionResponseInterface {
     try {
       $response = $this->entityTypeManager->getStorage('question_response')->create([
         'bundle' => $question->getResponseType(),
         'label' => $this->t('Response of "@question_label"', ['@question_label' => $question->label()]),
+        'langcode' => $langcode,
       ]);
       $response->setQuiz($result->getQuiz())
         ->setQuestion($question)

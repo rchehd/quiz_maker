@@ -38,13 +38,17 @@ use Drupal\user\EntityOwnerTrait;
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
+ *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *   },
  *   base_table = "question_answer",
+ *   data_table = "question_answer_field_data",
  *   translatable = FALSE,
  *   admin_permission = "administer question_answer types",
+ *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "bundle" = "bundle",
+ *     "langcode" = "langcode",
  *     "label" = "label",
  *     "uuid" = "uuid",
  *     "owner" = "uid",

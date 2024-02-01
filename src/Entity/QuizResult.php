@@ -42,13 +42,18 @@ use Drupal\user\EntityOwnerTrait;
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
+ *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *   },
  *   base_table = "quiz_result",
+ *   data_table = "quiz_result_field_data",
  *   admin_permission = "administer quiz_result types",
+ *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "bundle" = "bundle",
+ *     "langcode" = "langcode",
  *     "label" = "label",
+ *     "state" = "state",
  *     "uuid" = "uuid",
  *     "owner" = "uid",
  *   },
@@ -90,6 +95,7 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
 
     $fields['label'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Label'))
+      ->setTranslatable(TRUE)
       ->setRequired(TRUE)
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
@@ -106,6 +112,7 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
 
     $fields['description'] = BaseFieldDefinition::create('text_long')
       ->setLabel(t('Description'))
+      ->setTranslatable(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'text_textarea',
         'weight' => 10,
@@ -325,6 +332,10 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
       $responses = $this->get('responses')->referencedEntities();
       foreach ($responses as $response) {
         if ($response->get('question_id')->target_id === $question->id()) {
+          $langcode = $question->language()->getId();
+          if ($response->hasTranslation($langcode)) {
+            return $response->getTranslation($langcode);
+          }
           return $response;
         }
       }

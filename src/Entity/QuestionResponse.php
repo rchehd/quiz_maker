@@ -39,12 +39,16 @@ use Drupal\user\EntityOwnerTrait;
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
+ *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *   },
  *   base_table = "question_response",
+ *   data_table = "question_response_field_data",
  *   admin_permission = "administer question_response types",
+ *   translatable = TRUE,
  *   entity_keys = {
  *     "id" = "id",
  *     "bundle" = "bundle",
+ *     "langcode" = "langcode",
  *     "label" = "label",
  *     "uuid" = "uuid",
  *     "owner" = "uid",
@@ -88,6 +92,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
     $fields['label'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Label'))
       ->setRequired(TRUE)
+      ->setTranslatable(TRUE)
       ->setSetting('max_length', 255)
       ->setDisplayOptions('form', [
         'type' => 'string_textfield',

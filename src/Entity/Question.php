@@ -40,6 +40,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *     },
+ *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *   },
  *   base_table = "question",
  *   data_table = "question_field_data",
@@ -156,7 +157,6 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE)
       ->setLabel(t('Author'))
       ->setSetting('target_type', 'user')
       ->setDefaultValueCallback(self::class . '::getDefaultEntityOwner')
@@ -240,7 +240,6 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
-      ->setTranslatable(TRUE)
       ->setDescription(t('The time that the question was created.'))
       ->setDisplayOptions('view', [
         'label' => 'above',
@@ -256,7 +255,6 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setTranslatable(TRUE)
       ->setDescription(t('The time that the question was last edited.'));
 
     return $fields;

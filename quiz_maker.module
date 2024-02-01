@@ -665,24 +665,3 @@ function quiz_maker_theme_suggestions_quiz_alter(array &$suggestions, array $var
     }
   }
 }
-
-/**
- * Implements hook_entity_access().
- */
-function quiz_maker_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
-  $entity_list = [
-    'question' => ['view'],
-    'question_answer' => ['view'],
-    'question_response' => ['view'],
-  ];
-
-  if (in_array($entity->getEntityType()->id(), array_keys($entity_list))) {
-    $entity_type = $entity->getEntityType()->id();
-    if (isset($entity_list[$entity_type])) {
-      $operations = $entity_list[$entity_type];
-      if (in_array($operation, $operations)) {
-        return AccessResult::forbidden();
-      }
-    }
-  }
-}

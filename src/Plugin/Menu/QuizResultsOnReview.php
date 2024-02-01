@@ -5,6 +5,7 @@ namespace Drupal\quiz_maker\Plugin\Menu;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryException;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Menu\MenuLinkDefault;
 use Drupal\Core\Menu\StaticMenuLinkOverridesInterface;
@@ -56,7 +57,7 @@ final class QuizResultsOnReview extends MenuLinkDefault implements ContainerFact
           'state' => QuizResultType::ON_REVIEW,
         ]));
     }
-    catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
+    catch (InvalidPluginDefinitionException | PluginNotFoundException | QueryException $e) {
       $this->loggerChannelFactory->get('quiz_maker')->error($e->getMessage());
       return $title;
     }

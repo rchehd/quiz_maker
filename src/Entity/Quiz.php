@@ -44,6 +44,7 @@ use Drupal\user\EntityOwnerTrait;
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
  *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class
  *     },
+ *    "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *   },
  *   base_table = "quiz",
  *   data_table = "quiz_field_data",
@@ -142,7 +143,6 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setRevisionable(TRUE)
-      ->setTranslatable(TRUE)
       ->setLabel(t('Author'))
       ->setSetting('target_type', 'user')
       ->setDefaultValueCallback(self::class . '::getDefaultEntityOwner')
@@ -347,7 +347,6 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
-      ->setTranslatable(TRUE)
       ->setDescription(t('The time that the quiz was created.'))
       ->setDisplayOptions('view', [
         'label' => 'above',
@@ -363,7 +362,6 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
-      ->setTranslatable(TRUE)
       ->setDescription(t('The time that the quiz was last edited.'));
 
     return $fields;

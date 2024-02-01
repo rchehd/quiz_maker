@@ -8,6 +8,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element\Radios;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -76,7 +77,8 @@ class QuizTakeForm extends FormBase {
     protected QuizManager $quizManager,
     protected AccountInterface $currentUser,
     protected TimeInterface $time,
-    protected PrivateTempStoreFactory $privateTempStoreFactory
+    protected PrivateTempStoreFactory $privateTempStoreFactory,
+    protected LanguageManagerInterface $languageManager
   ) {
     $this->currentRequest = $requestStack->getCurrentRequest();
     $this->questionNumber = -1;
@@ -95,6 +97,7 @@ class QuizTakeForm extends FormBase {
       $container->get('current_user'),
       $container->get('datetime.time'),
       $container->get('tempstore.private'),
+      $container->get('language_manager'),
     );
   }
 
@@ -109,8 +112,9 @@ class QuizTakeForm extends FormBase {
    * {@inheritDoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, QuizInterface $quiz = NULL) {
+    $langcode = $this->languageManager->getCurrentLanguage()->getId();
     // Create or get draft quiz result.
-    $this->quizResult = $this->quizManager->startQuiz($this->currentUser, $quiz);
+    $this->quizResult = $this->quizManager->startQuiz($this->currentUser, $quiz, $langcode);
 
     $form['question'] = [
       '#type' => 'container',
@@ -164,6 +168,10 @@ class QuizTakeForm extends FormBase {
       }
       else {
         $current_question = $questions[$this->questionNumber];
+      }
+
+      if ($current_question->hasTranslation($langcode)) {
+        $current_question = $current_question->getTranslation($langcode);
       }
 
       $form['question']['number'] = [
@@ -287,9 +295,10 @@ class QuizTakeForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state, QuizInterface $quiz = NULL) {
     $current_question = $this->getCurrentQuestion();
     $response_data = $current_question->getResponse($form, $form_state);
+    $langcode = $this->languageManager->getCurrentLanguage()->getId();
     if ($response_data) {
-      $this->quizManager->updateQuiz($this->quizResult, $current_question, $response_data);
-      $this->quizManager->finishQuiz($this->quizResult);
+      $this->quizManager->updateQuiz($this->quizResult, $current_question, $response_data, $langcode);
+      $this->quizManager->finishQuiz($this->quizResult, $langcode);
     }
 
     $form_state->setRedirect('entity.quiz_result.canonical', [
@@ -386,9 +395,14 @@ class QuizTakeForm extends FormBase {
    */
   public function getCurrentQuestion(): ?QuestionInterface {
     $quiz = $this->currentRequest->get('quiz');
+    $langcode = $this->languageManager->getCurrentLanguage()->getId();
     if ($quiz instanceof QuizInterface) {
-      $question = $quiz->getQuestions();
-      return $question[$this->questionNumber];
+      $questions = $quiz->getQuestions();
+      $question = $questions[$this->questionNumber];
+      if ($question->hasTranslation($langcode)) {
+        return $question->getTranslation($langcode);
+      }
+      return $question;
     }
     return NULL;
   }
