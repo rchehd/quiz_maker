@@ -124,4 +124,12 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
    */
   public function getAnswerType(): ?string;
 
+  /**
+   * Is question enabled?
+   *
+   * @return bool
+   *   TRUE if enabled, otherwise FALSE.
+   */
+  public function isEnabled(): bool;
+
 }

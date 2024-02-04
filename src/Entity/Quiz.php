@@ -408,7 +408,8 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     $questions = $this->get('questions')->referencedEntities();
     foreach ($questions as $question) {
-      if ($question->hasTranslation($langcode)) {
+      /** @var \Drupal\quiz_maker\QuestionInterface $question */
+      if ($question->hasTranslation($langcode) && $question->isEnabled()) {
         $result[] = $question->getTranslation($langcode);
       }
     }
