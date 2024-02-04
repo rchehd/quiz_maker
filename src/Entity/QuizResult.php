@@ -321,7 +321,15 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
    * {@inheritDoc}
    */
   public function getResponses(): array {
-    return $this->get('responses')->referencedEntities();
+    $result = [];
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $responses = $this->get('responses')->referencedEntities();
+    foreach ($responses as $response) {
+      if ($response->hasTranslation($langcode)) {
+        $result[] = $response;
+      }
+    }
+    return $result;
   }
 
   /**

@@ -218,14 +218,22 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
    * {@inheritDoc}
    */
   public function getQuestion(): ?QuestionInterface {
-    return $this->get('question_id')->entity;
+    $entity = $this->get('question_id')->entity;
+    if ($entity->hasTranslation($this->getCurrentLanguageId())) {
+      return $entity->getTranslation($this->getCurrentLanguageId());
+    }
+    return $entity;
   }
 
   /**
    * {@inheritDoc}
    */
   public function getQuiz(): ?QuizInterface {
-    return $this->get('quiz_id')->entity;
+    $entity = $this->get('quiz_id')->entity;
+    if ($entity->hasTranslation($this->getCurrentLanguageId())) {
+      return $entity->getTranslation($this->getCurrentLanguageId());
+    }
+    return $entity;
   }
 
   /**
@@ -292,14 +300,31 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
    * {@inheritDoc}
    */
   public function getResponses(): array {
+    $result = [];
+    $langcode = $this->getCurrentLanguageId();
     $responses = $this->get('responses')->referencedEntities();
-    if ($responses) {
-      return array_map(function ($response) {
-        return $response->id();
-      }, $responses);
+    foreach ($responses as $response) {
+      if ($response->hasTranslation($langcode)) {
+        $result[] = $response->getTranslation($langcode);
+      }
+    }
+    if ($result) {
+      return array_map(function ($result) {
+        return $result->id();
+      }, $result);
     }
 
     return [];
+  }
+
+  /**
+   * Get current language id.
+   *
+   * @return string
+   *   Lang id.
+   */
+  protected function getCurrentLanguageId(): string {
+    return \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 
 }

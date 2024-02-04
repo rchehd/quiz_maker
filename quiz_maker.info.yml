@@ -7,3 +7,11 @@ dependencies:
   - range:range
   - inline_entity_form:inline_entity_form
   - state_machine:state_machine
+  - datetime_range:datetime_range
+  - field_group:field_group
+  - text:text
+  - taxonomy:taxonomy
+  - views_bulk_operations:views_bulk_operations
+  - views:views
+  - editor:editor
+  - filter:filter

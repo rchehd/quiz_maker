@@ -66,9 +66,19 @@ class DirectQuestion extends Question {
   public function isResponseCorrect(array $answers_ids): bool {
     $correct_answers = $this->getCorrectAnswers();
     $correct_answer = reset($correct_answers);
+    $languages = \Drupal::languageManager()->getLanguages();
     $response = reset($answers_ids);
-    $result = similar_text($correct_answer->getAnswer(), $response, $perc);
-    return $perc >= $this->getSimilarity();
+    $results = [];
+    // We need to check similarity with all translations of answer, because correct
+    // answers can have a translation, but user response text doesn't, and user can
+    // view every quiz result translation, but for each translation it will have the same text.
+    foreach ($languages as $language) {
+      $correct_answer_translation = $correct_answer->getTranslation($language->getId());
+      $res = similar_text(strip_tags($correct_answer_translation->getAnswer()), $response, $perc);
+      $results[] = $perc;
+    }
+    $result = max($results);
+    return $result >= $this->getSimilarity();
   }
 
   /**

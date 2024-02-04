@@ -371,7 +371,15 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
    * {@inheritDoc}
    */
   public function getQuestions(): array {
-    return $this->get('questions')->referencedEntities();
+    $result = [];
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $questions = $this->get('questions')->referencedEntities();
+    foreach ($questions as $question) {
+      if ($question->hasTranslation($langcode)) {
+        $result[] = $question->getTranslation($langcode);
+      }
+    }
+    return $result;
   }
 
   /**

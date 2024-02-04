@@ -271,7 +271,15 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
    * {@inheritDoc}
    */
   public function getAnswers(): ?array {
-    return $this->get('answers')->referencedEntities();
+    $result = [];
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $answers = $this->get('answers')->referencedEntities();
+    foreach ($answers as $answer) {
+      if ($answer->hasTranslation($langcode)) {
+        $result[] = $answer->getTranslation($langcode);
+      }
+    }
+    return $result;
   }
 
   /**
