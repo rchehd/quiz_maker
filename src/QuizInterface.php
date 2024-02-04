@@ -124,10 +124,10 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The user.
    *
-   * @return bool|string
-   *   TRUE if allow take quiz, otherwise FALSE or string of reason.
+   * @return bool|array
+   *   TRUE if allow take quiz, otherwise FALSE or array of reasons.
    */
-  public function allowTaking(AccountInterface $user): bool|string;
+  public function allowTaking(AccountInterface $user): bool|array;
 
   /**
    * Allow jump through questions.

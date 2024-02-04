@@ -105,6 +105,9 @@ content:
 hidden:
   created: true
   label: true
+  langcode: true
   manual_assessment: true
+  questions_tag: true
+  randomize_question_sequence: true
   result_type: true
   uid: true

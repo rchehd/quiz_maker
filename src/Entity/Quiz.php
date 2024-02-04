@@ -164,7 +164,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
 
     $fields['questions'] = BaseFieldDefinition::create('entity_reference_revisions')
       ->setLabel(t('Questions'))
-      ->setDescription(t('<strong>Warning:</strong> quiz has reference on question revision, so if you create the new revision of question - you need to re-add question for this quiz'))
+      ->setDescription(t('<strong>Warning:</strong> Quiz has a reference on question revision, so if you create a new revision of a question - you need to re-add the question for this quiz'))
       ->setSetting('target_type', 'question')
       ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setRevisionable(TRUE)
@@ -183,7 +183,9 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     $fields['result_type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Result type'))
       ->setSetting('target_type', 'quiz_result_type')
+      ->setRequired(TRUE)
       ->setCardinality(1)
+      ->setDefaultValue('standard')
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
         'settings' => [
@@ -279,7 +281,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       ->setLabel(t('Manual assessment'))
       ->setDescription(t('Enable, if you want to assess and set the score of quiz result manual.<br><strong>Warning: </strong><em>some type of question require manual assessment!</em>'))
       ->setRevisionable(TRUE)
-      ->setDefaultValue(TRUE)
+      ->setDefaultValue(FALSE)
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
         'weight' => 4,
@@ -341,6 +343,38 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayOptions('view', [
         'weight' => 6,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['questions_tag'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Questions tag'))
+      ->setDescription(t('Add questions that has tags from "Questions Tags" taxonomy.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'taxonomy_term')
+      ->setSetting('handler_settings', ['target_bundles' => ['questions_tags' => 'questions_tags']])
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setDisplayOptions('form', [
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 6,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['randomize_question_sequence'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Randomize question sequence.'))
+      ->setDescription(t('Randomize question sequence instead of chosen sequence.'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(FALSE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'weight' => 4,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'weight' => 10,
       ])
       ->setDisplayConfigurable('view', TRUE);
 
@@ -478,18 +512,19 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
   /**
    * {@inheritDoc}
    */
-  public function allowTaking(AccountInterface $user): bool|string {
+  public function allowTaking(AccountInterface $user): bool|array {
+    $reasons_to_forbidden = [];
     $quiz_attempts = $this->getAllowedAttempts();
     $access_period = $this->getAccessPeriod();
     // Do not allow to take quiz if user used all the attempts.
     $completed_results = $this->getResults($user, ['state' => QuizResultType::COMPLETED]);
     if ($quiz_attempts && $quiz_attempts <= count($completed_results)) {
-      return t('You used all attempts.');
+      $reasons_to_forbidden[] = t('You used all attempts.');
     }
     // Do not allow to take quiz if access period is expired.
     $now = \Drupal::time()->getCurrentTime();
     if ($access_period && ($now < $access_period['start_date'] || $now > $access_period['end_date'])) {
-      return t('Quiz not available because of access period.');
+      $reasons_to_forbidden[] = t('Quiz not available because of access period.');
     }
 
     $reviewed_result = $this->getResults($user, [
@@ -497,10 +532,14 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     ]);
 
     if ($reviewed_result) {
-      return t('Your last quiz result is on the assessment now, please wait for the completion of the assessment to do the next attempt.');
+      $reasons_to_forbidden[] = t('Your last quiz result is on the assessment now, please wait for the completion of the assessment to do the next attempt.');
     }
 
-    return TRUE;
+    if (empty($this->getQuestions())) {
+      $reasons_to_forbidden[] = t('Quiz doesn\'t have any question.');
+    }
+
+    return !empty($reasons_to_forbidden) ? $reasons_to_forbidden : TRUE;
   }
 
   /**

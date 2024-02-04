@@ -390,12 +390,20 @@ function quiz_maker_preprocess_quiz(array &$variables): void {
   if (!empty($quiz->getResults(\Drupal::currentUser(), ['state' => QuizResultType::DRAFT]))) {
     $label = 'Continue quiz';
   }
-  if (is_string($quiz->allowTaking(\Drupal::currentUser()))) {
+  if (is_array($quiz->allowTaking(\Drupal::currentUser()))) {
     $variables['take_quiz'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'p',
-      '#value' => $quiz->allowTaking(\Drupal::currentUser()),
+      '#type' => 'container',
     ];
+    $reasons = $quiz->allowTaking(\Drupal::currentUser());
+    // Render all reasons.
+    foreach ($reasons as $reason) {
+      $variables['take_quiz'][] = [
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => $reason,
+      ];
+    }
+
   }
   else {
     $variables['take_quiz'] = quiz_maker_get_quiz_take_link($quiz, $label);
