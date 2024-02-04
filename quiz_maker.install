@@ -4,3 +4,11 @@
  * @file
  * Install, update and uninstall functions for the Quiz Maker module.
  */
+
+/**
+ * Implements hook_install().
+ */
+function quiz_maker_install($is_syncing): void {
+  // Rebuild routes after view config importing, because menus are based on view routes.
+  \Drupal::service('router.builder')->rebuild();
+}
