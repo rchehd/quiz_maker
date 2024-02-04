@@ -73,7 +73,12 @@ class DirectQuestion extends Question {
     // answers can have a translation, but user response text doesn't, and user can
     // view every quiz result translation, but for each translation it will have the same text.
     foreach ($languages as $language) {
-      $correct_answer_translation = $correct_answer->getTranslation($language->getId());
+      if ($correct_answer->hasTranslation($language->getId())) {
+        $correct_answer_translation = $correct_answer->getTranslation($language->getId());
+      }
+      else {
+        $correct_answer_translation = $correct_answer;
+      }
       $res = similar_text(strip_tags($correct_answer_translation->getAnswer()), $response, $perc);
       $results[] = $perc;
     }

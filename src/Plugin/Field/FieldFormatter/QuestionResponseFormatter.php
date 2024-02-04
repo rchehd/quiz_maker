@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @FieldFormatter(
  *   id = "question_response_formatter",
  *   label = @Translation("Question Response Formatter"),
- *   field_types = {"entity_reference"},
+ *   field_types = {"entity_reference", "entity_reference_revisions"},
  * )
  */
 final class QuestionResponseFormatter extends FormatterBase {

@@ -144,3 +144,75 @@ quiz.revision_revert_translation_confirm:
         type: 'entity:quiz'
       quiz_revision:
         type: entity_revision:quiz
+
+entity.question.version_history:
+  path: '/question/{question}/revisions'
+  defaults:
+    _title: 'Revisions'
+    _controller: '\Drupal\quiz_maker\Controller\QuestionController::revisionOverview'
+  requirements:
+    _permission: 'view all question revisions'
+  options:
+    _admin_route: true
+    parameters:
+      question:
+        type: 'entity:question'
+
+entity.question.revision:
+  path: '/question/{question}/revisions/{question_revision}/view'
+  defaults:
+    _controller: '\Drupal\Core\Entity\Controller\EntityRevisionViewController'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
+  requirements:
+    _permission: 'view all question revisions'
+  options:
+    parameters:
+      question:
+        type: 'entity:question'
+      question_revision:
+        type: entity_revision:question
+
+question.revision_revert_confirm:
+  path: '/question/{question}/revisions/{question_revision}/revert'
+  defaults:
+    _form: '\Drupal\entity\Form\RevisionRevertForm'
+    _title: 'Revert to earlier revision'
+  requirements:
+    _permission: 'revert question revision'
+  options:
+    _admin_route: true
+    parameters:
+      question:
+        type: 'entity:question'
+      question_revision:
+        type: entity_revision:question
+
+question.revision_delete_confirm:
+  path: '/question/{question}/revisions/{question_revision}/delete'
+  defaults:
+    _form: '\Drupal\entity\Form\RevisionDeleteForm'
+    _title: 'Delete earlier revision'
+  requirements:
+    _permission: 'delete question revision'
+  options:
+    _admin_route: true
+    parameters:
+      question:
+        type: 'entity:question'
+      question_revision:
+        type: entity_revision:question
+
+question.revision_revert_translation_confirm:
+  path: '/question/{question}/revisions/{question_revision}/revert/{langcode}'
+  defaults:
+    _form: '\Drupal\quiz_maker\Form\QuestionRevisionRevertTranslationForm'
+    _title: 'Revert to earlier revision of a translation'
+  requirements:
+    _permission: 'revert question translation revision'
+  options:
+    _admin_route: true
+    parameters:
+      question:
+        type: 'entity:question'
+      question_revision:
+        type: entity_revision:question

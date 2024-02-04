@@ -161,7 +161,7 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['quiz'] = BaseFieldDefinition::create('entity_reference')
+    $fields['quiz'] = BaseFieldDefinition::create('entity_reference_revisions')
       ->setLabel(t('Quiz'))
       ->setSetting('target_type', 'quiz')
       ->setCardinality(1)

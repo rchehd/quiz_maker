@@ -79,7 +79,7 @@ class QuizManager {
         'bundle' => $quiz_result_type,
         'label' => $this->t('Result of "@quiz_label"', ['@quiz_label' => $quiz->label()]),
         'state' => QuizResultType::DRAFT,
-        'quiz' => $quiz->id(),
+        'quiz' => $quiz,
         'uid' => $user->id(),
         'attempt' => $quiz->getCompletedAttempts($user) + 1,
         'langcode' => $langcode,

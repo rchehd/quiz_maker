@@ -138,7 +138,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['question_id'] = BaseFieldDefinition::create('entity_reference')
+    $fields['question_id'] = BaseFieldDefinition::create('entity_reference_revisions')
       ->setLabel(t('Question'))
       ->setSetting('target_type', 'question')
       ->setDisplayOptions('form', [
@@ -151,7 +151,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['quiz_id'] = BaseFieldDefinition::create('entity_reference')
+    $fields['quiz_id'] = BaseFieldDefinition::create('entity_reference_revisions')
       ->setLabel(t('Quiz'))
       ->setSetting('target_type', 'quiz')
       ->setDisplayOptions('form', [
@@ -270,7 +270,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
    * {@inheritDoc}
    */
   public function setQuiz(QuizInterface $quiz): QuestionResponseInterface {
-    $this->set('quiz_id', $quiz->id());
+    $this->set('quiz_id', $quiz);
     return $this;
   }
 
@@ -278,7 +278,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
    * {@inheritDoc}
    */
   public function setQuestion(QuestionInterface $question): QuestionResponseInterface {
-    $this->set('question_id', $question->id());
+    $this->set('question_id', $question);
     return $this;
   }
 

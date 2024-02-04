@@ -160,7 +160,7 @@ class QuizTakeForm extends FormBase {
         $active_question = $this->quizResult->getActiveQuestion();
         /** @var \Drupal\quiz_maker\QuestionInterface $current_question */
         $current_question = $active_question;
-        $this->questionNumber = array_search($active_question, $questions);
+        $this->questionNumber = array_search($active_question, $questions, TRUE);
       }
       elseif (isset($form_input['question_navigation']) && $form_input['question_navigation'] != NULL) {
         $current_question = $questions[(int) $form_input['question_navigation']];

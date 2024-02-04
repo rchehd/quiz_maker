@@ -24,6 +24,10 @@ final class QuestionAccessControlHandler extends EntityAccessControlHandler {
       'view' => AccessResult::allowedIfHasPermissions($account, ['view question', 'administer question types'], 'OR'),
       'update' => AccessResult::allowedIfHasPermissions($account, ['edit question', 'administer question types'], 'OR'),
       'delete' => AccessResult::allowedIfHasPermissions($account, ['delete question', 'administer question types'], 'OR'),
+      'view all revisions' => AccessResult::allowedIfHasPermission($account, 'view all question revisions'),
+      'view revision' => AccessResult::allowedIfHasPermission($account, 'view question revision'),
+      'revert revision' => AccessResult::allowedIfHasPermission($account, 'revert question revision'),
+      'delete revision' => AccessResult::allowedIfHasPermission($account, 'delete question revision'),
       default => AccessResult::neutral(),
     };
   }

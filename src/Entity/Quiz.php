@@ -142,7 +142,6 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
-      ->setRevisionable(TRUE)
       ->setLabel(t('Author'))
       ->setSetting('target_type', 'user')
       ->setDefaultValueCallback(self::class . '::getDefaultEntityOwner')
@@ -163,8 +162,9 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['questions'] = BaseFieldDefinition::create('entity_reference')
+    $fields['questions'] = BaseFieldDefinition::create('entity_reference_revisions')
       ->setLabel(t('Questions'))
+      ->setDescription(t('<strong>Warning:</strong> quiz has reference on question revision, so if you create the new revision of question - you need to re-add question for this quiz'))
       ->setSetting('target_type', 'question')
       ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setRevisionable(TRUE)
@@ -184,7 +184,6 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       ->setLabel(t('Result type'))
       ->setSetting('target_type', 'quiz_result_type')
       ->setCardinality(1)
-      ->setRevisionable(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'entity_reference_autocomplete',
         'settings' => [

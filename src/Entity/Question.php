@@ -35,10 +35,13 @@ use Drupal\user\EntityOwnerTrait;
  *       "default" = "Drupal\quiz_maker\Form\QuestionForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
  *       "delete-multiple-confirm" = "Drupal\Core\Entity\Form\DeleteMultipleForm",
+ *       "revision-delete" = "\Drupal\Core\Entity\Form\RevisionDeleteForm::class",
+ *       "revision-revert" = "\Drupal\Core\Entity\Form\RevisionRevertForm::class",
  *     },
  *     "inline_form" = "Drupal\quiz_maker\Form\InlineQuestionForm",
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
+ *       "revision" = \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class
  *     },
  *     "translation" = "Drupal\content_translation\ContentTranslationHandler",
  *   },
@@ -71,6 +74,10 @@ use Drupal\user\EntityOwnerTrait;
  *     "edit-form" = "/question/{question}/edit",
  *     "delete-form" = "/question/{question}/delete",
  *     "delete-multiple-form" = "/admin/quiz-maker/question/delete-multiple",
+ *     "version-history" = "/question/{question}/revisions",
+ *     "revision" = "/question/{question}/revision/{question_revision}/view",
+ *     "revision-delete-form" = "/question/{question}/revision/{question_revision}/delete",
+ *     "revision-revert-form" = "/question/{question}/revision/{question_revision}/revert",
  *   },
  *   bundle_entity_type = "question_type",
  *   field_ui_base_route = "entity.question_type.edit_form",
@@ -156,7 +163,6 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
-      ->setRevisionable(TRUE)
       ->setLabel(t('Author'))
       ->setSetting('target_type', 'user')
       ->setDefaultValueCallback(self::class . '::getDefaultEntityOwner')
@@ -179,6 +185,7 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
 
     $fields['answers'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Answers'))
+      ->setRevisionable(TRUE)
       ->setSetting('target_type', 'question_answer')
       ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
       ->setDisplayOptions('form', [
@@ -207,6 +214,7 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
 
     $fields['tag'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Tag'))
+      ->setRevisionable(TRUE)
       ->setSetting('target_type', 'taxonomy_term')
       ->setCardinality(1)
       ->setDisplayOptions('form', [

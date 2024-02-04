@@ -12,7 +12,7 @@ use Drupal\Core\Field\FormatterBase;
  * @FieldFormatter(
  *   id = "question_count",
  *   label = @Translation("Question Count"),
- *   field_types = {"entity_reference"},
+ *   field_types = {"entity_reference", "entity_reference_revisions"},
  * )
  */
 final class QuestionCountFormatter extends FormatterBase {

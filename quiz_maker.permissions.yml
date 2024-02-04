@@ -35,6 +35,16 @@ delete question:
   title: 'Delete question'
 create question:
   title: 'Create question'
+view all question revisions:
+  title: 'View all question revisions'
+view question revision:
+  title: 'View question revision'
+revert question revision:
+  title: 'Revert question revision'
+revert question translation revision:
+  title: 'Revert question translation revision'
+delete question revision:
+  title: 'Delete question revision'
 
 administer question_answer types:
   title: 'Administer question answer types'
