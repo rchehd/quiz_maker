@@ -1,0 +1,8 @@
+name: 'Quiz Maker ECA'
+type: module
+description: 'Provide integration "Quiz Maker" module with "ECA".'
+package: Quiz Maker
+core_version_requirement: ^9 || ^10
+dependencies:
+  - quiz_maker:quiz_maker
+  - eca:eca
