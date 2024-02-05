@@ -12,9 +12,12 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\quiz_maker\Entity\QuizResult;
 use Drupal\quiz_maker\Entity\QuizResultType;
-use Drupal\quiz_maker\Event\QuizEvent;
-use Drupal\quiz_maker\Event\QuizEvents;
+use Drupal\quiz_maker\Event\ResponseEvents;
+use Drupal\quiz_maker\Event\ResponseEvent;
+use Drupal\quiz_maker\Event\QuizTakeEvent;
+use Drupal\quiz_maker\Event\QuizTakeEvents;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
@@ -71,11 +74,13 @@ class QuizManager {
       // Return the newest draft result.
       $result = end($draft_results);
       if ($result->hasTranslation($langcode)) {
+        $quiz_event = new QuizTakeEvent($quiz, $result);
+        $this->eventDispatcher->dispatch($quiz_event, QuizTakeEvents::QUIZ_START);
         return $result->getTranslation($langcode);
       }
       else {
-        $quiz_event = new QuizEvent($quiz, $result);
-        $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_START);
+        $quiz_event = new QuizTakeEvent($quiz, $result);
+        $this->eventDispatcher->dispatch($quiz_event, QuizTakeEvents::QUIZ_START);
         return $result;
       }
     }
@@ -98,8 +103,8 @@ class QuizManager {
     }
 
     if ($quiz_result instanceof QuizResultInterface) {
-      $quiz_event = new QuizEvent($quiz, $quiz_result);
-      $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_START);
+      $quiz_event = new QuizTakeEvent($quiz, $quiz_result);
+      $this->eventDispatcher->dispatch($quiz_event, QuizTakeEvents::QUIZ_START);
       return $quiz_result;
     }
 
@@ -127,8 +132,6 @@ class QuizManager {
       if ($response) {
         try {
           $result->addResponse($response)->save();
-          $quiz_event = new QuizEvent($result->getQuiz(), $result);
-          $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_UPDATE);
         }
         catch (EntityStorageException $e) {
           $this->logger->error($e->getMessage());
@@ -141,14 +144,18 @@ class QuizManager {
           ->setCorrect($question->isResponseCorrect($response_data))
           ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
           ->save();
-        $quiz_event = new QuizEvent($result->getQuiz(), $result);
-        $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_UPDATE);
+        // Dispatch 'Response create' event.
+        $response_event = new ResponseEvent($result, $response);
+        $this->eventDispatcher->dispatch($response_event, ResponseEvents::RESPONSE_UPDATE);
       }
       catch (EntityStorageException $e) {
         $this->logger->error($e->getMessage());
       }
     }
 
+    // Dispatch 'Quiz update' event.
+    $quiz_event = new QuizTakeEvent($result->getQuiz(), $result);
+    $this->eventDispatcher->dispatch($quiz_event, QuizTakeEvents::QUIZ_UPDATE);
   }
 
   /**
@@ -169,8 +176,8 @@ class QuizManager {
         if ($response) {
           try {
             $result->addResponse($response)->save();
-            $quiz_event = new QuizEvent($result->getQuiz(), $result);
-            $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_FINISH);
+            $quiz_event = new QuizTakeEvent($result->getQuiz(), $result);
+            $this->eventDispatcher->dispatch($quiz_event, QuizTakeEvents::QUIZ_FINISH);
           }
           catch (EntityStorageException $e) {
             $this->logger->error($e->getMessage());
@@ -187,8 +194,8 @@ class QuizManager {
         ->setState($state)
         ->setFinishedTime($this->time->getCurrentTime())
         ->save();
-      $quiz_event = new QuizEvent($result->getQuiz(), $result);
-      $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_FINISH);
+      $quiz_event = new QuizTakeEvent($result->getQuiz(), $result);
+      $this->eventDispatcher->dispatch($quiz_event, QuizTakeEvents::QUIZ_FINISH);
     }
     catch (EntityStorageException $e) {
       $this->logger->error($e->getMessage());
@@ -239,10 +246,47 @@ class QuizManager {
         ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
         ->save();
 
-      return $response instanceof QuestionResponseInterface ? $response : NULL;
+      if ($response instanceof QuestionResponseInterface) {
+        // Dispatch 'Response create' event.
+        $question_event = new ResponseEvent($result, $response);
+        $this->eventDispatcher->dispatch($question_event, ResponseEvents::RESPONSE_CREATE);
+        return $response;
+      }
+      else {
+        return NULL;
+      }
     }
     catch (InvalidPluginDefinitionException | PluginNotFoundException | EntityStorageException $e) {
       $this->logger->error($e->getMessage());
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Get last draft quiz result.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The user.
+   *
+   * @return \Drupal\quiz_maker\QuizResultInterface|null
+   *   The quiz result.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getUserLastQuizResult(AccountInterface $user): ?QuizResultInterface {
+    $query = $this->entityTypeManager->getStorage('quiz_result')->getQuery();
+    $quiz_result_ids = $query->accessCheck(FALSE)
+      ->condition('uid', $user->id())
+      ->condition('state', QuizResultType::DRAFT)
+      ->sort('updated')
+      ->range(0, 1)
+      ->execute();
+
+    if (!empty($quiz_result_ids)) {
+      $quiz_result_id = reset($quiz_result_ids);
+      return QuizResult::load($quiz_result_id);
     }
 
     return NULL;

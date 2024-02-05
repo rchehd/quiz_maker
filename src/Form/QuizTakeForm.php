@@ -3,27 +3,24 @@
 namespace Drupal\quiz_maker\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Render\Element\Radios;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
-use Drupal\Core\TempStore\TempStoreException;
-use Drupal\quiz_maker\Entity\QuizResultType;
+use Drupal\quiz_maker\Event\QuestionNavigationEvent;
+use Drupal\quiz_maker\Event\QuizTakeEvents;
 use Drupal\quiz_maker\QuestionInterface;
-use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\quiz_maker\QuizResultInterface;
 use Drupal\quiz_maker\Service\QuizManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class of Quiz take form.
@@ -78,7 +75,8 @@ class QuizTakeForm extends FormBase {
     protected AccountInterface $currentUser,
     protected TimeInterface $time,
     protected PrivateTempStoreFactory $privateTempStoreFactory,
-    protected LanguageManagerInterface $languageManager
+    protected LanguageManagerInterface $languageManager,
+    protected EventDispatcherInterface $eventDispatcher
   ) {
     $this->currentRequest = $requestStack->getCurrentRequest();
     $this->questionNumber = -1;
@@ -98,6 +96,7 @@ class QuizTakeForm extends FormBase {
       $container->get('datetime.time'),
       $container->get('tempstore.private'),
       $container->get('language_manager'),
+      $container->get('event_dispatcher'),
     );
   }
 
@@ -152,27 +151,7 @@ class QuizTakeForm extends FormBase {
         $form['#attached']['library'][] = 'quiz_maker/quiz_timer';
       }
 
-      $form_input = $form_state->getUserInput();
-
-      if ($this->questionNumber == -1) {
-        // When user open form - it will get the last active question if quiz
-        // wasn't finished before.
-        $active_question = $this->quizResult->getActiveQuestion();
-        /** @var \Drupal\quiz_maker\QuestionInterface $current_question */
-        $current_question = $active_question;
-        $this->questionNumber = array_search($active_question, $questions, TRUE);
-      }
-      elseif (isset($form_input['question_navigation']) && $form_input['question_navigation'] != NULL) {
-        $current_question = $questions[(int) $form_input['question_navigation']];
-        $this->questionNumber = (int) $form_input['question_navigation'];
-      }
-      else {
-        $current_question = $questions[$this->questionNumber];
-      }
-
-      if ($current_question->hasTranslation($langcode)) {
-        $current_question = $current_question->getTranslation($langcode);
-      }
+      $current_question = $this->getActiveQuestion($quiz, $form_state->getUserInput());
 
       $form['question']['number'] = [
         '#type' => 'html_tag',
@@ -349,6 +328,8 @@ class QuizTakeForm extends FormBase {
       $this->quizManager->updateQuiz($this->quizResult, $current_question, $response_data, $langcode);
     }
     $this->questionNumber++;
+    $question_navigation_event = new QuestionNavigationEvent($this->quizResult->getQuiz(), $current_question, $this->quizResult->getUser(), $this->questionNumber);
+    $this->eventDispatcher->dispatch($question_navigation_event, QuizTakeEvents::NEXT_QUESTION);
     $user_input = $form_state->getUserInput();
     $user_input['question_navigation'] = $this->questionNumber;
     $form_state->setUserInput($user_input);
@@ -369,6 +350,9 @@ class QuizTakeForm extends FormBase {
   public function getQuestion(array &$form, FormStateInterface $form_state): array {
     $question_number = (int) $form_state->getValue('question_navigation');
     $this->questionNumber = $question_number;
+    $current_question = $this->getCurrentQuestion();
+    $question_navigation_event = new QuestionNavigationEvent($this->quizResult->getQuiz(), $current_question, $this->quizResult->getUser(), $this->questionNumber);
+    $this->eventDispatcher->dispatch($question_navigation_event, QuizTakeEvents::NAVIGATE_TO_QUESTION);
     return $form['question'];
   }
 
@@ -382,6 +366,9 @@ class QuizTakeForm extends FormBase {
    */
   public function getPreviousQuestion(array &$form, FormStateInterface $form_state): void {
     $this->questionNumber--;
+    $current_question = $this->getCurrentQuestion();
+    $question_navigation_event = new QuestionNavigationEvent($this->quizResult->getQuiz(), $current_question, $this->quizResult->getUser(), $this->questionNumber);
+    $this->eventDispatcher->dispatch($question_navigation_event, QuizTakeEvents::PREVIOUS_QUESTION);
     $user_input = $form_state->getUserInput();
     $user_input['question_navigation'] = $this->questionNumber;
     $form_state->setUserInput($user_input);
@@ -431,6 +418,43 @@ class QuizTakeForm extends FormBase {
       }
     }
     return $element;
+  }
+
+  /**
+   * Get active question
+   *
+   * @param \Drupal\quiz_maker\QuizInterface $quiz
+   *   The quiz.
+   * @param array $form_input
+   *   The form input.
+   *
+   * @return \Drupal\quiz_maker\QuestionInterface
+   *   The question.
+   */
+  protected function getActiveQuestion(QuizInterface $quiz, array $form_input): QuestionInterface {
+    $questions = $quiz->getQuestions();
+    $langcode = $this->languageManager->getCurrentLanguage()->getId();
+    if ($this->questionNumber == -1) {
+      // When user open form - it will get the last active question if quiz
+      // wasn't finished before.
+      $active_question = $this->quizResult->getActiveQuestion();
+      /** @var \Drupal\quiz_maker\QuestionInterface $current_question */
+      $current_question = $active_question;
+      $this->questionNumber = array_search($active_question, $questions, TRUE);
+    }
+    elseif (isset($form_input['question_navigation']) && $form_input['question_navigation'] != NULL) {
+      $current_question = $questions[(int) $form_input['question_navigation']];
+      $this->questionNumber = (int) $form_input['question_navigation'];
+    }
+    else {
+      $current_question = $questions[$this->questionNumber];
+    }
+
+    if ($current_question->hasTranslation($langcode)) {
+      $current_question = $current_question->getTranslation($langcode);
+    }
+
+    return $current_question;
   }
 
 }

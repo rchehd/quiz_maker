@@ -9,7 +9,7 @@ use Drupal\quiz_maker\QuizResultInterface;
 /**
  * QuizEvent class.
  */
-class QuizEvent extends Event {
+class QuizTakeEvent extends Event {
 
   /**
    * Class constructor.
