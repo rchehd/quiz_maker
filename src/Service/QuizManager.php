@@ -13,11 +13,14 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\QuizResultType;
+use Drupal\quiz_maker\Event\QuizEvent;
+use Drupal\quiz_maker\Event\QuizEvents;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\quiz_maker\QuizResultInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Quiz manager service.
@@ -41,7 +44,8 @@ class QuizManager {
     protected RequestStack $requestStack,
     protected TimeInterface $time,
     protected LoggerChannelFactoryInterface $loggerChannelFactory,
-    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo
+    protected EntityTypeBundleInfoInterface $entityTypeBundleInfo,
+    protected EventDispatcherInterface $eventDispatcher
   ) {
     $this->logger = $loggerChannelFactory->get('quiz_maker');
   }
@@ -70,6 +74,8 @@ class QuizManager {
         return $result->getTranslation($langcode);
       }
       else {
+        $quiz_event = new QuizEvent($quiz, $result);
+        $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_START);
         return $result;
       }
     }
@@ -92,6 +98,8 @@ class QuizManager {
     }
 
     if ($quiz_result instanceof QuizResultInterface) {
+      $quiz_event = new QuizEvent($quiz, $quiz_result);
+      $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_START);
       return $quiz_result;
     }
 
@@ -119,6 +127,8 @@ class QuizManager {
       if ($response) {
         try {
           $result->addResponse($response)->save();
+          $quiz_event = new QuizEvent($result->getQuiz(), $result);
+          $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_UPDATE);
         }
         catch (EntityStorageException $e) {
           $this->logger->error($e->getMessage());
@@ -131,6 +141,8 @@ class QuizManager {
           ->setCorrect($question->isResponseCorrect($response_data))
           ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
           ->save();
+        $quiz_event = new QuizEvent($result->getQuiz(), $result);
+        $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_UPDATE);
       }
       catch (EntityStorageException $e) {
         $this->logger->error($e->getMessage());
@@ -157,6 +169,8 @@ class QuizManager {
         if ($response) {
           try {
             $result->addResponse($response)->save();
+            $quiz_event = new QuizEvent($result->getQuiz(), $result);
+            $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_FINISH);
           }
           catch (EntityStorageException $e) {
             $this->logger->error($e->getMessage());
@@ -173,6 +187,8 @@ class QuizManager {
         ->setState($state)
         ->setFinishedTime($this->time->getCurrentTime())
         ->save();
+      $quiz_event = new QuizEvent($result->getQuiz(), $result);
+      $this->eventDispatcher->dispatch($quiz_event, QuizEvents::QUIZ_FINISH);
     }
     catch (EntityStorageException $e) {
       $this->logger->error($e->getMessage());
