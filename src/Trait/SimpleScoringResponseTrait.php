@@ -4,6 +4,7 @@ namespace Drupal\quiz_maker\Trait;
 
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\SimpleScoringQuestionInterface;
 
 /**
  * Provides a scoring helper for question answer entity.
@@ -13,10 +14,10 @@ use Drupal\quiz_maker\QuestionResponseInterface;
 trait SimpleScoringResponseTrait {
 
   /**
-   * {@inheritDoc}
+   * Implements \Drupal\quiz_maker\SimpleScoringResponseInterface::setScore().
    */
   public function setScore(QuestionInterface $question, bool $value, float $score = NULL, array $response_data = []): QuestionResponseInterface {
-    $is_simple_score = $question->isSimpleScore();
+    $is_simple_score = $question instanceof SimpleScoringQuestionInterface ? $question->isSimpleScore() : FALSE;
     // When simple scoring disabled, we need to calculate score of every
     // right matching.
     if (!$is_simple_score && $response_data) {
@@ -43,22 +44,5 @@ trait SimpleScoringResponseTrait {
 
     return $result;
   }
-
-  /**
-   * TRUE if response is correct.
-   *
-   * @param int $response_id
-   *   The current response id.
-   * @param int $answer_id
-   *   The current answer id.
-   * @param array $response_ids
-   *   The array if response ids.
-   * @param array $answer_ids
-   *   The array if answer ids.
-   *
-   * @return bool
-   *   TRUE if response is correct, otherwise FALSE.
-   */
-  abstract protected function isResponseCorrect(int $response_id, int $answer_id, array $response_ids, array $answer_ids): bool;
 
 }

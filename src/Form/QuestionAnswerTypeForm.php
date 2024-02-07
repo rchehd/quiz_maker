@@ -63,7 +63,7 @@ class QuestionAnswerTypeForm extends BundleEntityFormBase {
     $message_args = ['%label' => $this->entity->label()];
     $this->messenger()->addStatus(
       match($result) {
-        SAVED_NEW => $this->t('The question answer type %label has been added.', $message_args),
+        default => $this->t('The question answer type %label has been added.', $message_args),
         SAVED_UPDATED => $this->t('The question answer type %label has been updated.', $message_args),
       }
     );

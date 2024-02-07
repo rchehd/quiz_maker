@@ -381,7 +381,7 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
    * {@inheritDoc}
    */
   public function isEnabled(): bool {
-    return $this->get('status')->getString();
+    return (bool) $this->get('status')->getString();
   }
 
 }

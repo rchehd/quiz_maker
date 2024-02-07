@@ -8,6 +8,7 @@
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityFormInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -45,14 +46,14 @@ function quiz_maker_theme(): array {
       'variables' => [
         'matching_question' => NULL,
         'matching_answer' => NULL,
-      ]
+      ],
     ],
     'timer' => [
       'variables' => [
         'hours' => NULL,
         'minutes' => NULL,
         'seconds' => NULL,
-      ]
+      ],
     ],
   ];
 }
@@ -88,6 +89,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
+      /** @var \Drupal\quiz_maker\QuizInterface $quiz */
       foreach ($storage->loadMultiple($quiz_ids) as $quiz) {
         $quiz->set('status', FALSE)->save();
       }
@@ -99,6 +101,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
+      /** @var \Drupal\quiz_maker\QuestionInterface $question */
       foreach ($storage->loadMultiple($question_ids) as $question) {
         $question->set('status', FALSE)->save();
       }
@@ -110,6 +113,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
+      /** @var \Drupal\quiz_maker\QuestionAnswerInterface $question_answer */
       foreach ($storage->loadMultiple($question_answer_ids) as $question_answer) {
         $question_answer->set('status', FALSE)->save();
       }
@@ -121,6 +125,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
+      /** @var \Drupal\quiz_maker\QuizResultInterface $quiz_result */
       foreach ($storage->loadMultiple($quiz_result_ids) as $quiz_result) {
         $quiz_result->set('status', FALSE)->save();
       }
@@ -132,6 +137,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
+      /** @var \Drupal\quiz_maker\QuestionResponseInterface $question_response */
       foreach ($storage->loadMultiple($question_response_ids) as $question_response) {
         $question_response->set('status', FALSE)->save();
       }
@@ -144,6 +150,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
+      /** @var \Drupal\quiz_maker\QuizInterface $quiz */
       foreach ($storage->loadMultiple($quiz_ids) as $quiz) {
         $quiz->setOwnerId(0)->save();
       }
@@ -154,6 +161,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
+      /** @var \Drupal\quiz_maker\QuestionInterface $question */
       foreach ($storage->loadMultiple($question_ids) as $question) {
         $question->setOwnerId(0)->save();
       }
@@ -164,6 +172,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
+      /** @var \Drupal\quiz_maker\QuestionAnswerInterface $question_answer */
       foreach ($storage->loadMultiple($question_answer_ids) as $question_answer) {
         $question_answer->setOwnerId(0)->save();
       }
@@ -174,6 +183,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
+      /** @var \Drupal\quiz_maker\QuizResultInterface $quiz_result */
       foreach ($storage->loadMultiple($quiz_result_ids) as $quiz_result) {
         $quiz_result->setOwnerId(0)->save();
       }
@@ -184,6 +194,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
+      /** @var \Drupal\quiz_maker\QuestionResponseInterface $question_response */
       foreach ($storage->loadMultiple($question_response_ids) as $question_response) {
         $question_response->setOwnerId(0)->save();
       }
@@ -196,6 +207,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
  */
 function quiz_maker_user_predelete(UserInterface $account): void {
   // Delete quizzes that belong to this account.
+  /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
   $storage = \Drupal::entityTypeManager()->getStorage('quiz');
   $quiz_ids = $storage->getQuery()
     ->condition('uid', $account->id())
@@ -216,6 +228,7 @@ function quiz_maker_user_predelete(UserInterface $account): void {
   }
 
   // Delete questions that belong to this account.
+  /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
   $storage = \Drupal::entityTypeManager()->getStorage('question');
   $question_ids = $storage->getQuery()
     ->condition('uid', $account->id())
@@ -273,8 +286,8 @@ function quiz_maker_user_predelete(UserInterface $account): void {
  *
  * @param array $variables
  *   An associative array containing:
- *   - elements: An associative array containing the question information and any
- *     fields attached to the entity.
+ *   - elements: An associative array containing the question information and
+ *   any fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_question(array &$variables): void {
@@ -291,8 +304,8 @@ function template_preprocess_question(array &$variables): void {
  *
  * @param array $variables
  *   An associative array containing:
- *   - elements: An associative array containing the question answer information and any
- *     fields attached to the entity.
+ *   - elements: An associative array containing the question answer
+ *   information and any fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_question_answer(array &$variables): void {
@@ -309,8 +322,8 @@ function template_preprocess_question_answer(array &$variables): void {
  *
  * @param array $variables
  *   An associative array containing:
- *   - elements: An associative array containing the quiz result information and any
- *     fields attached to the entity.
+ *   - elements: An associative array containing the quiz result information
+ *   and any fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_quiz_result(array &$variables): void {
@@ -355,8 +368,8 @@ function quiz_maker_entity_bundle_info_alter(array &$bundles): void {
  *
  * @param array $variables
  *   An associative array containing:
- *   - elements: An associative array containing the question response information and any
- *     fields attached to the entity.
+ *   - elements: An associative array containing the question response
+ *   information and any fields attached to the entity.
  *   - attributes: HTML attributes for the containing element.
  */
 function template_preprocess_question_response(array &$variables): void {
@@ -478,11 +491,11 @@ function quiz_maker_entity_presave(EntityInterface $entity): void {
             ]
           );
           $answer->save();
+          $entity->addAnswer($answer);
         }
         catch (InvalidPluginDefinitionException | PluginNotFoundException | EntityStorageException $e) {
           \Drupal::logger('quiz_maker')->error($e->getMessage());
         }
-        $entity->addAnswer($answer);
       }
 
     }
@@ -515,7 +528,11 @@ function quiz_maker_preprocess_views_view_table(&$variables): void {
  */
 function quiz_maker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   if (str_contains($form_id, 'question_form') && isset($form['answers'])) {
-    $entity_bundle = $form_state->getformObject()->getEntity()->bundle();
+    $form_object = $form_state->getFormObject();
+    if (!($form_object instanceof EntityFormInterface)) {
+      return;
+    }
+    $entity_bundle = $form_object->getEntity()->bundle();
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
     $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
     $bundles_info = $entity_type_bundle_info->getBundleInfo('question');
@@ -524,7 +541,7 @@ function quiz_maker_form_alter(&$form, FormStateInterface $form_state, $form_id)
       if ($answer_type) {
         $form['answers']['widget']['actions']['bundle'] = [
           '#type' => 'hidden',
-          '#value' => $answer_type
+          '#value' => $answer_type,
         ];
       }
     }
@@ -545,7 +562,7 @@ function quiz_maker_inline_entity_form_entity_form_alter(array &$entity_form, Fo
       if ($answer_type) {
         $entity_form['answers']['widget']['actions']['bundle'] = [
           '#type' => 'hidden',
-          '#value' => $answer_type
+          '#value' => $answer_type,
         ];
       }
     }
@@ -559,15 +576,15 @@ function quiz_maker_entity_base_field_info_alter(&$fields, EntityTypeInterface $
   $entity_reference_fields = [
     'quiz' => [
       'field_name' => 'questions',
-      'target_entity_id' => 'question'
+      'target_entity_id' => 'question',
     ],
     'question' => [
       'field_name' => 'answers',
-      'target_entity_id' => 'question_answer'
+      'target_entity_id' => 'question_answer',
     ],
     'quiz_result' => [
       'field_name' => 'responses',
-      'target_entity_id' => 'question_response'
+      'target_entity_id' => 'question_response',
     ],
   ];
 

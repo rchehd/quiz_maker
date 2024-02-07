@@ -218,6 +218,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
    * {@inheritDoc}
    */
   public function getQuestion(): ?QuestionInterface {
+    /** @var \Drupal\quiz_maker\QuestionInterface $entity */
     $entity = $this->get('question_id')->entity;
     if ($entity->hasTranslation($this->getCurrentLanguageId())) {
       return $entity->getTranslation($this->getCurrentLanguageId());
@@ -229,6 +230,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
    * {@inheritDoc}
    */
   public function getQuiz(): ?QuizInterface {
+    /** @var \Drupal\quiz_maker\QuizInterface $entity */
     $entity = $this->get('quiz_id')->entity;
     if ($entity->hasTranslation($this->getCurrentLanguageId())) {
       return $entity->getTranslation($this->getCurrentLanguageId());

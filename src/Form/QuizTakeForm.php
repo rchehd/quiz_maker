@@ -421,7 +421,7 @@ class QuizTakeForm extends FormBase {
   }
 
   /**
-   * Get active question
+   * Get active question.
    *
    * @param \Drupal\quiz_maker\QuizInterface $quiz
    *   The quiz.

@@ -5,6 +5,7 @@ namespace Drupal\quiz_maker\Plugin\QuizMaker\Answer;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\quiz_maker\Entity\QuestionAnswer;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\SimpleScoringAnswerInterface;
 use Drupal\quiz_maker\Trait\SimpleScoringAnswerTrait;
 
 /**
@@ -16,7 +17,7 @@ use Drupal\quiz_maker\Trait\SimpleScoringAnswerTrait;
  *   description = @Translation("Multiple choice answer.")
  * )
  */
-class MultipleChoiceAnswer extends QuestionAnswer {
+class MultipleChoiceAnswer extends QuestionAnswer implements SimpleScoringAnswerInterface {
 
   use SimpleScoringAnswerTrait;
 

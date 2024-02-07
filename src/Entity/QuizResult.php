@@ -279,14 +279,18 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
    * {@inheritDoc}
    */
   public function getQuiz(): QuizInterface {
-    return $this->get('quiz')->entity;
+    /** @var \Drupal\quiz_maker\QuizInterface $quiz */
+    $quiz = $this->get('quiz')->entity;
+    return $quiz;
   }
 
   /**
    * {@inheritDoc}
    */
   public function getUser(): AccountInterface {
-    return $this->get('uid')->entity;
+    /** @var \Drupal\Core\Session\AccountInterface $user */
+    $user = $this->get('uid')->entity;
+    return $user;
   }
 
   /**

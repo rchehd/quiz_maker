@@ -5,7 +5,6 @@ namespace Drupal\quiz_maker\Controller;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\quiz_maker\QuizInterface;
@@ -21,8 +20,6 @@ final class QuizMakerController extends ControllerBase {
    * The controller constructor.
    */
   public function __construct(
-    EntityTypeManagerInterface $entityTypeManager,
-    AccountInterface $currentUser,
     protected QuizManager $quizManager
   ) {}
 
@@ -31,8 +28,6 @@ final class QuizMakerController extends ControllerBase {
    */
   public static function create(ContainerInterface $container): self {
     return new self(
-      $container->get('entity_type.manager'),
-      $container->get('current_user'),
       $container->get('quiz_maker.quiz_manager'),
     );
   }

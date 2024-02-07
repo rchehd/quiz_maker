@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\SimpleScoringQuestionInterface;
 use Drupal\quiz_maker\Trait\SimpleScoringQuestionTrait;
 
 /**
@@ -19,7 +20,7 @@ use Drupal\quiz_maker\Trait\SimpleScoringQuestionTrait;
  *   response_bundle = "multiple_choice_response",
  * )
  */
-class MultipleChoiceQuestion extends Question {
+class MultipleChoiceQuestion extends Question implements SimpleScoringQuestionInterface {
 
   use StringTranslationTrait;
   use SimpleScoringQuestionTrait;

@@ -10,13 +10,7 @@ namespace Drupal\quiz_maker\Trait;
 trait SimpleScoringQuestionTrait {
 
   /**
-   * TRUE if question score should calculate by simple way.
-   *
-   * Explanation: Calculate the answer score considering an exact match or a
-   * partial match (every matching have wight in answer).
-   *
-   * @return bool
-   *   TRUE if simple scoring, otherwise FALSE.
+   * Implements \Drupal\quiz_maker\SimpleScoringQuestionInterface::isSimpleScore().
    */
   public function isSimpleScore(): bool {
     if ($this->hasField('field_simple_scoring')) {

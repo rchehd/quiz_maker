@@ -14,10 +14,10 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\QuizResult;
 use Drupal\quiz_maker\Entity\QuizResultType;
-use Drupal\quiz_maker\Event\ResponseEvents;
-use Drupal\quiz_maker\Event\ResponseEvent;
 use Drupal\quiz_maker\Event\QuizTakeEvent;
 use Drupal\quiz_maker\Event\QuizTakeEvents;
+use Drupal\quiz_maker\Event\ResponseEvent;
+use Drupal\quiz_maker\Event\ResponseEvents;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
@@ -72,6 +72,7 @@ class QuizManager {
     ]);
     if ($draft_results) {
       // Return the newest draft result.
+      /** @var \Drupal\quiz_maker\QuizResultInterface $result */
       $result = end($draft_results);
       if ($result->hasTranslation($langcode)) {
         $quiz_event = new QuizTakeEvent($quiz, $result);
@@ -214,7 +215,7 @@ class QuizManager {
     foreach ($responses as $response) {
       $score = $score + $response->getScore();
     }
-    return round(($score / $quiz_result->getQuiz()->getMaxScore()) * 100);
+    return (int) round(($score / $quiz_result->getQuiz()->getMaxScore()) * 100);
   }
 
   /**
@@ -234,6 +235,7 @@ class QuizManager {
    */
   protected function createResponse(QuizResultInterface $result, QuestionInterface $question, array $response_data, string $langcode): ?QuestionResponseInterface {
     try {
+      /** @var \Drupal\quiz_maker\QuestionResponseInterface $response */
       $response = $this->entityTypeManager->getStorage('question_response')->create([
         'bundle' => $question->getResponseType(),
         'label' => $this->t('Response of "@question_label"', ['@question_label' => $question->label()]),
@@ -246,15 +248,10 @@ class QuizManager {
         ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
         ->save();
 
-      if ($response instanceof QuestionResponseInterface) {
-        // Dispatch 'Response create' event.
-        $question_event = new ResponseEvent($result, $response);
-        $this->eventDispatcher->dispatch($question_event, ResponseEvents::RESPONSE_CREATE);
-        return $response;
-      }
-      else {
-        return NULL;
-      }
+      // Dispatch 'Response create' event.
+      $question_event = new ResponseEvent($result, $response);
+      $this->eventDispatcher->dispatch($question_event, ResponseEvents::RESPONSE_CREATE);
+      return $response;
     }
     catch (InvalidPluginDefinitionException | PluginNotFoundException | EntityStorageException $e) {
       $this->logger->error($e->getMessage());

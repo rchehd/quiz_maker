@@ -90,7 +90,7 @@ class QuizHelper {
           '#value' => $answer->getAnswer($response),
           '#attributes' => [
             'class' => match($mark_mode) {
-              0 => [$answer->getResponseStatus($response)],
+              default => [$answer->getResponseStatus($response)],
               1 => match ($answer->getResponseStatus($response)) {
                 QuestionAnswer::CORRECT, QuestionAnswer::IN_CORRECT => ['chosen'],
                 default => [],

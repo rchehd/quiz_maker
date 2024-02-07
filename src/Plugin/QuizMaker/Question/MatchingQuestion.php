@@ -8,6 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
 use Drupal\quiz_maker\Plugin\QuizMaker\Answer\MatchingAnswer;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\SimpleScoringQuestionInterface;
 use Drupal\quiz_maker\Trait\SimpleScoringQuestionTrait;
 
 /**
@@ -21,7 +22,7 @@ use Drupal\quiz_maker\Trait\SimpleScoringQuestionTrait;
  *   response_bundle = "matching_choice_response",
  * )
  */
-class MatchingQuestion extends Question {
+class MatchingQuestion extends Question implements SimpleScoringQuestionInterface {
 
   use StringTranslationTrait;
   use SimpleScoringQuestionTrait;

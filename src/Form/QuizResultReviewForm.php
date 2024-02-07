@@ -156,7 +156,7 @@ class QuizResultReviewForm extends FormBase {
         $form[$question->id()]['results'][$question->id() . '_is_correct'] = [
           '#type' => 'checkbox',
           '#title' => $this->t('Correct'),
-          '#default_value' => $response->isCorrect() ?? FALSE,
+          '#default_value' => $response->isCorrect(),
         ];
 
       }

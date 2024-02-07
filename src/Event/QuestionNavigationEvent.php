@@ -65,7 +65,7 @@ class QuestionNavigationEvent extends Event {
    * Get user.
    *
    * @return \Drupal\Core\Session\AccountInterface
-   *  The user.
+   *   The user.
    */
   public function getUser(): AccountInterface {
     return $this->user;

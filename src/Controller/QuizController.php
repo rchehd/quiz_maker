@@ -7,6 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
@@ -64,6 +65,7 @@ class QuizController extends ControllerBase {
     $langname = $quiz->language()->getName();
     $languages = $quiz->getTranslationLanguages();
     $has_translations = (count($languages) > 1);
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $quiz_storage */
     $quiz_storage = $this->entityTypeManager()->getStorage('quiz');
 
     $build['#title'] = $has_translations ? $this->t('@langname revisions for %title', [
@@ -86,11 +88,16 @@ class QuizController extends ControllerBase {
       ) {
         $username = [
           '#theme' => 'username',
-          '#account' => $revision->getRevisionUser(),
+          '#account' => $revision instanceof RevisionLogInterface ? $revision->getRevisionUser() : NULL,
         ];
 
         // Use revision link to link to revisions that are not active.
-        $date = $this->dateFormatter->format($revision->revision_timestamp->value, 'short');
+        if (!empty($revision->revision_timestamp)) {
+          $date = $this->dateFormatter->format($revision->revision_timestamp->value, 'short');
+        }
+        else {
+          $date = $this->dateFormatter->format($revision->getChangedTime(), 'short');
+        }
 
         // We treat also the latest translation-affecting revision as current
         // revision, if it was the default revision, as its values for the
@@ -117,7 +124,7 @@ class QuizController extends ControllerBase {
               'date' => $link,
               'username' => $this->renderer->renderPlain($username),
               'message' => [
-                '#markup' => $revision->revision_log->value,
+                '#markup' => !empty($revision->revision_log) ? $revision->revision_log->value : NULL,
                 '#allowed_tags' => Xss::getHtmlTagList()
               ],
             ],

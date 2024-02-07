@@ -424,8 +424,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     try {
       $result_storage = \Drupal::entityTypeManager()->getStorage('quiz_result');
       $query = $result_storage->getQuery();
-      $query->accessCheck(FALSE)
-        ->condition('bundle', $result_type)
+      $query->condition('bundle', $result_type)
         ->condition('uid', $user->id());
 
       if ($conditions) {
@@ -434,7 +433,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
         }
       }
 
-      $result_ids = $query->execute();
+      $result_ids = $query->accessCheck(FALSE)->execute();
 
       if ($result_ids) {
         return $result_storage->loadMultiple($result_ids);

@@ -1,0 +1,28 @@
+grumphp:
+    tasks:
+        phpcs:
+            warning_severity: 0
+            standard:
+                - vendor/drupal/coder/coder_sniffer/Drupal
+                - vendor/drupal/coder/coder_sniffer/DrupalPractice
+            ignore_patterns:
+                - '*/vendor/*'
+            triggered_by:
+                - php
+                - module
+                - inc
+                - install
+                - theme
+                - yml
+        phpstan:
+            configuration: './phpstan.neon'
+            memory_limit: '-1'
+            triggered_by:
+                - php
+                - module
+                - theme
+                - inc
+                - install
+    fixer:
+        enabled: true
+        fix_by_default: true

@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\entity\Form\RevisionRevertForm;
-use Drupal\node\NodeInterface;
+use Drupal\quiz_maker\QuizInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,6 +18,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class QuizRevisionRevertTranslationForm extends RevisionRevertForm {
+
+  /**
+   * The langcode.
+   *
+   * @var mixed|null
+   */
+  private mixed $langcode;
 
   /**
    * Constructs a new NodeRevisionRevertTranslationForm.
@@ -67,11 +74,13 @@ class QuizRevisionRevertTranslationForm extends RevisionRevertForm {
    * {@inheritdoc}
    */
   public function getQuestion() {
+    /** @var \Drupal\Core\Entity\RevisionLogInterface $revision */
+    $revision = $this->revision;
     return $this->t(
       'Are you sure you want to revert @language translation to the revision from %revision-date?',
       [
-        '@language' => $this->languageManager->getLanguageName($this->langcode),
-        '%revision-date' => $this->dateFormatter->format($this->revision->getRevisionCreationTime())
+        '@language' => $this->languageManager->getLanguageName($this->revision->language()->getId()),
+        '%revision-date' => $this->dateFormatter->format($revision->getRevisionCreationTime())
       ]
     );
   }
@@ -80,7 +89,7 @@ class QuizRevisionRevertTranslationForm extends RevisionRevertForm {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return '';
+    return $this->t('');
   }
 
   /**
@@ -89,15 +98,17 @@ class QuizRevisionRevertTranslationForm extends RevisionRevertForm {
   public function buildForm(array $form, FormStateInterface $form_state, $quiz_revision = NULL, $langcode = NULL) {
     $this->langcode = $langcode;
     $form = parent::buildForm($form, $form_state, $quiz_revision);
+    /** @var \Drupal\Core\Entity\TranslatableRevisionableInterface $revision */
+    $revision = $this->revision;
 
     // Unless untranslatable fields are configured to affect only the default
     // translation, we need to ask the user whether they should be included in
     // the revert process.
-    $default_translation_affected = $this->revision->isDefaultTranslationAffectedOnly();
+    $default_translation_affected = $revision->isDefaultTranslationAffectedOnly();
     $form['revert_untranslated_fields'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Revert content shared among translations'),
-      '#default_value' => $default_translation_affected && $this->revision->getTranslation($this->langcode)->isDefaultTranslation(),
+      '#default_value' => $default_translation_affected && $revision->getTranslation($langcode)->isDefaultTranslation(),
       '#access' => !$default_translation_affected,
     ];
 
@@ -105,12 +116,21 @@ class QuizRevisionRevertTranslationForm extends RevisionRevertForm {
   }
 
   /**
-   * {@inheritdoc}
+   * Prepare reverted revision.
+   *
+   * @param \Drupal\quiz_maker\QuizInterface $revision
+   *   The revision.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return \Drupal\Core\Entity\RevisionableInterface
+   *   The entity revision.
    */
-  protected function prepareRevertedRevision(NodeInterface $revision, FormStateInterface $form_state) {
-    $revert_untranslated_fields = (bool) $form_state->getValue('revert_untranslated_fields');
+  protected function prepareRevertedRevision(QuizInterface $revision, FormStateInterface $form_state) {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
+    $storage = $this->quizStorage;
     $translation = $revision->getTranslation($this->langcode);
-    return $this->quizStorage->createRevision($translation, TRUE, $revert_untranslated_fields);
+    return $storage->createRevision($translation, TRUE);
   }
 
 }

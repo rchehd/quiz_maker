@@ -1,0 +1,19 @@
+parameters:
+    level: 5
+    paths:
+        - .
+    excludePaths:
+        - '*/tests/*.php'
+        - '*/Annotation//*.php'
+    ignoreErrors:
+        # @see https://github.com/mglaman/phpstan-drupal/issues/112#issue-557001157
+        - '#Plugin manager has cache backend specified but does not declare cache tags.#'
+
+        # new static() is a best practice in Drupal, so we cannot fix that.
+        # @see https://www.drupal.org/docs/develop/development-tools/phpstan/handling-unsafe-usage-of-new-static
+        - "#^Unsafe usage of new static#"
+
+        # Ignore PHPUnit errors.
+        - '#Class PHPUnit\\Framework\\TestCase not found#'
+        - '#Reflection error: PHPUnit\\Framework\\TestCase not found#'
+    reportUnmatchedIgnoredErrors: false

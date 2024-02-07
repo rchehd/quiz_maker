@@ -28,7 +28,7 @@ class DirectQuestion extends Question {
   public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
     $default_answer = $question_response?->getResponses();
     if ($default_answer) {
-      /** @var \Drupal\quiz_maker\QuestionAnswerInterface $answer */
+      /** @var \Drupal\quiz_maker\QuestionAnswerInterface $default_value */
       $default_value = reset($default_answer);
     }
 
@@ -79,6 +79,7 @@ class DirectQuestion extends Question {
       else {
         $correct_answer_translation = $correct_answer;
       }
+      /** @var \Drupal\quiz_maker\QuestionAnswerInterface $correct_answer_translation */
       $res = similar_text(strip_tags($correct_answer_translation->getAnswer()), $response, $perc);
       $results[] = $perc;
     }

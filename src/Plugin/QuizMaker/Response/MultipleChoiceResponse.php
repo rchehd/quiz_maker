@@ -3,6 +3,7 @@
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Response;
 
 use Drupal\quiz_maker\Entity\QuestionResponse;
+use Drupal\quiz_maker\SimpleScoringResponseInterface;
 use Drupal\quiz_maker\Trait\SimpleScoringResponseTrait;
 
 /**
@@ -14,14 +15,14 @@ use Drupal\quiz_maker\Trait\SimpleScoringResponseTrait;
  *    description = @Translation("Multiple choice response.")
  * )
  */
-class MultipleChoiceResponse extends QuestionResponse {
+class MultipleChoiceResponse extends QuestionResponse implements SimpleScoringResponseInterface {
 
   use SimpleScoringResponseTrait;
 
   /**
    * {@inheritDoc}
    */
-  protected function isResponseCorrect(int $response_id, int $answer_id, array $response_ids, array $answer_ids): bool {
+  public function isResponseCorrect(int $response_id, int $answer_id, array $response_ids, array $answer_ids): bool {
     return in_array($response_id, $answer_ids);
   }
 

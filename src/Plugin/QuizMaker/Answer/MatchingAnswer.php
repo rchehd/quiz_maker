@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\quiz_maker\Entity\QuestionAnswer;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\SimpleScoringAnswerInterface;
 use Drupal\quiz_maker\Trait\SimpleScoringAnswerTrait;
 
 /**
@@ -17,7 +18,7 @@ use Drupal\quiz_maker\Trait\SimpleScoringAnswerTrait;
  *   description = @Translation("Matching answer.")
  * )
  */
-class MatchingAnswer extends QuestionAnswer {
+class MatchingAnswer extends QuestionAnswer implements SimpleScoringAnswerInterface {
 
   use SimpleScoringAnswerTrait;
 

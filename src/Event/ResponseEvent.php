@@ -6,11 +6,16 @@ use Drupal\Component\EventDispatcher\Event;
 use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizResultInterface;
 
+/**
+ * ResponseEvent class.
+ */
 class ResponseEvent extends Event {
 
   /**
    * Class constructor.
    *
+   * @param \Drupal\quiz_maker\QuizResultInterface $quizResult
+   *   The quiz result.
    * @param \Drupal\quiz_maker\QuestionResponseInterface $questionResponse
    *   The question user's response.
    */

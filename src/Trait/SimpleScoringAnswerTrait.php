@@ -10,10 +10,7 @@ namespace Drupal\quiz_maker\Trait;
 trait SimpleScoringAnswerTrait {
 
   /**
-   * Get answer score.
-   *
-   * @return ?int
-   *   The score.
+   * Implements \Drupal\quiz_maker\SimpleScoringAnswerInterface::getScore().
    */
   public function getScore(): ?int {
     if ($this->hasField('field_score')) {

@@ -2,6 +2,9 @@
 
 namespace Drupal\quiz_maker\Event;
 
+/**
+ * ResponseEvents class.
+ */
 final class ResponseEvents {
 
   /**
