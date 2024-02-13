@@ -8,7 +8,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\quiz_maker\QuizInterface;
-use Drupal\quiz_maker\Service\QuizManager;
+use Drupal\quiz_maker\Service\QuizResultManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,7 +20,7 @@ final class QuizMakerController extends ControllerBase {
    * The controller constructor.
    */
   public function __construct(
-    protected QuizManager $quizManager
+    protected QuizResultManager $quizManager
   ) {}
 
   /**
@@ -28,7 +28,7 @@ final class QuizMakerController extends ControllerBase {
    */
   public static function create(ContainerInterface $container): self {
     return new self(
-      $container->get('quiz_maker.quiz_manager'),
+      $container->get('quiz_maker.quiz_result_manager'),
     );
   }
 

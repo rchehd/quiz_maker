@@ -61,10 +61,13 @@ interface QuizResultInterface extends ContentEntityInterface, EntityOwnerInterfa
    * User can answer only several question, and then continue taking quiz from
    * the last question.
    *
+   * @param array $questions
+   *   The array of questions.
+   *
    * @return ?\Drupal\quiz_maker\QuestionInterface
    *   The question.
    */
-  public function getActiveQuestion(): ?QuestionInterface;
+  public function getActiveQuestion(array $questions): ?QuestionInterface;
 
   /**
    * Get result state.

@@ -145,4 +145,12 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
    */
   public function getTimeLimit(): ?int;
 
+  /**
+   * Do question sequence to be randomized.
+   *
+   * @return bool
+   *   TRUE when have to be, otherwise FALSE.
+   */
+  public function randomizeQuestionSequence(): bool;
+
 }

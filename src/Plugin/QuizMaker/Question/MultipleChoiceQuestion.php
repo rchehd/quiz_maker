@@ -62,6 +62,9 @@ class MultipleChoiceQuestion extends Question implements SimpleScoringQuestionIn
    */
   public function getResponse(array &$form, FormStateInterface $form_state): array {
     $responses = $form_state->getValue('multiple_choice_answer');
+    if (!$responses) {
+      return [];
+    }
     $responses = array_filter($responses, function ($response) {
       return $response != 0;
     });

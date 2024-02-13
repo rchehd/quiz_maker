@@ -358,9 +358,8 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
   /**
    * {@inheritDoc}
    */
-  public function getActiveQuestion(): ?QuestionInterface {
+  public function getActiveQuestion(array $questions): ?QuestionInterface {
     $responses = $this->getResponses();
-    $questions = $this->getQuiz()->getQuestions();
     $answered_question_ids = array_map(function ($responses) {
       return $responses->getQuestion()->id();
     }, $responses);

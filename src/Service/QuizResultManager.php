@@ -12,7 +12,6 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\quiz_maker\Entity\QuizResult;
 use Drupal\quiz_maker\Entity\QuizResultType;
 use Drupal\quiz_maker\Event\QuizTakeEvent;
 use Drupal\quiz_maker\Event\QuizTakeEvents;
@@ -28,7 +27,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 /**
  * Quiz manager service.
  */
-class QuizManager {
+class QuizResultManager {
 
   use StringTranslationTrait;
 
@@ -66,7 +65,7 @@ class QuizManager {
    * @return \Drupal\quiz_maker\QuizResultInterface|null
    *   The quiz result or null.
    */
-  public function startQuiz(AccountInterface $user, QuizInterface $quiz, string $langcode): ?QuizResultInterface {
+  public function createQuizResult(AccountInterface $user, QuizInterface $quiz, string $langcode): ?QuizResultInterface {
     $draft_results = $quiz->getResults($user, [
       'state' => QuizResultType::DRAFT,
     ]);
@@ -124,7 +123,7 @@ class QuizManager {
    * @param string $langcode
    *   The langcode.
    */
-  public function updateQuiz(QuizResultInterface $result, QuestionInterface $question, array $response_data, string $langcode): void {
+  public function updateQuizResult(QuizResultInterface $result, QuestionInterface $question, array $response_data, string $langcode): void {
     // Get question response from result, if it doesn't exist - create new response,
     // otherwise - update current response.
     $response = $result->getResponse($question);
@@ -167,7 +166,7 @@ class QuizManager {
    * @param string $langcode
    *   The langcode.
    */
-  public function finishQuiz(QuizResultInterface $result, string $langcode): void {
+  public function completeQuizResult(QuizResultInterface $result, string $langcode): void {
     $questions = $result->getQuiz()->getQuestions();
     // Create empty responses if question was skipped by user.
     foreach ($questions as $question) {
@@ -255,35 +254,6 @@ class QuizManager {
     }
     catch (InvalidPluginDefinitionException | PluginNotFoundException | EntityStorageException $e) {
       $this->logger->error($e->getMessage());
-    }
-
-    return NULL;
-  }
-
-  /**
-   * Get last draft quiz result.
-   *
-   * @param \Drupal\Core\Session\AccountInterface $user
-   *   The user.
-   *
-   * @return \Drupal\quiz_maker\QuizResultInterface|null
-   *   The quiz result.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   */
-  public function getUserLastQuizResult(AccountInterface $user): ?QuizResultInterface {
-    $query = $this->entityTypeManager->getStorage('quiz_result')->getQuery();
-    $quiz_result_ids = $query->accessCheck(FALSE)
-      ->condition('uid', $user->id())
-      ->condition('state', QuizResultType::DRAFT)
-      ->sort('updated')
-      ->range(0, 1)
-      ->execute();
-
-    if (!empty($quiz_result_ids)) {
-      $quiz_result_id = reset($quiz_result_ids);
-      return QuizResult::load($quiz_result_id);
     }
 
     return NULL;

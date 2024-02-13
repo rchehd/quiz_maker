@@ -598,4 +598,11 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     return NULL;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  public function randomizeQuestionSequence(): bool {
+    return (bool) $this->get('randomize_question_sequence')->getString();
+  }
+
 }

@@ -10,7 +10,7 @@ use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\quiz_maker\Entity\QuizResultType;
 use Drupal\quiz_maker\QuizResultInterface;
 use Drupal\quiz_maker\Service\QuizHelper;
-use Drupal\quiz_maker\Service\QuizManager;
+use Drupal\quiz_maker\Service\QuizResultManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,14 +37,14 @@ class QuizResultReviewForm extends FormBase {
    *
    * @param \Drupal\quiz_maker\Service\QuizHelper $quizHelper
    *   The quiz helper service.
-   * @param \Drupal\quiz_maker\Service\QuizManager $quizManager
+   * @param \Drupal\quiz_maker\Service\QuizResultManager $quizManager
    *   The quiz manager.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerChannelFactory
    *   The logger factory.
    */
   public function __construct(
     protected QuizHelper $quizHelper,
-    protected QuizManager $quizManager,
+    protected QuizResultManager $quizManager,
     protected LoggerChannelFactoryInterface $loggerChannelFactory,
   ) {
     $this->logger = $loggerChannelFactory->get('quiz_maker');
@@ -56,7 +56,7 @@ class QuizResultReviewForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('quiz_maker.quiz_helper'),
-      $container->get('quiz_maker.quiz_manager'),
+      $container->get('quiz_maker.quiz_result_manager'),
       $container->get('logger.factory'),
     );
   }

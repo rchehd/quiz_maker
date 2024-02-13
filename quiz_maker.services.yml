@@ -11,8 +11,8 @@ services:
     class: Drupal\quiz_maker\Service\QuizMakerQuestionResponsePluginManager
     parent: default_plugin_manager
 
-  quiz_maker.quiz_manager:
-    class: Drupal\quiz_maker\Service\QuizManager
+  quiz_maker.quiz_result_manager:
+    class: Drupal\quiz_maker\Service\QuizResultManager
     arguments:
       - '@entity_type.manager'
       - '@request_stack'
@@ -20,6 +20,19 @@ services:
       - '@logger.factory'
       - '@entity_type.bundle.info'
       - '@event_dispatcher'
+
+  quiz_maker.quiz_session:
+    class: Drupal\quiz_maker\Service\QuizSession
+    arguments:
+      - '@entity_type.manager'
+      - '@logger.factory'
+      - '@event_dispatcher'
+      - '@tempstore.private'
+      - '@quiz_maker.quiz_result_manager'
+      - '@current_user'
+      - '@language_manager'
+      - '@datetime.time'
+
   quiz_maker.quiz_helper:
     class: Drupal\quiz_maker\Service\QuizHelper
     arguments:

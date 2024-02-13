@@ -32,12 +32,13 @@ class BooleanQuestion extends Question {
       foreach ($answers as $answer) {
         $options[$answer->id()] = $answer->getAnswer();
       }
+      $response = $question_response?->getResponses();
       return [
         'boolean_answer' => [
           '#type' => 'radios',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
-          '#default_value' => $question_response?->getResponses(),
+          '#default_value' => $response ? reset($response) : NULL,
           '#disabled' => !$allow_change_response
         ]
       ];
