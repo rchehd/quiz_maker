@@ -98,6 +98,10 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       // If no owner has been set explicitly, make the anonymous user the owner.
       $this->setOwnerId(0);
     }
+
+    if ($questions = $this->getQuestionByTags()) {
+      $this->set('questions', $questions);
+    }
   }
 
   /**
@@ -348,7 +352,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
 
     $fields['questions_tag'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Questions tag'))
-      ->setDescription(t('Add questions that has tags from "Questions Tags" taxonomy.'))
+      ->setDescription(t('Add questions that has tags from "Questions Tags" taxonomy. (You can add multiple tags with a comma)'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'taxonomy_term')
       ->setSetting('handler_settings', ['target_bundles' => ['questions_tags' => 'questions_tags']])
@@ -414,6 +418,13 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
       }
     }
     return $result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getQuestionTags(): array {
+    return $this->get('questions_tag')->referencedEntities();
   }
 
   /**
@@ -603,6 +614,42 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
    */
   public function randomizeQuestionSequence(): bool {
     return (bool) $this->get('randomize_question_sequence')->getString();
+  }
+
+  /**
+   * Get questions by tags.
+   *
+   * @return array
+   *   Array of questions.
+   */
+  private function getQuestionByTags(): array {
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $questions = [];
+    $tags = $this->getQuestionTags();
+
+    $tag_ids = array_map(function ($tag) {
+      return $tag->id();
+    }, $tags);
+
+    try {
+      $query = $this->entityTypeManager()->getStorage('question')->getQuery();
+      $question_ids = $query
+        ->accessCheck(FALSE)
+        ->condition('tag', $tag_ids, 'IN')
+        ->execute();
+
+      foreach ($question_ids as $question_id) {
+        $question = Question::load($question_id);
+        if ($question->hasTranslation($langcode)) {
+          $questions[] = $question->getTranslation($langcode);
+        }
+      }
+    }
+    catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
+      \Drupal::logger('quiz_maker')->error($e->getMessage());
+    }
+
+    return $questions;
   }
 
 }

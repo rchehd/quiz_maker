@@ -23,6 +23,14 @@ interface QuizInterface extends ContentEntityInterface, EntityOwnerInterface, En
   public function getQuestions(): array;
 
   /**
+   * Get question tags.
+   *
+   * @return \Drupal\taxonomy\TermInterface[]
+   *   Array of term interface.
+   */
+  public function getQuestionTags(): array;
+
+  /**
    * Get pass rate.
    *
    * @return ?int

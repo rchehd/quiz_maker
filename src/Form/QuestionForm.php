@@ -38,7 +38,7 @@ class QuestionForm extends ContentEntityForm {
         throw new \LogicException('Could not save the entity.');
     }
 
-    $form_state->setRedirectUrl($this->entity->toUrl());
+    $form_state->setRedirect('view.questions.question_list');
 
     return $result;
   }

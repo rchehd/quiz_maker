@@ -214,6 +214,7 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
 
     $fields['tag'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Tag'))
+      ->setDescription(t('The tag of question (Question group).'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'taxonomy_term')
       ->setCardinality(1)
