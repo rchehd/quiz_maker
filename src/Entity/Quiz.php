@@ -627,6 +627,10 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     $questions = [];
     $tags = $this->getQuestionTags();
 
+    if (empty($tags)) {
+      return $questions;
+    }
+
     $tag_ids = array_map(function ($tag) {
       return $tag->id();
     }, $tags);

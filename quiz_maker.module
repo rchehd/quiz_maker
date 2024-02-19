@@ -21,6 +21,7 @@ use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuizInterface;
 use Drupal\quiz_maker\QuizResultInterface;
+use Drupal\taxonomy\TermInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -499,6 +500,14 @@ function quiz_maker_entity_presave(EntityInterface $entity): void {
       }
 
     }
+
+    if ($entity->getTag() instanceof TermInterface) {
+      /** @var \Drupal\quiz_maker\Service\QuizHelper $quiz_helper */
+      $quiz_helper = \Drupal::service('quiz_maker.quiz_helper');
+      // Update quizzes which have tag of these questions.
+      $quiz_helper->updateQuizzesWithTag($entity->getTag());
+    }
+
   }
 
   if ($entity instanceof QuestionAnswerInterface) {

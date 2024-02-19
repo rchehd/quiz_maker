@@ -5,6 +5,7 @@ namespace Drupal\quiz_maker;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\taxonomy\TermInterface;
 use Drupal\user\EntityOwnerInterface;
 
 /**
@@ -125,11 +126,34 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
   public function getAnswerType(): ?string;
 
   /**
+   * Get question term.
+   *
+   * @return \Drupal\taxonomy\TermInterface|null
+   *   The term if it exists, otherwise null.
+   */
+  public function getTag(): ?TermInterface;
+
+  /**
    * Is question enabled?
    *
    * @return bool
    *   TRUE if enabled, otherwise FALSE.
    */
   public function isEnabled(): bool;
+
+  /**
+   * Get question response view on result view.
+   *
+   * @param \Drupal\quiz_maker\QuestionResponseInterface $response
+   *   The response.
+   * @param int $mark_mode
+   *   The mark mode:
+   *      - 0: 'correct/incorrect',
+   *      - 1: 'chosen/not-chosen'.
+   *
+   * @return array
+   *   The render array.
+   */
+  public function getResponseView(QuestionResponseInterface $response, int $mark_mode = 0): array;
 
 }

@@ -65,24 +65,27 @@ class DirectQuestion extends Question {
    */
   public function isResponseCorrect(array $answers_ids): bool {
     $correct_answers = $this->getCorrectAnswers();
-    $correct_answer = reset($correct_answers);
     $languages = \Drupal::languageManager()->getLanguages();
     $response = reset($answers_ids);
     $results = [];
     // We need to check similarity with all translations of answer, because correct
     // answers can have a translation, but user response text doesn't, and user can
     // view every quiz result translation, but for each translation it will have the same text.
-    foreach ($languages as $language) {
-      if ($correct_answer->hasTranslation($language->getId())) {
-        $correct_answer_translation = $correct_answer->getTranslation($language->getId());
+    // User can add several answers and response will compare with all of them.
+    foreach ($correct_answers as $correct_answer) {
+      foreach ($languages as $language) {
+        if ($correct_answer->hasTranslation($language->getId())) {
+          $correct_answer_translation = $correct_answer->getTranslation($language->getId());
+        }
+        else {
+          $correct_answer_translation = $correct_answer;
+        }
+        /** @var \Drupal\quiz_maker\QuestionAnswerInterface $correct_answer_translation */
+        $res = similar_text(strip_tags($correct_answer_translation->getAnswer()), $response, $perc);
+        $results[] = $perc;
       }
-      else {
-        $correct_answer_translation = $correct_answer;
-      }
-      /** @var \Drupal\quiz_maker\QuestionAnswerInterface $correct_answer_translation */
-      $res = similar_text(strip_tags($correct_answer_translation->getAnswer()), $response, $perc);
-      $results[] = $perc;
     }
+
     $result = max($results);
     return $result >= $this->getSimilarity();
   }
@@ -95,6 +98,16 @@ class DirectQuestion extends Question {
    */
   public function getSimilarity(): float {
     return $this->get('field_similarity')->value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponseView(QuestionResponseInterface $response, int $mark_mode = 0): array {
+    $result = parent::getResponseView($response, $mark_mode);
+    // In direct question we need to show answer only one time, because direct
+    // answers has only one user answer.
+    return reset($result);
   }
 
 }

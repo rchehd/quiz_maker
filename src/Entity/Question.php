@@ -11,6 +11,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\taxonomy\TermInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -332,6 +333,16 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
   /**
    * {@inheritDoc}
    */
+  public function getTag(): ?TermInterface {
+    if ($this->get('tag')->entity instanceof TermInterface) {
+      return $this->get('tag')->entity;
+    }
+    return NULL;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function addAnswer(QuestionAnswerInterface $answer): void {
     $answers = $this->getAnswers();
     if ($answers) {
@@ -383,6 +394,34 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
    */
   public function isEnabled(): bool {
     return (bool) $this->get('status')->getString();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponseView(QuestionResponseInterface $response, int $mark_mode = 0): array {
+    $result = [];
+    $answers = $this->getAnswers();
+    // Return list of answers with related class.
+    foreach ($answers as $answer) {
+      if ($answer instanceof QuestionAnswerInterface) {
+        $result[$answer->id()] = [
+          '#type' => 'html_tag',
+          '#tag' => $answer->getViewHtmlTag(),
+          '#value' => $answer->getAnswer($response),
+          '#attributes' => [
+            'class' => match($mark_mode) {
+              default => [$answer->getResponseStatus($response)],
+              1 => match ($answer->getResponseStatus($response)) {
+                QuestionAnswer::CORRECT, QuestionAnswer::IN_CORRECT => ['chosen'],
+                default => [],
+              }
+            }
+          ]
+        ];
+      }
+    }
+    return $result;
   }
 
 }
