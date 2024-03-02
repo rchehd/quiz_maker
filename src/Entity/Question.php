@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
@@ -273,6 +274,13 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
   /**
    * {@inheritDoc}
    */
+  public function getQuestionAnswerWrapperId(): string {
+    return $this->getAnswerType() . '_' . $this->id();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public function getQuestion(): ?string {
     return $this->get('question')->value;
   }
@@ -422,6 +430,30 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
       }
     }
     return $result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponse(array &$form, FormStateInterface $form_state): array {
+    $question_form_id = $this->getQuestionAnswerWrapperId();
+    $response = $form_state->getValue($question_form_id);
+    if ($response) {
+      return is_array($response) ? $response : [$response];
+    }
+    else {
+      return [];
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
+    $question_form_id = $this->getQuestionAnswerWrapperId();
+    if (!$form_state->getValue($question_form_id)) {
+      $form_state->setErrorByName($question_form_id, t('Choose the answer, please.'));
+    }
   }
 
 }

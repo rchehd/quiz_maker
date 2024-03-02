@@ -38,7 +38,7 @@ class SingleChoiceQuestion extends Question {
         $default_answer = reset($default_answer);
       }
       return [
-        'single_choice_answer' => [
+        $this->getQuestionAnswerWrapperId() => [
           '#type' => 'radios',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
@@ -49,24 +49,6 @@ class SingleChoiceQuestion extends Question {
     }
 
     return [];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
-    if (!$form_state->getValue('single_choice_answer')) {
-      $form_state->setErrorByName('single_choice_answer', $this->t('Choose the answer, please.'));
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getResponse(array &$form, FormStateInterface $form_state): array {
-    return [
-      $form_state->getValue('single_choice_answer')
-    ];
   }
 
 }

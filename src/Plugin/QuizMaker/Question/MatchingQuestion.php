@@ -39,33 +39,42 @@ class MatchingQuestion extends Question implements SimpleScoringQuestionInterfac
           'class' => ['matching-form']
         ]
       ];
-      $answer_form['question_table'] = [
+
+      // To build answer form we have to set unique names to get right response
+      // in form submit, because quiz could have several question of the same type.
+      $answer_form['question_table_' . $this->id()] = [
         '#type' => 'container',
         '#attributes' => [
           'class' => ['question-table']
         ]
       ];
-      $answer_form['answer_table'] = [
+
+      $answer_form['answer_table_' . $this->id()] = [
         '#type' => 'container',
         '#attributes' => [
           'class' => ['answer-table']
         ]
       ];
       // The column of questions (non-draggable).
-      $answer_form['question_table']['question_column'] = $this->getMatchingTable($answers, 'getMatchingQuestion', $this->t('Question'), FALSE, FALSE);
+      $answer_form['question_table_' . $this->id()]['question_column_' . $this->id()] = $this->getMatchingTable($answers, 'getMatchingQuestion', $this->t('Question'), FALSE, FALSE);
 
       // The matching column of answers(draggable).
       // If question already has response - get answers from response,
       // otherwise get original answers and shuffle it.
       if ($question_response) {
         $answers = \Drupal::entityTypeManager()->getStorage('question_answer')->loadMultiple($question_response->getResponses());
+        // When we get any error and answer array is empty.
+        if (!$answers) {
+          $answers = $this->getAnswers();
+          shuffle($answers);
+        }
       }
       else {
         $answers = $this->getAnswers();
         shuffle($answers);
       }
 
-      $answer_form['answer_table']['answer_column'] = $this->getMatchingTable($answers, 'getMatchingAnswer', $this->t('Answer'), $allow_change_response);
+      $answer_form['answer_table_' . $this->id()][$this->getQuestionAnswerWrapperId()] = $this->getMatchingTable($answers, 'getMatchingAnswer', $this->t('Answer'), $allow_change_response);
 
       return $answer_form;
     }
@@ -84,7 +93,11 @@ class MatchingQuestion extends Question implements SimpleScoringQuestionInterfac
    * {@inheritDoc}
    */
   public function getResponse(array &$form, FormStateInterface $form_state): array {
-    return array_keys($form_state->getValue('answer_column'));
+    $responses = parent::getResponse($form, $form_state);
+    if (!$responses) {
+      return [];
+    }
+    return array_keys($responses);
   }
 
   /**

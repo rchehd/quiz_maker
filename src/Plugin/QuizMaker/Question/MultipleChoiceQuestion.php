@@ -35,7 +35,7 @@ class MultipleChoiceQuestion extends Question implements SimpleScoringQuestionIn
         $options[$answer->id()] = $answer->getAnswer();
       }
       return [
-        'multiple_choice_answer' => [
+        $this->getQuestionAnswerWrapperId() => [
           '#type' => 'checkboxes',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
@@ -51,17 +51,8 @@ class MultipleChoiceQuestion extends Question implements SimpleScoringQuestionIn
   /**
    * {@inheritDoc}
    */
-  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
-    if (!$form_state->getValue('multiple_choice_answer')) {
-      $form_state->setErrorByName('multiple_choice_answer', $this->t('Choose the answer, please.'));
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public function getResponse(array &$form, FormStateInterface $form_state): array {
-    $responses = $form_state->getValue('multiple_choice_answer');
+    $responses = parent::getResponse($form, $form_state);
     if (!$responses) {
       return [];
     }

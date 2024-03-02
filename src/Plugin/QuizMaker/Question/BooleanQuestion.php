@@ -34,7 +34,7 @@ class BooleanQuestion extends Question {
       }
       $response = $question_response?->getResponses();
       return [
-        'boolean_answer' => [
+        $this->getQuestionAnswerWrapperId() => [
           '#type' => 'radios',
           '#title' => $this->t('Select an answer'),
           '#options' => $options,
@@ -45,24 +45,6 @@ class BooleanQuestion extends Question {
     }
 
     return [];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
-    if (!$form_state->getValue('boolean_answer')) {
-      $form_state->setErrorByName('boolean_answer', $this->t('Choose the answer, please.'));
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getResponse(array &$form, FormStateInterface $form_state): array {
-    return [
-      $form_state->getValue('boolean_answer')
-    ];
   }
 
   /**

@@ -33,30 +33,12 @@ class DirectQuestion extends Question {
     }
 
     return [
-      'direct_answer' => [
+      $this->getQuestionAnswerWrapperId() => [
         '#type' => 'textarea',
         '#title' => $this->t('Write an answer'),
         '#default_value' => $default_value ?? NULL,
         '#disabled' => !$allow_change_response
       ]
-    ];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
-    if (!$form_state->getValue('direct_answer')) {
-      $form_state->setErrorByName('direct_answer', $this->t('Choose the answer, please.'));
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getResponse(array &$form, FormStateInterface $form_state): array {
-    return [
-      $form_state->getValue('direct_answer')
     ];
   }
 

@@ -14,7 +14,34 @@ use Drupal\user\EntityOwnerInterface;
 interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
   /**
-   * Get Answering form.
+   * Get question answer wrapper id.
+   *
+   * @return string
+   *   The unique question id.
+   */
+  public function getQuestionAnswerWrapperId(): string;
+
+  /**
+   * Build Answering form.
+   *
+   * Example how to build answering form:
+   * $form = [
+   *   $this->getQuestionAnswerWrapperId() => [
+   *     '#type' => 'example',
+   *     '#title' => $this->t('Example'),
+   *   ]
+   * ];
+   * Or
+   * $form['wrapper'] = [
+   *    '#type' => 'container',
+   * ]
+   *
+   * $form['wrapper']['answer_form'] = [
+   *    $this->getQuestionAnswerWrapperId() => [
+   *      '#type' => 'example',
+   *      '#title' => $this->t('Example'),
+   *    ]
+   *  ];
    *
    * @param \Drupal\quiz_maker\QuestionResponseInterface|null $question_response
    *   Question response. Used for set default value for answering form.
