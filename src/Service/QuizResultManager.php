@@ -17,6 +17,7 @@ use Drupal\quiz_maker\Event\QuizTakeEvent;
 use Drupal\quiz_maker\Event\QuizTakeEvents;
 use Drupal\quiz_maker\Event\ResponseEvent;
 use Drupal\quiz_maker\Event\ResponseEvents;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
@@ -116,19 +117,19 @@ class QuizResultManager {
    *
    * @param \Drupal\quiz_maker\QuizResultInterface $result
    *   The quiz result.
-   * @param \Drupal\quiz_maker\QuestionInterface $question
-   *   The question.
+   * @param \Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface $question_instance
+   *   The question plugin instance.
    * @param array $response_data
    *   The response data.
    * @param string $langcode
    *   The langcode.
    */
-  public function updateQuizResult(QuizResultInterface $result, QuestionInterface $question, array $response_data, string $langcode): void {
+  public function updateQuizResult(QuizResultInterface $result, QuestionPluginInterface $question_instance, array $response_data, string $langcode): void {
     // Get question response from result, if it doesn't exist - create new response,
     // otherwise - update current response.
-    $response = $result->getResponse($question);
+    $response = $result->getResponse($question_instance->getEntity());
     if (!$response) {
-      $response = $this->createResponse($result, $question, $response_data, $langcode);
+      $response = $this->createResponse($result, $question_instance, $response_data, $langcode);
       if ($response) {
         try {
           $result->addResponse($response)->save();
@@ -141,8 +142,8 @@ class QuizResultManager {
     else {
       try {
         $response->setResponseData($response_data)
-          ->setCorrect($question->isResponseCorrect($response_data))
-          ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
+          ->setCorrect($question_instance->isResponseCorrect($response_data))
+          ->setScore($question_instance->getEntity(), $question_instance->isResponseCorrect($response_data), $question_instance->getEntity()->getMaxScore(), $response_data)
           ->save();
         // Dispatch 'Response create' event.
         $response_event = new ResponseEvent($result, $response);
@@ -172,7 +173,7 @@ class QuizResultManager {
     foreach ($questions as $question) {
       $response = $result->getResponse($question);
       if (!$response) {
-        $response = $this->createResponse($result, $question, [], $langcode);
+        $response = $this->createResponse($result, $question->getInstance(), [], $langcode);
         if ($response) {
           try {
             $result->addResponse($response)->save();
@@ -222,8 +223,8 @@ class QuizResultManager {
    *
    * @param \Drupal\quiz_maker\QuizResultInterface $result
    *   The quiz result.
-   * @param \Drupal\quiz_maker\QuestionInterface $question
-   *   The question.
+   * @param \Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface $question_instance
+   *   The question instance.
    * @param array $response_data
    *   The response data.
    * @param string $langcode
@@ -232,19 +233,19 @@ class QuizResultManager {
    * @return ?\Drupal\quiz_maker\QuestionResponseInterface
    *   The response.
    */
-  protected function createResponse(QuizResultInterface $result, QuestionInterface $question, array $response_data, string $langcode): ?QuestionResponseInterface {
+  protected function createResponse(QuizResultInterface $result, QuestionPluginInterface $question_instance, array $response_data, string $langcode): ?QuestionResponseInterface {
     try {
       /** @var \Drupal\quiz_maker\QuestionResponseInterface $response */
       $response = $this->entityTypeManager->getStorage('question_response')->create([
-        'bundle' => $question->getResponseType(),
-        'label' => $this->t('Response of "@question_label"', ['@question_label' => $question->label()]),
+        'bundle' => $question_instance->getEntity()->getResponseType(),
+        'label' => $this->t('Response of "@question_label"', ['@question_label' => $question_instance->getEntity()->label()]),
         'langcode' => $langcode,
       ]);
       $response->setQuiz($result->getQuiz())
-        ->setQuestion($question)
+        ->setQuestion($question_instance->getEntity())
         ->setResponseData($response_data)
-        ->setCorrect($question->isResponseCorrect($response_data))
-        ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
+        ->setCorrect($question_instance->isResponseCorrect($response_data))
+        ->setScore($question_instance->getEntity(), $question_instance->isResponseCorrect($response_data), $question_instance->getEntity()->getMaxScore(), $response_data)
         ->save();
 
       // Dispatch 'Response create' event.

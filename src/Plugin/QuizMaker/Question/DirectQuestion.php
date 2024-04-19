@@ -2,9 +2,8 @@
 
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Question;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\quiz_maker\Entity\Question;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginBase;
 use Drupal\quiz_maker\QuestionResponseInterface;
 
 /**
@@ -14,11 +13,9 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   id = "direct_question",
  *   label = @Translation("Direct question"),
  *   description = @Translation("Direct question."),
- *   answer_bundle = "direct_answer",
- *   response_bundle = "direct_response",
  * )
  */
-class DirectQuestion extends Question {
+class DirectQuestion extends QuestionPluginBase {
 
   use StringTranslationTrait;
 
@@ -46,8 +43,8 @@ class DirectQuestion extends Question {
    * {@inheritDoc}
    */
   public function isResponseCorrect(array $answers_ids): bool {
-    $correct_answers = $this->getCorrectAnswers();
-    $languages = \Drupal::languageManager()->getLanguages();
+    $correct_answers = $this->getEntity()->getCorrectAnswers();
+    $languages = $this->languageManager->getLanguages();
     $response = reset($answers_ids);
     $results = [];
     // We need to check similarity with all translations of answer, because correct
@@ -77,9 +74,11 @@ class DirectQuestion extends Question {
    *
    * @return float
    *   The similarity.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function getSimilarity(): float {
-    return $this->get('field_similarity')->value;
+    return $this->getEntity()->get('field_similarity')->value;
   }
 
   /**

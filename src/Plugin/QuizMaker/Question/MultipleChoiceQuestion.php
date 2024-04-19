@@ -4,7 +4,7 @@ namespace Drupal\quiz_maker\Plugin\QuizMaker\Question;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\quiz_maker\Entity\Question;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginBase;
 use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\SimpleScoringQuestionInterface;
 use Drupal\quiz_maker\Trait\SimpleScoringQuestionTrait;
@@ -16,11 +16,9 @@ use Drupal\quiz_maker\Trait\SimpleScoringQuestionTrait;
  *   id = "multiple_choice_question",
  *   label = @Translation("Multiple question"),
  *   description = @Translation("Multiple question."),
- *   answer_bundle = "multiple_choice_answer",
- *   response_bundle = "multiple_choice_response",
  * )
  */
-class MultipleChoiceQuestion extends Question implements SimpleScoringQuestionInterface {
+class MultipleChoiceQuestion extends QuestionPluginBase implements SimpleScoringQuestionInterface {
 
   use StringTranslationTrait;
   use SimpleScoringQuestionTrait;
@@ -29,7 +27,7 @@ class MultipleChoiceQuestion extends Question implements SimpleScoringQuestionIn
    * {@inheritDoc}
    */
   public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
-    if ($answers = $this->getAnswers()) {
+    if ($answers = $this->getEntity()->getAnswers()) {
       $options = [];
       foreach ($answers as $answer) {
         $options[$answer->id()] = $answer->getAnswer();

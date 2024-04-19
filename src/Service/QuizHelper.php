@@ -10,6 +10,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\QuestionAnswer;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface;
 use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
@@ -42,8 +43,8 @@ class QuizHelper {
   /**
    * Get question result.
    *
-   * @param \Drupal\quiz_maker\QuestionInterface $question
-   *   The question.
+   * @param \Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface $question_instance
+   *   The question plugin instance.
    * @param \Drupal\quiz_maker\QuestionResponseInterface $response
    *   The response.
    * @param int $mark_mode
@@ -63,7 +64,7 @@ class QuizHelper {
    * @return array
    *   The render array.
    */
-  public function getQuestionResultView(QuestionInterface $question, QuestionResponseInterface $response, int $mark_mode = 0, bool $show_score = TRUE, int $list_style = NULL): array {
+  public function getQuestionResultView(QuestionPluginInterface $question_instance, QuestionResponseInterface $response, int $mark_mode = 0, bool $show_score = TRUE, int $list_style = NULL): array {
     $result_view = [
       '#type' => 'container',
       '#attributes' => [
@@ -74,7 +75,7 @@ class QuizHelper {
     $result_view['question'] = [
       '#type' => 'html_tag',
       '#tag' => 'h4',
-      '#value' => $question->getQuestion(),
+      '#value' => $question_instance->getEntity()->getQuestion(),
     ];
 
     $result_view['answers'] = [
@@ -85,7 +86,7 @@ class QuizHelper {
       ],
     ];
 
-    $result_view['answers'][] = $question->getResponseView($response, $mark_mode);
+    $result_view['answers'][] = $question_instance->getResponseView($response, $mark_mode);
 
     if ($show_score) {
       $result_view['score'] = [

@@ -6,3 +6,5 @@ _core:
 id: boolean_question
 label: 'Boolean question'
 plugin: boolean_question
+answer_type: boolean_answer
+response_type: boolean_response

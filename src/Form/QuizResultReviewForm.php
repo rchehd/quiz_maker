@@ -78,6 +78,7 @@ class QuizResultReviewForm extends FormBase {
       $responses = $quiz_result->getResponses();
       foreach ($responses as $response) {
         $question = $response->getQuestion();
+        $question_instance = $question->getInstance();
 
         $form[$question->id()] = [
           '#type' => 'container',
@@ -95,7 +96,7 @@ class QuizResultReviewForm extends FormBase {
         ];
 
         $form[$question->id()]['user_response']['question_response'] = $this->quizHelper->getQuestionResultView(
-          $question,
+          $question_instance,
           $response,
           1,
           FALSE

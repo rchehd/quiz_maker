@@ -335,34 +335,6 @@ function template_preprocess_quiz_result(array &$variables): void {
 }
 
 /**
- * Implements hook_entity_bundle_info_alter().
- *
- * Map question and answers classes to bundles.
- */
-function quiz_maker_entity_bundle_info_alter(array &$bundles): void {
-  $plugin_types = [
-    'question' => 'plugin.manager.quiz_maker.question',
-    'question_answer' => 'plugin.manager.quiz_maker.question_answer',
-    'question_response' => 'plugin.manager.quiz_maker.question_response',
-  ];
-
-  foreach ($plugin_types as $plugin_type => $plugin_manager) {
-    $pluginManager = \Drupal::service($plugin_manager);
-    $plugins = $pluginManager->getDefinitions();
-    foreach ($plugins as $key => $plugin) {
-      if (isset($bundles[$plugin_type][$key])) {
-        $bundles[$plugin_type][$key]['class'] = $plugin['class'];
-        if ($plugin_type === 'question') {
-          $bundles[$plugin_type][$key]['answer_bundle'] = $plugin['answer_bundle'];
-          $bundles[$plugin_type][$key]['response_bundle'] = $plugin['response_bundle'];
-        }
-      }
-    }
-  }
-
-}
-
-/**
  * Prepares variables for question response templates.
  *
  * Default template: quiz-maker-question-response.html.twig.
@@ -474,12 +446,13 @@ function quiz_maker_get_quiz_link(QuizInterface $quiz, string $label): array {
 function quiz_maker_entity_presave(EntityInterface $entity): void {
   // Add default answers to question if it has.
   if ($entity instanceof QuestionInterface) {
+    $entity_instance = $entity->getInstance();
     if (!$entity->getAnswers()) {
       /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
       $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
       $bundles_info = $entity_type_bundle_info->getBundleInfo($entity->getEntityType()->id());
       $bundle = $bundles_info[$entity->bundle()]['answer_bundle'];
-      $default_answers_data = $entity->getDefaultAnswersData();
+      $default_answers_data = $entity_instance->getDefaultAnswersData();
       foreach ($default_answers_data as $answer_data) {
         try {
           /** @var \Drupal\quiz_maker\QuestionAnswerInterface $answer */

@@ -2,11 +2,8 @@
 
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Question;
 
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\quiz_maker\Entity\Question;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginBase;
 use Drupal\quiz_maker\QuestionResponseInterface;
 
 /**
@@ -16,11 +13,9 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   id = "single_choice_question",
  *   label = @Translation("Single choice question"),
  *   description = @Translation("Single choice question."),
- *   answer_bundle = "single_choice_answer",
- *   response_bundle = "single_choice_response",
  * )
  */
-class SingleChoiceQuestion extends Question {
+class SingleChoiceQuestion extends QuestionPluginBase {
 
   use StringTranslationTrait;
 
@@ -28,7 +23,7 @@ class SingleChoiceQuestion extends Question {
    * {@inheritDoc}
    */
   public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
-    if ($answers = $this->getAnswers()) {
+    if ($answers = $this->getEntity()->getAnswers()) {
       $options = [];
       foreach ($answers as $answer) {
         $options[$answer->id()] = $answer->getAnswer();

@@ -2,6 +2,7 @@
 
 namespace Drupal\quiz_maker\Entity;
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -9,6 +10,7 @@ use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface;
 use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
@@ -85,7 +87,7 @@ use Drupal\user\EntityOwnerTrait;
  *   field_ui_base_route = "entity.question_type.edit_form",
  * )
  */
-abstract class Question extends RevisionableContentEntityBase implements QuestionInterface {
+class Question extends RevisionableContentEntityBase implements QuestionInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
@@ -274,13 +276,6 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
   /**
    * {@inheritDoc}
    */
-  public function getQuestionAnswerWrapperId(): string {
-    return $this->getAnswerType() . '_' . $this->id();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public function getQuestion(): ?string {
     return $this->get('question')->value;
   }
@@ -320,27 +315,6 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
   /**
    * {@inheritDoc}
    */
-  public function getDefaultAnswersData(): array {
-    return [];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getResponseType(): ?string {
-    return $this->getBundleInfoValue('response_bundle');
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getAnswerType(): ?string {
-    return $this->getBundleInfoValue('answer_bundle');
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public function getTag(): ?TermInterface {
     if ($this->get('tag')->entity instanceof TermInterface) {
       return $this->get('tag')->entity;
@@ -372,34 +346,6 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
   /**
    * {@inheritDoc}
    */
-  public function isResponseCorrect(array $answers_ids): bool {
-    $correct_answers = $this->getCorrectAnswers();
-    $correct_answers_ids = array_map(function ($correct_answer) {
-      return $correct_answer->id();
-    }, $correct_answers);
-    return array_map('intval', $correct_answers_ids) === array_map('intval', $answers_ids);
-  }
-
-  /**
-   * Get bundle info value.
-   *
-   * @param string $value_name
-   *   The info value name.
-   *
-   * @return ?string
-   *   The value.
-   */
-  protected function getBundleInfoValue(string $value_name): ?string {
-    /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
-    $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
-    $bundles_info = $entity_type_bundle_info->getBundleInfo($this->entityTypeId);
-    $info = $bundles_info[$this->bundle()] ?? [];
-    return $info[$value_name] ?? NULL;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public function isEnabled(): bool {
     return (bool) $this->get('status')->getString();
   }
@@ -407,53 +353,45 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
   /**
    * {@inheritDoc}
    */
-  public function getResponseView(QuestionResponseInterface $response, int $mark_mode = 0): array {
-    $result = [];
-    $answers = $this->getAnswers();
-    // Return list of answers with related class.
-    foreach ($answers as $answer) {
-      if ($answer instanceof QuestionAnswerInterface) {
-        $result[$answer->id()] = [
-          '#type' => 'html_tag',
-          '#tag' => $answer->getViewHtmlTag(),
-          '#value' => $answer->getAnswer($response),
-          '#attributes' => [
-            'class' => match($mark_mode) {
-              default => [$answer->getResponseStatus($response)],
-              1 => match ($answer->getResponseStatus($response)) {
-                QuestionAnswer::CORRECT, QuestionAnswer::IN_CORRECT => ['chosen'],
-                default => [],
-              }
-            }
-          ]
-        ];
+  public function getResponseType(): ?string {
+    $question_type = $this->getEntityType();
+    if ($question_type instanceof QuestionType) {
+      return $question_type->getResponseType();
+    }
+
+    return NULL;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getAnswerType(): ?string {
+    $question_type = $this->getEntityType();
+    if ($question_type instanceof QuestionType) {
+      return $question_type->getAnswerType();
+    }
+
+    return NULL;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getInstance(): ?QuestionPluginInterface {
+    $question_type = $this->getEntityType();
+    if ($question_type instanceof QuestionType) {
+      /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
+      $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question');
+      try {
+        return $plugin_manager->createInstance($question_type->getPluginId(), ['question_id' => $this->id()]);
+      }
+      catch (PluginException $e) {
+        \Drupal::logger('quiz_maker')->error($e->getMessage());
+        return NULL;
       }
     }
-    return $result;
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  public function getResponse(array &$form, FormStateInterface $form_state): array {
-    $question_form_id = $this->getQuestionAnswerWrapperId();
-    $response = $form_state->getValue($question_form_id);
-    if ($response) {
-      return is_array($response) ? $response : [$response];
-    }
-    else {
-      return [];
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
-    $question_form_id = $this->getQuestionAnswerWrapperId();
-    if (!$form_state->getValue($question_form_id)) {
-      $form_state->setErrorByName($question_form_id, t('Choose the answer, please.'));
-    }
+    return NULL;
   }
 
 }

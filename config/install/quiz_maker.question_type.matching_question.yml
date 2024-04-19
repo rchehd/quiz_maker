@@ -6,3 +6,5 @@ _core:
 id: matching_question
 label: 'Matching question'
 plugin: matching_question
+answer_type: multiple_choice_answer
+response_type: matching_choice_response

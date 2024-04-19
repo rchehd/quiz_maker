@@ -6,3 +6,5 @@ _core:
 id: direct_question
 label: 'Direct question'
 plugin: direct_question
+answer_type: direct_answer
+response_type: direct_response

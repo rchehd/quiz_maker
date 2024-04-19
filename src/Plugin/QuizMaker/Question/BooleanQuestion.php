@@ -2,9 +2,8 @@
 
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Question;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\quiz_maker\Entity\Question;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginBase;
 use Drupal\quiz_maker\QuestionResponseInterface;
 
 /**
@@ -14,11 +13,9 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   id = "boolean_question",
  *   label = @Translation("Boolean question"),
  *   description = @Translation("Boolean question."),
- *   answer_bundle = "boolean_answer",
- *   response_bundle = "boolean_response",
  * )
  */
-class BooleanQuestion extends Question {
+class BooleanQuestion extends QuestionPluginBase {
 
   use StringTranslationTrait;
 
@@ -26,7 +23,7 @@ class BooleanQuestion extends Question {
    * {@inheritDoc}
    */
   public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
-    $answers = $this->getAnswers();
+    $answers = $this->getEntity()->getAnswers();
     if ($answers) {
       $options = [];
       foreach ($answers as $answer) {
@@ -73,9 +70,11 @@ class BooleanQuestion extends Question {
    *
    * @return bool
    *   TRUE if it is current state, otherwise FALSE.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   private function isBooleanState(bool $state): bool {
-    return $state === (bool) $this->get('field_boolean_state')->getString();
+    return $state === (bool) $this->getEntity()->get('field_boolean_state')->getString();
   }
 
 }

@@ -36,6 +36,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "label" = "label",
  *     "uuid" = "uuid",
  *     "plugin" = "plugin",
+ *     "answer_type" = "answer_type",
+ *     "response_type" = "response_type",
  *   },
  *   links = {
  *     "add-form" = "/admin/quiz-maker/structure/question_types/add",
@@ -48,6 +50,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "label",
  *     "uuid",
  *     "plugin",
+ *     "answer_type",
+ *     "response_type",
  *   },
  * )
  */
@@ -71,6 +75,20 @@ final class QuestionType extends ConfigEntityBundleBase {
   protected string $plugin;
 
   /**
+   * The plugin instance ID.
+   *
+   * @var string
+   */
+  protected string $answer_type;
+
+  /**
+   * The plugin instance ID.
+   *
+   * @var string
+   */
+  protected string $response_type;
+
+  /**
    * Get question type plugin id.
    *
    * @return ?string
@@ -78,6 +96,34 @@ final class QuestionType extends ConfigEntityBundleBase {
    */
   public function getPluginId(): ?string {
     if (($plugin_key = $this->getEntityType()->getKey('plugin')) && isset($this->{$plugin_key})) {
+      return $this->{$plugin_key};
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Get question answer type.
+   *
+   * @return ?string
+   *   The answer type.
+   */
+  public function getAnswerType(): ?string {
+    if (($plugin_key = $this->getEntityType()->getKey('answer_type')) && isset($this->{$plugin_key})) {
+      return $this->{$plugin_key};
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Get question response type.
+   *
+   * @return ?string
+   *   The response type.
+   */
+  public function getResponseType(): ?string {
+    if (($plugin_key = $this->getEntityType()->getKey('response_type')) && isset($this->{$plugin_key})) {
       return $this->{$plugin_key};
     }
 

@@ -5,6 +5,7 @@ namespace Drupal\quiz_maker\Form;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\quiz_maker\Entity\QuestionType;
 use Drupal\quiz_maker\Trait\QuizMakerPluginTrait;
@@ -22,10 +23,14 @@ class QuestionTypeForm extends BundleEntityFormBase {
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $pluginManager
    *   The plugin manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
    */
   public function __construct(
-    protected PluginManagerInterface $pluginManager
+    protected PluginManagerInterface $pluginManager,
+    EntityTypeManagerInterface $entityTypeManager
   ) {
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -33,7 +38,8 @@ class QuestionTypeForm extends BundleEntityFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.quiz_maker.question')
+      $container->get('plugin.manager.quiz_maker.question'),
+      $container->get('entity_type.manager'),
     );
   }
 
@@ -77,6 +83,24 @@ class QuestionTypeForm extends BundleEntityFormBase {
       '#required' => TRUE,
     ];
 
+    $form['answer_type'] = [
+      '#title' => $this->t('The answer type'),
+      '#type' => 'select',
+      '#options' => $this->getEntityTypes('question_answer_type'),
+      '#default_value' => $question_type->getAnswerType(),
+      '#description' => $this->t('The answer type of this question type.'),
+      '#required' => TRUE,
+    ];
+
+    $form['response_type'] = [
+      '#title' => $this->t('The response type'),
+      '#type' => 'select',
+      '#options' => $this->getEntityTypes('question_response_type'),
+      '#default_value' => $question_type->getResponseType(),
+      '#description' => $this->t('The response type of this question type.'),
+      '#required' => TRUE,
+    ];
+
     return $this->protectBundleIdElement($form);
   }
 
@@ -104,6 +128,28 @@ class QuestionTypeForm extends BundleEntityFormBase {
       }
     );
     $form_state->setRedirectUrl($this->entity->toUrl('collection'));
+
+    return $result;
+  }
+
+  /**
+   * Get option list of entity types.
+   *
+   * @param string $entity_id
+   *   The entity id.
+   *
+   * @return array
+   *   The list of entity types.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function getEntityTypes(string $entity_id): array {
+    $entity_types = $this->entityTypeManager->getStorage($entity_id)->loadMultiple();
+    $result = [];
+    foreach ($entity_types as $entity_type) {
+      $result[$entity_type->id()] = $entity_type->label();
+    }
 
     return $result;
   }
