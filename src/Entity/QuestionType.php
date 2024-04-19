@@ -35,6 +35,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid",
+ *     "plugin" = "plugin",
  *   },
  *   links = {
  *     "add-form" = "/admin/quiz-maker/structure/question_types/add",
@@ -46,6 +47,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
  *     "id",
  *     "label",
  *     "uuid",
+ *     "plugin",
  *   },
  * )
  */
@@ -60,5 +62,26 @@ final class QuestionType extends ConfigEntityBundleBase {
    * The human-readable name of the question type.
    */
   protected string $label;
+
+  /**
+   * The plugin instance ID.
+   *
+   * @var string
+   */
+  protected string $plugin;
+
+  /**
+   * Get question type plugin id.
+   *
+   * @return ?string
+   *   The plugin id.
+   */
+  public function getPluginId(): ?string {
+    if (($plugin_key = $this->getEntityType()->getKey('plugin')) && isset($this->{$plugin_key})) {
+      return $this->{$plugin_key};
+    }
+
+    return NULL;
+  }
 
 }
