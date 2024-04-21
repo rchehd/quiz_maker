@@ -4,7 +4,7 @@ namespace Drupal\quiz_maker;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
-use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\user\EntityOwnerInterface;
 
@@ -14,28 +14,67 @@ use Drupal\user\EntityOwnerInterface;
 interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
   /**
-   * Get Question plugin.
+   * Get question answer wrapper id.
    *
-   * @return ?\Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface
-   *   The plugin object.
+   * @return string
+   *   The unique question id.
    */
-  public function getInstance(): ?QuestionPluginInterface;
+  public function getQuestionAnswerWrapperId(): string;
 
   /**
-   * Get response type.
+   * Build Answering form.
    *
-   * @return ?string
-   *   The response type.
+   * Example how to build answering form:
+   * $form = [
+   *   $this->getQuestionAnswerWrapperId() => [
+   *     '#type' => 'example',
+   *     '#title' => $this->t('Example'),
+   *   ]
+   * ];
+   * Or
+   * $form['wrapper'] = [
+   *    '#type' => 'container',
+   * ]
+   *
+   * $form['wrapper']['answer_form'] = [
+   *    $this->getQuestionAnswerWrapperId() => [
+   *      '#type' => 'example',
+   *      '#title' => $this->t('Example'),
+   *    ]
+   *  ];
+   *
+   * @param \Drupal\quiz_maker\QuestionResponseInterface|null $question_response
+   *   Question response. Used for set default value for answering form.
+   * @param bool $allow_change_response
+   *   TRUE if question allow to change response, otherwise FALSE.
+   *
+   * @return array
+   *   Form array.
    */
-  public function getResponseType(): ?string;
+  public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array;
 
   /**
-   * Get answer type.
+   * Question form validation.
    *
-   * @return ?string
-   *   The answer type.
+   * @param array $form
+   *   The form elements.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
    */
-  public function getAnswerType(): ?string;
+  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void;
+
+  /**
+   * Handles form submission for the question type.
+   *
+   * @param array $form
+   *   The form elements.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return array
+   *   The question answer.
+   */
+  public function getResponse(array &$form, FormStateInterface $form_state): array;
 
   /**
    * Get question text.
@@ -70,12 +109,48 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
   public function getCorrectAnswers(): array;
 
   /**
+   * Check if response is correct.
+   *
+   * @param array $answers_ids
+   *   The response answers ids.
+   *
+   * @return bool
+   *   TRUE if correct, otherwise FALSE.
+   */
+  public function isResponseCorrect(array $answers_ids): bool;
+
+  /**
    * Get max score.
    *
    * @return int
    *   The score.
    */
   public function getMaxScore(): int;
+
+  /**
+   * Get default answers.
+   *
+   * @return array
+   *   Return array if arrays with default answer data, or empty array if there
+   *   aren't default answers.
+   */
+  public function getDefaultAnswersData(): array;
+
+  /**
+   * Get response type.
+   *
+   * @return ?string
+   *   The response type.
+   */
+  public function getResponseType(): ?string;
+
+  /**
+   * Get answer type.
+   *
+   * @return ?string
+   *   The answer type.
+   */
+  public function getAnswerType(): ?string;
 
   /**
    * Get question term.
@@ -92,5 +167,20 @@ interface QuestionInterface extends ContentEntityInterface, EntityOwnerInterface
    *   TRUE if enabled, otherwise FALSE.
    */
   public function isEnabled(): bool;
+
+  /**
+   * Get question response view on result view.
+   *
+   * @param \Drupal\quiz_maker\QuestionResponseInterface $response
+   *   The response.
+   * @param int $mark_mode
+   *   The mark mode:
+   *      - 0: 'correct/incorrect',
+   *      - 1: 'chosen/not-chosen'.
+   *
+   * @return array
+   *   The render array.
+   */
+  public function getResponseView(QuestionResponseInterface $response, int $mark_mode = 0): array;
 
 }

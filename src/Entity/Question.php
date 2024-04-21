@@ -3,6 +3,9 @@
 namespace Drupal\quiz_maker\Entity;
 
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -14,7 +17,9 @@ use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface;
 use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\Trait\EntityWithPluginTrait;
 use Drupal\taxonomy\TermInterface;
+use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -377,13 +382,66 @@ class Question extends RevisionableContentEntityBase implements QuestionInterfac
   /**
    * {@inheritDoc}
    */
-  public function getInstance(): ?QuestionPluginInterface {
+  public function getQuestionAnswerWrapperId(): string {
+    return $this->getPluginInstance()->getQuestionAnswerWrapperId();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
+    return $this->getPluginInstance()->getAnsweringForm($question_response, $allow_change_response);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
+    $this->getPluginInstance()->validateAnsweringForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponse(array &$form, FormStateInterface $form_state): array {
+    return $this->getPluginInstance()->getResponse($form, $form_state);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function isResponseCorrect(array $answers_ids): bool {
+    return $this->getPluginInstance()->isResponseCorrect($answers_ids);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getDefaultAnswersData(): array {
+    return $this->getPluginInstance()->getDefaultAnswersData();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponseView(QuestionResponseInterface $response, int $mark_mode = 0): array {
+    return $this->getPluginInstance()->getResponseView($response, $mark_mode);
+  }
+
+  /**
+   * Get question plugin instance.
+   *
+   * @return \Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface|null
+   *   The plugin instance.
+   */
+  protected function getPluginInstance(): ?QuestionPluginInterface {
     $question_type = $this->getEntityType();
     if ($question_type instanceof QuestionType) {
       /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
       $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question');
       try {
-        return $plugin_manager->createInstance($question_type->getPluginId(), ['question_id' => $this->id()]);
+        $question_instance = $plugin_manager->createInstance($question_type->getPluginId(), ['question_id' => $this->id()]);
+        return $question_instance instanceof QuestionPluginInterface ? $question_instance : NULL;
       }
       catch (PluginException $e) {
         \Drupal::logger('quiz_maker')->error($e->getMessage());
