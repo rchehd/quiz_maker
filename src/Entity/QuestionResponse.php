@@ -296,13 +296,13 @@ class QuestionResponse extends ContentEntityBase implements QuestionResponseInte
    * @return ?\Drupal\quiz_maker\Plugin\QuizMaker\QuestionResponsePluginInterface
    *   The plugin instance.
    */
-  protected function getPluginInstance(): ?QuestionResponsePluginInterface {
+  public function getPluginInstance(): ?QuestionResponsePluginInterface {
     $response_type = QuestionResponseType::load($this->bundle());
     if ($response_type instanceof QuestionResponseType) {
       /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
       $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question_response');
       try {
-        $response_instance = $plugin_manager->createInstance($response_type->getPluginId(), ['response' => $this->id()]);
+        $response_instance = $plugin_manager->createInstance($response_type->getPluginId(), ['response' => $this]);
         return $response_instance instanceof QuestionResponsePluginInterface ? $response_instance : NULL;
       }
       catch (PluginException $e) {

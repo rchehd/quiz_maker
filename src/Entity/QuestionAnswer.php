@@ -256,13 +256,13 @@ class QuestionAnswer extends ContentEntityBase implements QuestionAnswerInterfac
    * @return ?\Drupal\quiz_maker\Plugin\QuizMaker\QuestionAnswerPluginInterface
    *   The plugin instance.
    */
-  protected function getPluginInstance(): ?QuestionAnswerPluginInterface {
+  public function getPluginInstance(): ?QuestionAnswerPluginInterface {
     $answer_type = QuestionAnswerType::load($this->bundle());
     if ($answer_type instanceof QuestionAnswerType) {
       /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
       $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question_answer');
       try {
-        $answer_instance = $plugin_manager->createInstance($answer_type->getPluginId(), ['answer' => $this->id()]);
+        $answer_instance = $plugin_manager->createInstance($answer_type->getPluginId(), ['answer' => $this]);
         return $answer_instance instanceof QuestionAnswerPluginInterface ? $answer_instance : NULL;
       }
       catch (PluginException $e) {

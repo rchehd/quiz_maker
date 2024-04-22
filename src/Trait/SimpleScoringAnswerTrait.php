@@ -13,8 +13,8 @@ trait SimpleScoringAnswerTrait {
    * Implements \Drupal\quiz_maker\SimpleScoringAnswerInterface::getScore().
    */
   public function getScore(): ?int {
-    if ($this->hasField('field_score')) {
-      return $this->get('field_score')->value;
+    if ($this->entity->hasField('field_score')) {
+      return $this->entity->get('field_score')->value;
     }
     return NULL;
   }

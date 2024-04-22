@@ -396,7 +396,7 @@ class Question extends RevisionableContentEntityBase implements QuestionInterfac
    * @return \Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface|null
    *   The plugin instance.
    */
-  protected function getPluginInstance(): ?QuestionPluginInterface {
+  public function getPluginInstance(): ?QuestionPluginInterface {
     $question_type = QuestionType::load($this->bundle());
     if ($question_type instanceof QuestionType) {
       /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */

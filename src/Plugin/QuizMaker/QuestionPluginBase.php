@@ -228,7 +228,7 @@ abstract class QuestionPluginBase extends PluginBase implements QuestionPluginIn
       /** @var \Drupal\Core\Entity\EntityInterface $correct_answer */
       return $correct_answer->id();
     }, $correct_answers);
-    return array_map('intval', $correct_answers_ids) === array_map('intval', $answers_ids);
+    return array_map('intval', array_values($correct_answers_ids)) === array_map('intval', $answers_ids);
   }
 
   /**

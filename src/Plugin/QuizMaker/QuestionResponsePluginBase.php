@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class of response plugin.
  */
-abstract class QuestionResponsePluginBase extends PluginBase implements QuestionResponseInterface, ContainerFactoryPluginInterface {
+abstract class QuestionResponsePluginBase extends PluginBase implements QuestionResponsePluginInterface, ContainerFactoryPluginInterface {
 
   /**
    * The response entity.

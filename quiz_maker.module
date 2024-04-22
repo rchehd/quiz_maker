@@ -16,6 +16,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\quiz_maker\Entity\Question;
+use Drupal\quiz_maker\Entity\QuestionAnswer;
 use Drupal\quiz_maker\Entity\QuestionAnswerType;
 use Drupal\quiz_maker\Entity\QuestionType;
 use Drupal\quiz_maker\Entity\QuizResultType;
@@ -447,11 +449,9 @@ function quiz_maker_get_quiz_link(QuizInterface $quiz, string $label): array {
  */
 function quiz_maker_entity_presave(EntityInterface $entity): void {
   // Add default answers to question if it has.
-  if ($entity instanceof QuestionInterface) {
-    /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
-    $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question');
+  if ($entity instanceof Question) {
     $question_type = QuestionType::load($entity->bundle());
-    $question_instance = $plugin_manager->createInstance($question_type->getPluginId(), ['question' => $entity]);
+    $question_instance = $entity->getPluginInstance();
     if (!$question_instance->getAnswers()) {
       $bundle = $question_type->getAnswerType();
       $default_answers_data = $entity->getDefaultAnswersData();
@@ -485,11 +485,8 @@ function quiz_maker_entity_presave(EntityInterface $entity): void {
 
   }
 
-  if ($entity instanceof QuestionAnswerInterface) {
-    /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
-    $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question_answer');
-    $answer_type = QuestionAnswerType::load($entity->bundle());
-    $answer_instance = $plugin_manager->createInstance($answer_type->getPluginId(), ['answer' => $entity]);
+  if ($entity instanceof QuestionAnswer) {
+    $answer_instance = $entity->getPluginInstance();
     if ($answer_instance->isAlwaysCorrect()) {
       $answer_instance->setCorrect(TRUE);
     }

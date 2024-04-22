@@ -106,8 +106,10 @@ class MatchingAnswer extends QuestionAnswerPluginBase implements SimpleScoringAn
     if (isset($response_answers[$answer_number])) {
       $answer_id = $response_answers[$answer_number];
       foreach ($question->getAnswers() as $answer) {
-        if ($answer->id() === $answer_id) {
-          return $answer->getMatchingAnswer();
+        /** @var \Drupal\quiz_maker\Entity\QuestionAnswer $answer */
+        $answer_plugin = $answer->getPluginInstance();
+        if ($answer->id() === $answer_id && $answer_plugin instanceof MatchingAnswer) {
+          return $answer_plugin->getMatchingAnswer();
         }
       }
     }

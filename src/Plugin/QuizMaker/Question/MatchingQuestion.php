@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\quiz_maker\Entity\Question;
+use Drupal\quiz_maker\Entity\QuestionAnswerType;
 use Drupal\quiz_maker\Plugin\QuizMaker\Answer\MatchingAnswer;
 use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginBase;
 use Drupal\quiz_maker\QuestionResponseInterface;
@@ -41,21 +42,21 @@ class MatchingQuestion extends QuestionPluginBase implements SimpleScoringQuesti
 
       // To build answer form we have to set unique names to get right response
       // in form submit, because quiz could have several question of the same type.
-      $answer_form['question_table_' . $this->getEntity()->id()] = [
+      $answer_form['question_table_' . $this->entity->id()] = [
         '#type' => 'container',
         '#attributes' => [
           'class' => ['question-table']
         ]
       ];
 
-      $answer_form['answer_table_' . $this->getEntity()->id()] = [
+      $answer_form['answer_table_' . $this->entity->id()] = [
         '#type' => 'container',
         '#attributes' => [
           'class' => ['answer-table']
         ]
       ];
       // The column of questions (non-draggable).
-      $answer_form['question_table_' . $this->getEntity()->id()]['question_column_' . $this->getEntity()->id()] = $this->getMatchingTable($answers, 'getMatchingQuestion', $this->t('Question'), FALSE, FALSE);
+      $answer_form['question_table_' . $this->entity->id()]['question_column_' . $this->entity->id()] = $this->getMatchingTable($answers, 'getMatchingQuestion', $this->t('Question'), FALSE, FALSE);
 
       // The matching column of answers(draggable).
       // If question already has response - get answers from response,
@@ -73,7 +74,7 @@ class MatchingQuestion extends QuestionPluginBase implements SimpleScoringQuesti
         shuffle($answers);
       }
 
-      $answer_form['answer_table_' . $this->getEntity()->id()][$this->getQuestionAnswerWrapperId()] = $this->getMatchingTable($answers, 'getMatchingAnswer', $this->t('Answer'), $allow_change_response);
+      $answer_form['answer_table_' . $this->entity->id()][$this->getQuestionAnswerWrapperId()] = $this->getMatchingTable($answers, 'getMatchingAnswer', $this->t('Answer'), $allow_change_response);
 
       return $answer_form;
     }
@@ -138,11 +139,13 @@ class MatchingQuestion extends QuestionPluginBase implements SimpleScoringQuesti
 
     $i = 0;
     foreach ($answers as $answer) {
+      /** @var \Drupal\quiz_maker\Entity\QuestionAnswer $answer */
+      $answer_instance = $answer->getPluginInstance();
       $row = [
         'label' => [
           '#type' => 'html_tag',
           '#tag' => 'span',
-          '#value' => $answer->{$answer_function}(),
+          '#value' => $answer_instance->{$answer_function}(),
         ],
         '#attributes' => [
           'class' => ['draggable'],

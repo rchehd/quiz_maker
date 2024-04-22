@@ -12,6 +12,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\quiz_maker\Entity\QuestionType;
 use Drupal\quiz_maker\Entity\QuizResultType;
 use Drupal\quiz_maker\Event\QuizTakeEvent;
 use Drupal\quiz_maker\Event\QuizTakeEvents;
@@ -140,10 +141,12 @@ class QuizResultManager {
     }
     else {
       try {
+        /** @var \Drupal\quiz_maker\Entity\QuestionResponse $response */
         $response->setResponseData($response_data)
           ->setCorrect($question->isResponseCorrect($response_data))
-          ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
-          ->save();
+          ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data);
+        // Save response.
+        $response->save();
         // Dispatch 'Response create' event.
         $response_event = new ResponseEvent($result, $response);
         $this->eventDispatcher->dispatch($response_event, ResponseEvents::RESPONSE_UPDATE);
@@ -234,18 +237,22 @@ class QuizResultManager {
    */
   protected function createResponse(QuizResultInterface $result, QuestionInterface $question, array $response_data, string $langcode): ?QuestionResponseInterface {
     try {
-      /** @var \Drupal\quiz_maker\QuestionResponseInterface $response */
+      /** @var \Drupal\quiz_maker\Entity\Question $question */
+      $question_type = QuestionType::load($question->bundle());
+      /** @var \Drupal\quiz_maker\Entity\QuestionResponse $response */
       $response = $this->entityTypeManager->getStorage('question_response')->create([
-        'bundle' => $question->getResponseType(),
+        'bundle' => $question_type->getResponseType(),
         'label' => $this->t('Response of "@question_label"', ['@question_label' => $question->label()]),
         'langcode' => $langcode,
       ]);
+
       $response->setQuiz($result->getQuiz())
         ->setQuestion($question)
         ->setResponseData($response_data)
         ->setCorrect($question->isResponseCorrect($response_data))
-        ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data)
-        ->save();
+        ->setScore($question, $question->isResponseCorrect($response_data), $question->getMaxScore(), $response_data);
+
+      $response->save();
 
       // Dispatch 'Response create' event.
       $question_event = new ResponseEvent($result, $response);
