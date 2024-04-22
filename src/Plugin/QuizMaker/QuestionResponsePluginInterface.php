@@ -7,16 +7,16 @@ use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
 
 /**
- * The Question Plugin interface.
+ * The Question Response Plugin interface.
  */
-interface QuestionPluginInterface extends QuestionInterface {
+interface QuestionResponsePluginInterface extends QuestionResponseInterface {
 
   /**
    * Get plugin entity.
    *
-   * @return \Drupal\quiz_maker\QuestionInterface
+   * @return \Drupal\quiz_maker\QuestionResponseInterface
    *   The question.
    */
-  public function getEntity(): QuestionInterface;
+  public function getEntity(): QuestionResponseInterface;
 
 }

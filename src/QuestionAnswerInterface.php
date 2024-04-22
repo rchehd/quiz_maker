@@ -2,16 +2,10 @@
 
 namespace Drupal\quiz_maker;
 
-use Drupal\Core\Entity\ContentEntityInterface;
-use Drupal\Core\Entity\EntityChangedInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\quiz_maker\Entity\QuestionResponse;
-use Drupal\user\EntityOwnerInterface;
-
 /**
  * Provides an interface defining a question answer entity type.
  */
-interface QuestionAnswerInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
+interface QuestionAnswerInterface {
 
   /**
    * Check is answer is correct.

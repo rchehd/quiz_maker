@@ -2,7 +2,7 @@
 
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Response;
 
-use Drupal\quiz_maker\Entity\QuestionResponse;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionResponsePluginBase;
 
 /**
  * Plugin implementation of the question.
@@ -13,6 +13,6 @@ use Drupal\quiz_maker\Entity\QuestionResponse;
  *    description = @Translation("Boolean response.")
  * )
  */
-class BooleanResponse extends QuestionResponse {
+class BooleanResponse extends QuestionResponsePluginBase {
 
 }

@@ -3,6 +3,8 @@
 namespace Drupal\quiz_maker\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -11,6 +13,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
+use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -66,7 +69,7 @@ use Drupal\user\EntityOwnerTrait;
  *   field_ui_base_route = "entity.question_response_type.edit_form",
  * )
  */
-abstract class QuestionResponse extends ContentEntityBase implements QuestionResponseInterface {
+class QuestionResponse extends ContentEntityBase implements QuestionResponseInterface, ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
@@ -218,7 +221,7 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
    * {@inheritDoc}
    */
   public function getQuestion(): ?QuestionInterface {
-    /** @var \Drupal\quiz_maker\QuestionInterface $entity */
+    /** @var \Drupal\quiz_maker\Entity\Question $entity */
     $entity = $this->get('question_id')->entity;
     if ($entity->hasTranslation($this->getCurrentLanguageId())) {
       return $entity->getTranslation($this->getCurrentLanguageId());

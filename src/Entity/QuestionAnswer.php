@@ -2,13 +2,19 @@
 
 namespace Drupal\quiz_maker\Entity;
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionAnswerPluginInterface;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface;
 use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -66,7 +72,7 @@ use Drupal\user\EntityOwnerTrait;
  *   field_ui_base_route = "entity.question_answer_type.edit_form",
  * )
  */
-abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswerInterface {
+class QuestionAnswer extends ContentEntityBase implements QuestionAnswerInterface, ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
@@ -85,6 +91,21 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
    * The "Neutral" answer status.
    */
   const NEUTRAL = 'neutral';
+
+  /**
+   * The plugin instance.
+   *
+   * @var ?\Drupal\quiz_maker\Plugin\QuizMaker\QuestionAnswerPluginInterface
+   */
+  protected ?QuestionAnswerPluginInterface $instance;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = []) {
+    parent::__construct($values, $entity_type, $bundle, $translations);
+    $this->instance = $this->getPluginInstance();
+  }
 
   /**
    * {@inheritdoc}
@@ -199,42 +220,73 @@ abstract class QuestionAnswer extends ContentEntityBase implements QuestionAnswe
    * {@inheritDoc}
    */
   public function isCorrect(): bool {
-    return (bool) $this->get('is_correct')->getString();
+    return $this->instance->isCorrect();
   }
 
   /**
    * {@inheritDoc}
    */
   public function setCorrect(bool $value): void {
-    $this->set('is_correct', $value);
+    $this->instance->setCorrect($value);
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAnswer(QuestionResponseInterface $response = NULL): ?string {
-    return $this->get('answer')->value;
+    return $this->instance->getAnswer($response);
   }
 
   /**
    * {@inheritDoc}
    */
   public function isAlwaysCorrect(): bool {
-    return FALSE;
+    return $this->instance->isAlwaysCorrect();
   }
 
   /**
    * {@inheritDoc}
    */
   public function isAlwaysInCorrect(): bool {
-    return FALSE;
+    return $this->instance->isAlwaysInCorrect();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getViewHtmlTag(): string {
-    return 'li';
+    return $this->instance->getViewHtmlTag();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponseStatus(QuestionResponseInterface $response): string {
+    return $this->instance->getResponseStatus($response);
+  }
+
+  /**
+   * Get answer plugin instance.
+   *
+   * @return ?\Drupal\quiz_maker\Plugin\QuizMaker\QuestionAnswerPluginInterface
+   *   The plugin instance.
+   */
+  protected function getPluginInstance(): ?QuestionAnswerPluginInterface {
+    $answer_type = $this->getEntityType();
+    if ($answer_type instanceof QuestionAnswerType) {
+      /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
+      $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question_answer');
+      try {
+        $answer_instance = $plugin_manager->createInstance($answer_type->getPluginId(), ['answer_id' => $this->id()]);
+        return $answer_instance instanceof QuestionAnswerPluginInterface ? $answer_instance : NULL;
+      }
+      catch (PluginException $e) {
+        \Drupal::logger('quiz_maker')->error($e->getMessage());
+        return NULL;
+      }
+    }
+
+    return NULL;
   }
 
 }

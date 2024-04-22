@@ -4,6 +4,7 @@ namespace Drupal\quiz_maker\Plugin\QuizMaker\Answer;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\quiz_maker\Entity\QuestionAnswer;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionAnswerPluginBase;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\SimpleScoringAnswerInterface;
@@ -18,7 +19,7 @@ use Drupal\quiz_maker\Trait\SimpleScoringAnswerTrait;
  *   description = @Translation("Matching answer.")
  * )
  */
-class MatchingAnswer extends QuestionAnswer implements SimpleScoringAnswerInterface {
+class MatchingAnswer extends QuestionAnswerPluginBase implements SimpleScoringAnswerInterface {
 
   use SimpleScoringAnswerTrait;
 
@@ -36,7 +37,7 @@ class MatchingAnswer extends QuestionAnswer implements SimpleScoringAnswerInterf
    *   The matching question.
    */
   public function getMatchingQuestion(): string {
-    return $this->get('field_matching_question')->value;
+    return $this->entity->get('field_matching_question')->value;
   }
 
   /**
@@ -46,7 +47,7 @@ class MatchingAnswer extends QuestionAnswer implements SimpleScoringAnswerInterf
    *   The matching answer.
    */
   public function getMatchingAnswer(): string {
-    return $this->get('field_matching_answer')->value;
+    return $this->entity->get('field_matching_answer')->value;
   }
 
   /**
@@ -55,15 +56,15 @@ class MatchingAnswer extends QuestionAnswer implements SimpleScoringAnswerInterf
   public function getResponseStatus(QuestionResponseInterface $response): string {
     $responses = $response->getResponses();
     if (!$responses) {
-      return self::NEUTRAL;
+      return QuestionAnswer::NEUTRAL;
     }
-    $answer_position = array_search($this->id(), $responses);
+    $answer_position = array_search($this->entity->id(), $responses);
     $answer_original_position = $this->getAnswerOriginalWeight($response->getQuestion());
     if ($answer_position === $answer_original_position) {
-      return self::CORRECT;
+      return QuestionAnswer::CORRECT;
     }
     else {
-      return self::IN_CORRECT;
+      return QuestionAnswer::IN_CORRECT;
     }
   }
 
@@ -79,14 +80,13 @@ class MatchingAnswer extends QuestionAnswer implements SimpleScoringAnswerInterf
       $chosen_matching_answer = $this->getMatchingAnswer();
     }
 
-    $renderer = \Drupal::service('renderer');
     $string = [
       '#theme' => 'question_matching_answer',
       '#matching_question' => $matching_question,
       '#matching_answer' => $chosen_matching_answer,
     ];
 
-    return $renderer->render($string);
+    return $this->renderer->render($string);
 
   }
 
@@ -128,7 +128,7 @@ class MatchingAnswer extends QuestionAnswer implements SimpleScoringAnswerInterf
     $answer_ids = array_map(function ($answer) {
       return $answer->id();
     }, $answers);
-    return array_search($this->id(), $answer_ids);
+    return array_search($this->entity->id(), $answer_ids);
   }
 
 }

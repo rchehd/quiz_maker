@@ -92,10 +92,25 @@ use Drupal\user\EntityOwnerTrait;
  *   field_ui_base_route = "entity.question_type.edit_form",
  * )
  */
-class Question extends RevisionableContentEntityBase implements QuestionInterface {
+class Question extends RevisionableContentEntityBase implements QuestionInterface, ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
+
+  /**
+   * The plugin instance.
+   *
+   * @var \Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface|null
+   */
+  private ?QuestionPluginInterface $instance;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = []) {
+    parent::__construct($values, $entity_type, $bundle, $translations);
+    $this->instance = $this->getPluginInstance();
+  }
 
   /**
    * {@inheritdoc}
@@ -282,122 +297,84 @@ class Question extends RevisionableContentEntityBase implements QuestionInterfac
    * {@inheritDoc}
    */
   public function getQuestion(): ?string {
-    return $this->get('question')->value;
+    return $this->instance->getQuestion();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAnswers(): ?array {
-    $result = [];
-    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    $answers = $this->get('answers')->referencedEntities();
-    foreach ($answers as $answer) {
-      if ($answer->hasTranslation($langcode)) {
-        $result[] = $answer->getTranslation($langcode);
-      }
-    }
-    return $result;
+    return $this->instance->getAnswers();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getCorrectAnswers(): array {
-    $answers = $this->getAnswers();
-    return array_filter($answers, function ($answer) {
-      return $answer->isCorrect();
-    });
+    return $this->instance->getCorrectAnswers();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getMaxScore(): int {
-    return $this->get('max_score')->value;
+    return $this->instance->getMaxScore();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getTag(): ?TermInterface {
-    if ($this->get('tag')->entity instanceof TermInterface) {
-      return $this->get('tag')->entity;
-    }
-    return NULL;
+    return $this->instance->getTag();
   }
 
   /**
    * {@inheritDoc}
    */
   public function addAnswer(QuestionAnswerInterface $answer): void {
-    $answers = $this->getAnswers();
-    if ($answers) {
-      $answer_ids = array_map(function ($answer) {
-        return $answer->id();
-      }, $answers);
-    }
-    else {
-      $answer_ids = [];
-    }
-
-    if (!in_array($answer->id(), $answer_ids)) {
-      $answer_ids[] = $answer->id();
-      $this->set('answers', $answer_ids);
-    }
-
+    $this->instance->addAnswer($answer);
   }
 
   /**
    * {@inheritDoc}
    */
   public function isEnabled(): bool {
-    return (bool) $this->get('status')->getString();
+    return $this->instance->isEnabled();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getResponseType(): ?string {
-    $question_type = $this->getEntityType();
-    if ($question_type instanceof QuestionType) {
-      return $question_type->getResponseType();
-    }
-
-    return NULL;
+    return $this->instance->getResponseType();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAnswerType(): ?string {
-    $question_type = $this->getEntityType();
-    if ($question_type instanceof QuestionType) {
-      return $question_type->getAnswerType();
-    }
-
-    return NULL;
+    return $this->instance->getAnswerType();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getQuestionAnswerWrapperId(): string {
-    return $this->getPluginInstance()->getQuestionAnswerWrapperId();
+    return $this->instance->getQuestionAnswerWrapperId();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
-    return $this->getPluginInstance()->getAnsweringForm($question_response, $allow_change_response);
+    return $this->instance->getAnsweringForm($question_response, $allow_change_response);
   }
 
   /**
    * {@inheritDoc}
    */
   public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
-    $this->getPluginInstance()->validateAnsweringForm($form, $form_state);
+    $this->instance->validateAnsweringForm($form, $form_state);
   }
 
   /**
@@ -411,21 +388,21 @@ class Question extends RevisionableContentEntityBase implements QuestionInterfac
    * {@inheritDoc}
    */
   public function isResponseCorrect(array $answers_ids): bool {
-    return $this->getPluginInstance()->isResponseCorrect($answers_ids);
+    return $this->instance->isResponseCorrect($answers_ids);
   }
 
   /**
    * {@inheritDoc}
    */
   public function getDefaultAnswersData(): array {
-    return $this->getPluginInstance()->getDefaultAnswersData();
+    return $this->instance->getDefaultAnswersData();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getResponseView(QuestionResponseInterface $response, int $mark_mode = 0): array {
-    return $this->getPluginInstance()->getResponseView($response, $mark_mode);
+    return $this->instance->getResponseView($response, $mark_mode);
   }
 
   /**

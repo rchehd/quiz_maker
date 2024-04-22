@@ -9,7 +9,7 @@ use Drupal\user\EntityOwnerInterface;
 /**
  * Provides an interface defining a question response entity type.
  */
-interface QuestionResponseInterface extends ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
+interface QuestionResponseInterface {
 
   /**
    * Get question.
