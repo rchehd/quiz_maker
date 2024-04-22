@@ -2,8 +2,9 @@
 
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Answer;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\quiz_maker\Entity\QuestionAnswer;
+use Drupal\quiz_maker\Entity\QuestionResponse;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionAnswerPluginBase;
 use Drupal\quiz_maker\Plugin\QuizMaker\Response\DirectResponse;
 use Drupal\quiz_maker\QuestionResponseInterface;
 
@@ -16,14 +17,14 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *   description = @Translation("Direct answer.")
  * )
  */
-class DirectAnswer extends QuestionAnswer {
+class DirectAnswer extends QuestionAnswerPluginBase {
 
   /**
    * {@inheritDoc}
    */
   public function getAnswer(QuestionResponseInterface $response = NULL): ?string {
-    if ($response instanceof DirectResponse) {
-      return $response->getUserResponse() ?? t('Empty answer');
+    if ($response instanceof QuestionResponse && $response->getPluginInstance() instanceof DirectResponse) {
+      return $response->getPluginInstance()->getUserResponse() ?? t('Empty answer');
     }
     return parent::getAnswer();
   }
@@ -33,14 +34,14 @@ class DirectAnswer extends QuestionAnswer {
    */
   public function getResponseStatus(QuestionResponseInterface $response): string {
     if (!$response->getResponses()) {
-      return self::NEUTRAL;
+      return QuestionAnswer::NEUTRAL;
     }
     $question = $response->getQuestion();
     if ($question->isResponseCorrect($response->getResponses())) {
-      return self::CORRECT;
+      return QuestionAnswer::CORRECT;
     }
     else {
-      return self::IN_CORRECT;
+      return QuestionAnswer::IN_CORRECT;
     }
   }
 

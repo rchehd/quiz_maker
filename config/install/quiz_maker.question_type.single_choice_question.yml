@@ -5,3 +5,6 @@ _core:
   default_config_hash: 0BSFQcD2s-KeR945oXulfK93SJXq13Jg4deoDeh_KGk
 id: single_choice_question
 label: 'Single choice question'
+plugin: single_choice_question
+answer_type: single_choice_answer
+response_type: single_choice_response

@@ -5,3 +5,6 @@ _core:
   default_config_hash: E79XVOOGDIZLtZx4LwuWXlE28vxWxYcYZ5SJlGvjwrk
 id: boolean_question
 label: 'Boolean question'
+plugin: boolean_question
+answer_type: boolean_answer
+response_type: boolean_response

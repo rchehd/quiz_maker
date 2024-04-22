@@ -9,8 +9,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\quiz_maker\Entity\QuestionAnswer;
-use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\taxonomy\TermInterface;
@@ -43,7 +41,7 @@ class QuizHelper {
    * Get question result.
    *
    * @param \Drupal\quiz_maker\QuestionInterface $question
-   *   The question.
+   *   The question plugin instance.
    * @param \Drupal\quiz_maker\QuestionResponseInterface $response
    *   The response.
    * @param int $mark_mode

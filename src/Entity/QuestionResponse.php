@@ -2,15 +2,21 @@
 
 namespace Drupal\quiz_maker\Entity;
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionAnswerPluginInterface;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionResponsePluginInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
 use Drupal\quiz_maker\QuizInterface;
+use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -66,7 +72,7 @@ use Drupal\user\EntityOwnerTrait;
  *   field_ui_base_route = "entity.question_response_type.edit_form",
  * )
  */
-abstract class QuestionResponse extends ContentEntityBase implements QuestionResponseInterface {
+class QuestionResponse extends ContentEntityBase implements QuestionResponseInterface, ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
@@ -218,115 +224,94 @@ abstract class QuestionResponse extends ContentEntityBase implements QuestionRes
    * {@inheritDoc}
    */
   public function getQuestion(): ?QuestionInterface {
-    /** @var \Drupal\quiz_maker\QuestionInterface $entity */
-    $entity = $this->get('question_id')->entity;
-    if ($entity->hasTranslation($this->getCurrentLanguageId())) {
-      return $entity->getTranslation($this->getCurrentLanguageId());
-    }
-    return $entity;
+    return $this->getPluginInstance()->getQuestion();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getQuiz(): ?QuizInterface {
-    /** @var \Drupal\quiz_maker\QuizInterface $entity */
-    $entity = $this->get('quiz_id')->entity;
-    if ($entity->hasTranslation($this->getCurrentLanguageId())) {
-      return $entity->getTranslation($this->getCurrentLanguageId());
-    }
-    return $entity;
+    return $this->getPluginInstance()->getQuiz();
   }
 
   /**
    * {@inheritDoc}
    */
   public function isCorrect(): bool {
-    return $this->get('is_correct')->value;
+    return $this->getPluginInstance()->isCorrect();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getScore(): float {
-    return $this->get('score')->value;
+    return $this->getPluginInstance()->getScore();
   }
 
   /**
    * {@inheritDoc}
    */
   public function setResponseData(array $data): QuestionResponseInterface {
-    $this->set('responses', $data);
-    return $this;
+    return $this->getPluginInstance()->setResponseData($data);
   }
 
   /**
    * {@inheritDoc}
    */
   public function setCorrect(bool $value): QuestionResponseInterface {
-    $this->set('is_correct', $value);
-    return $this;
+    return $this->getPluginInstance()->setCorrect($value);
   }
 
   /**
    * {@inheritDoc}
    */
   public function setQuiz(QuizInterface $quiz): QuestionResponseInterface {
-    $this->set('quiz_id', $quiz);
-    return $this;
+    return $this->getPluginInstance()->setQuiz($quiz);
   }
 
   /**
    * {@inheritDoc}
    */
   public function setQuestion(QuestionInterface $question): QuestionResponseInterface {
-    $this->set('question_id', $question);
-    return $this;
+    return $this->getPluginInstance()->setQuestion($question);
   }
 
   /**
    * {@inheritDoc}
    */
   public function setScore(QuestionInterface $question, bool $value, float $score = NULL, array $response_data = []): QuestionResponseInterface {
-    if ($value) {
-      $this->set('score', $score ?? $question->getMaxScore());
-    }
-    else {
-      $this->set('score', 0);
-    }
-
-    return $this;
+    return $this->getPluginInstance()->setScore($question, $value, $score, $response_data);
   }
 
   /**
    * {@inheritDoc}
    */
   public function getResponses(): array {
-    $result = [];
-    $langcode = $this->getCurrentLanguageId();
-    $responses = $this->get('responses')->referencedEntities();
-    foreach ($responses as $response) {
-      if ($response->hasTranslation($langcode)) {
-        $result[] = $response->getTranslation($langcode);
-      }
-    }
-    if ($result) {
-      return array_map(function ($result) {
-        return $result->id();
-      }, $result);
-    }
-
-    return [];
+    return $this->getPluginInstance()->getResponses();
   }
 
   /**
-   * Get current language id.
+   * Get response plugin instance.
    *
-   * @return string
-   *   Lang id.
+   * @return ?\Drupal\quiz_maker\Plugin\QuizMaker\QuestionResponsePluginInterface
+   *   The plugin instance.
    */
-  protected function getCurrentLanguageId(): string {
-    return \Drupal::languageManager()->getCurrentLanguage()->getId();
+  public function getPluginInstance(): ?QuestionResponsePluginInterface {
+    $response_type = QuestionResponseType::load($this->bundle());
+    if ($response_type instanceof QuestionResponseType) {
+      /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
+      $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question_response');
+      try {
+        $response_instance = $plugin_manager->createInstance($response_type->getPluginId(), ['response' => $this]);
+        return $response_instance instanceof QuestionResponsePluginInterface ? $response_instance : NULL;
+      }
+      catch (PluginException $e) {
+        \Drupal::logger('quiz_maker')->error($e->getMessage());
+        return NULL;
+      }
+    }
+
+    return NULL;
   }
 
 }

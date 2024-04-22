@@ -5,3 +5,6 @@ _core:
   default_config_hash: H33yqL6u9KuiGKdtpZqb8zw0vX9yvFjC3wiN18gj9-A
 id: direct_question
 label: 'Direct question'
+plugin: direct_question
+answer_type: direct_answer
+response_type: direct_response

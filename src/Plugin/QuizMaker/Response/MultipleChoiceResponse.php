@@ -2,7 +2,7 @@
 
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Response;
 
-use Drupal\quiz_maker\Entity\QuestionResponse;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionResponsePluginBase;
 use Drupal\quiz_maker\SimpleScoringResponseInterface;
 use Drupal\quiz_maker\Trait\SimpleScoringResponseTrait;
 
@@ -15,7 +15,7 @@ use Drupal\quiz_maker\Trait\SimpleScoringResponseTrait;
  *    description = @Translation("Multiple choice response.")
  * )
  */
-class MultipleChoiceResponse extends QuestionResponse implements SimpleScoringResponseInterface {
+class MultipleChoiceResponse extends QuestionResponsePluginBase implements SimpleScoringResponseInterface {
 
   use SimpleScoringResponseTrait;
 

@@ -69,16 +69,16 @@ use Drupal\user\EntityOwnerTrait;
  *   },
  *   links = {
  *     "collection" = "/admin/quiz-maker/quizzes",
- *     "add-form" = "/quiz/add/{quiz_type}",
- *     "add-page" = "/quiz/add",
+ *     "add-form" = "/admin/quiz_maker/quiz/add/{quiz_type}",
+ *     "add-page" = "/admin/quiz_maker/quiz/add",
  *     "canonical" = "/quiz/{quiz}",
- *     "edit-form" = "/quiz/{quiz}/edit",
- *     "delete-form" = "/quiz/{quiz}/delete",
+ *     "edit-form" = "/admin/quiz_maker/quiz/{quiz}/edit",
+ *     "delete-form" = "/admin/quiz_maker/quiz/{quiz}/delete",
  *     "delete-multiple-form" = "/admin/quiz-maker/quizzes/delete-multiple",
- *     "version-history" = "/quiz/{quiz}/revisions",
- *     "revision" = "/quiz/{quiz}/revision/{quiz_revision}/view",
- *     "revision-delete-form" = "/quiz/{quiz}/revision/{quiz_revision}/delete",
- *     "revision-revert-form" = "/quiz/{quiz}/revision/{quiz_revision}/revert",
+ *     "version-history" = "/admin/quiz_maker/quiz/{quiz}/revisions",
+ *     "revision" = "/admin/quiz_maker/quiz/{quiz}/revision/{quiz_revision}/view",
+ *     "revision-delete-form" = "/admin/quiz_maker/quiz/{quiz}/revision/{quiz_revision}/delete",
+ *     "revision-revert-form" = "/admin/quiz_maker/quiz/{quiz}/revision/{quiz_revision}/revert",
  *   },
  *   bundle_entity_type = "quiz_type",
  *   field_ui_base_route = "entity.quiz_type.edit_form",
@@ -412,7 +412,7 @@ class Quiz extends RevisionableContentEntityBase implements QuizInterface {
     $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     $questions = $this->get('questions')->referencedEntities();
     foreach ($questions as $question) {
-      /** @var \Drupal\quiz_maker\QuestionInterface $question */
+      /** @var \Drupal\quiz_maker\Entity\Question $question */
       if ($question->hasTranslation($langcode) && $question->isEnabled()) {
         $result[] = $question->getTranslation($langcode);
       }

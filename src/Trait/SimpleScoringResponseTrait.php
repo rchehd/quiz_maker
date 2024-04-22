@@ -23,15 +23,18 @@ trait SimpleScoringResponseTrait {
     if (!$is_simple_score && $response_data) {
       $answers = $question->getCorrectAnswers();
       $answer_ids = array_map(function ($answer) {
+        /** @var \Drupal\quiz_maker\Entity\QuestionAnswer $answer */
         return (int) $answer->id();
       }, $answers);
       $total_score = 0;
       $max_score = 0;
       // Add score for avery guessed matching.
       for ($i = 0; $i < count($answers); $i++) {
-        $max_score += $answers[$i]->getScore();
-        if (isset($response_data[$i]) && $this->isResponseCorrect($response_data[$i], $answers[$i]->id(), $response_data, $answer_ids)) {
-          $total_score += $answers[$i]->getScore();
+        /** @var \Drupal\quiz_maker\Entity\QuestionAnswer $answer */
+        $answer = $answers[$i];
+        $max_score += $answer->getPluginInstance()->getScore();
+        if (isset($response_data[$i]) && $this->isResponseCorrect($response_data[$i], $answer->id(), $response_data, $answer_ids)) {
+          $total_score += $answer->getPluginInstance()->getScore();
         }
       }
       // Calculate the fraction from the question max score.

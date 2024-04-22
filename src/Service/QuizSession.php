@@ -161,7 +161,8 @@ class QuizSession {
    */
   public function finishSession(QuizInterface $quiz, array $response_data): bool {
     if ($response_data) {
-      $this->quizResultManager->updateQuizResult($this->getQuizResult($quiz), $this->getCurrentQuestion($quiz), $response_data, $this->langcode);
+      $question = $this->getCurrentQuestion($quiz);
+      $this->quizResultManager->updateQuizResult($this->getQuizResult($quiz), $question, $response_data, $this->langcode);
     }
     $this->quizResultManager->completeQuizResult($this->getQuizResult($quiz), $this->langcode);
     // Delete session for quiz.
@@ -278,7 +279,8 @@ class QuizSession {
    *   The new question number.
    */
   public function incrementQuestionNumber(QuizInterface $quiz, array $response_data): int {
-    $this->quizResultManager->updateQuizResult($this->getQuizResult($quiz), $this->getCurrentQuestion($quiz), $response_data, $this->langcode);
+    $question = $this->getCurrentQuestion($quiz);
+    $this->quizResultManager->updateQuizResult($this->getQuizResult($quiz), $question, $response_data, $this->langcode);
     $question_number = $this->getCurrentQuestionNumber($quiz);
     $question_number++;
     $this->updateSessionData($quiz, self::CURRENT_QUESTION_NUMBER, $question_number);

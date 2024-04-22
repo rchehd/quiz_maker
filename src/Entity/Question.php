@@ -2,6 +2,10 @@
 
 namespace Drupal\quiz_maker\Entity;
 
+use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -9,10 +13,13 @@ use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface;
 use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
 use Drupal\quiz_maker\QuestionResponseInterface;
+use Drupal\quiz_maker\Trait\EntityWithPluginTrait;
 use Drupal\taxonomy\TermInterface;
+use Drupal\user\EntityOwnerInterface;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -85,7 +92,7 @@ use Drupal\user\EntityOwnerTrait;
  *   field_ui_base_route = "entity.question_type.edit_form",
  * )
  */
-abstract class Question extends RevisionableContentEntityBase implements QuestionInterface {
+class Question extends RevisionableContentEntityBase implements QuestionInterface, ContentEntityInterface, EntityOwnerInterface, EntityChangedInterface {
 
   use EntityChangedTrait;
   use EntityOwnerTrait;
@@ -274,186 +281,137 @@ abstract class Question extends RevisionableContentEntityBase implements Questio
   /**
    * {@inheritDoc}
    */
-  public function getQuestionAnswerWrapperId(): string {
-    return $this->getAnswerType() . '_' . $this->id();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public function getQuestion(): ?string {
-    return $this->get('question')->value;
+    return $this->getPluginInstance()->getQuestion();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAnswers(): ?array {
-    $result = [];
-    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    $answers = $this->get('answers')->referencedEntities();
-    foreach ($answers as $answer) {
-      if ($answer->hasTranslation($langcode)) {
-        $result[] = $answer->getTranslation($langcode);
-      }
-    }
-    return $result;
+    return $this->getPluginInstance()->getAnswers();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getCorrectAnswers(): array {
-    $answers = $this->getAnswers();
-    return array_filter($answers, function ($answer) {
-      return $answer->isCorrect();
-    });
+    return $this->getPluginInstance()->getCorrectAnswers();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getMaxScore(): int {
-    return $this->get('max_score')->value;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getDefaultAnswersData(): array {
-    return [];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getResponseType(): ?string {
-    return $this->getBundleInfoValue('response_bundle');
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function getAnswerType(): ?string {
-    return $this->getBundleInfoValue('answer_bundle');
+    return $this->getPluginInstance()->getMaxScore();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getTag(): ?TermInterface {
-    if ($this->get('tag')->entity instanceof TermInterface) {
-      return $this->get('tag')->entity;
-    }
-    return NULL;
+    return $this->getPluginInstance()->getTag();
   }
 
   /**
    * {@inheritDoc}
    */
   public function addAnswer(QuestionAnswerInterface $answer): void {
-    $answers = $this->getAnswers();
-    if ($answers) {
-      $answer_ids = array_map(function ($answer) {
-        return $answer->id();
-      }, $answers);
-    }
-    else {
-      $answer_ids = [];
-    }
-
-    if (!in_array($answer->id(), $answer_ids)) {
-      $answer_ids[] = $answer->id();
-      $this->set('answers', $answer_ids);
-    }
-
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public function isResponseCorrect(array $answers_ids): bool {
-    $correct_answers = $this->getCorrectAnswers();
-    $correct_answers_ids = array_map(function ($correct_answer) {
-      return $correct_answer->id();
-    }, $correct_answers);
-    return array_map('intval', $correct_answers_ids) === array_map('intval', $answers_ids);
-  }
-
-  /**
-   * Get bundle info value.
-   *
-   * @param string $value_name
-   *   The info value name.
-   *
-   * @return ?string
-   *   The value.
-   */
-  protected function getBundleInfoValue(string $value_name): ?string {
-    /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
-    $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
-    $bundles_info = $entity_type_bundle_info->getBundleInfo($this->entityTypeId);
-    $info = $bundles_info[$this->bundle()] ?? [];
-    return $info[$value_name] ?? NULL;
+    $this->getPluginInstance()->addAnswer($answer);
   }
 
   /**
    * {@inheritDoc}
    */
   public function isEnabled(): bool {
-    return (bool) $this->get('status')->getString();
+    return $this->getPluginInstance()->isEnabled();
   }
 
   /**
    * {@inheritDoc}
    */
-  public function getResponseView(QuestionResponseInterface $response, int $mark_mode = 0): array {
-    $result = [];
-    $answers = $this->getAnswers();
-    // Return list of answers with related class.
-    foreach ($answers as $answer) {
-      if ($answer instanceof QuestionAnswerInterface) {
-        $result[$answer->id()] = [
-          '#type' => 'html_tag',
-          '#tag' => $answer->getViewHtmlTag(),
-          '#value' => $answer->getAnswer($response),
-          '#attributes' => [
-            'class' => match($mark_mode) {
-              default => [$answer->getResponseStatus($response)],
-              1 => match ($answer->getResponseStatus($response)) {
-                QuestionAnswer::CORRECT, QuestionAnswer::IN_CORRECT => ['chosen'],
-                default => [],
-              }
-            }
-          ]
-        ];
-      }
-    }
-    return $result;
+  public function getResponseType(): ?string {
+    return $this->getPluginInstance()->getResponseType();
   }
 
   /**
    * {@inheritDoc}
    */
-  public function getResponse(array &$form, FormStateInterface $form_state): array {
-    $question_form_id = $this->getQuestionAnswerWrapperId();
-    $response = $form_state->getValue($question_form_id);
-    if ($response) {
-      return is_array($response) ? $response : [$response];
-    }
-    else {
-      return [];
-    }
+  public function getAnswerType(): ?string {
+    return $this->getPluginInstance()->getAnswerType();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getQuestionAnswerWrapperId(): string {
+    return $this->getPluginInstance()->getQuestionAnswerWrapperId();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
+    return $this->getPluginInstance()->getAnsweringForm($question_response, $allow_change_response);
   }
 
   /**
    * {@inheritDoc}
    */
   public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
-    $question_form_id = $this->getQuestionAnswerWrapperId();
-    if (!$form_state->getValue($question_form_id)) {
-      $form_state->setErrorByName($question_form_id, t('Choose the answer, please.'));
+    $this->getPluginInstance()->validateAnsweringForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponse(array &$form, FormStateInterface $form_state): array {
+    return $this->getPluginInstance()->getResponse($form, $form_state);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function isResponseCorrect(array $answers_ids): bool {
+    return $this->getPluginInstance()->isResponseCorrect($answers_ids);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getDefaultAnswersData(): array {
+    return $this->getPluginInstance()->getDefaultAnswersData();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getResponseView(QuestionResponseInterface $response, int $mark_mode = 0): array {
+    return $this->getPluginInstance()->getResponseView($response, $mark_mode);
+  }
+
+  /**
+   * Get question plugin instance.
+   *
+   * @return \Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface|null
+   *   The plugin instance.
+   */
+  public function getPluginInstance(): ?QuestionPluginInterface {
+    $question_type = QuestionType::load($this->bundle());
+    if ($question_type instanceof QuestionType) {
+      /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
+      $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question');
+      try {
+        $question_instance = $plugin_manager->createInstance($question_type->getPluginId(), ['question' => $this]);
+        return $question_instance instanceof QuestionPluginInterface ? $question_instance : NULL;
+      }
+      catch (PluginException $e) {
+        \Drupal::logger('quiz_maker')->error($e->getMessage());
+        return NULL;
+      }
     }
+
+    return NULL;
   }
 
 }

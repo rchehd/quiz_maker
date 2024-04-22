@@ -59,11 +59,11 @@ use Drupal\user\EntityOwnerTrait;
  *   },
  *   links = {
  *     "collection" = "/admin/content/quiz-result",
- *     "add-form" = "/quiz-result/add/{quiz_result_type}",
- *     "add-page" = "/quiz-result/add",
+ *     "add-form" = "/admin/quiz_maker/quiz-result/add/{quiz_result_type}",
+ *     "add-page" = "/admin/quiz_maker/quiz-result/add",
  *     "canonical" = "/quiz-result/{quiz_result}",
- *     "edit-form" = "/quiz-result/{quiz_result}/edit",
- *     "delete-form" = "/quiz-result/{quiz_result}/delete",
+ *     "edit-form" = "/admin/quiz_maker/quiz-result/{quiz_result}/edit",
+ *     "delete-form" = "/admin/quiz_maker/quiz-result/{quiz_result}/delete",
  *     "delete-multiple-form" = "/admin/content/quiz-result/delete-multiple",
  *   },
  *   bundle_entity_type = "quiz_result_type",
@@ -340,6 +340,7 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
    * {@inheritDoc}
    */
   public function getResponse(QuestionInterface $question): ?QuestionResponseInterface {
+    /** @var \Drupal\quiz_maker\Entity\Question $question */
     if ($this->hasField('responses')) {
       $responses = $this->get('responses')->referencedEntities();
       foreach ($responses as $response) {
@@ -361,7 +362,9 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
   public function getActiveQuestion(array $questions): ?QuestionInterface {
     $responses = $this->getResponses();
     $answered_question_ids = array_map(function ($responses) {
-      return $responses->getQuestion()->id();
+      /** @var \Drupal\quiz_maker\Entity\Question $question */
+      $question = $responses->getQuestion();
+      return $question->id();
     }, $responses);
     if (!$responses) {
       return reset($questions);
@@ -418,10 +421,12 @@ class QuizResult extends ContentEntityBase implements QuizResultInterface {
    * {@inheritDoc}
    */
   public function addResponse(QuestionResponseInterface $response): QuizResultInterface {
+    /** @var \Drupal\quiz_maker\Entity\QuestionResponse $response */
     $responses = $this->getResponses();
     if ($responses) {
-      $response_ids = array_map(function ($responses) {
-        return $responses->id();
+      $response_ids = array_map(function ($response) {
+        /** @var \Drupal\quiz_maker\Entity\QuestionResponse $response */
+        return $response->id();
       }, $responses);
     }
     else {

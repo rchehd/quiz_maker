@@ -5,3 +5,6 @@ _core:
   default_config_hash: XShfQfv0Y6OR0RjgehmrTV4kw_Cg3_0hp_8jJV32s4Q
 id: multiple_choice_question
 label: 'Multiple choice question'
+plugin: multiple_choice_question
+answer_type: multiple_choice_answer
+response_type: multiple_choice_response

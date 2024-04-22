@@ -77,6 +77,7 @@ class QuizResultReviewForm extends FormBase {
 
       $responses = $quiz_result->getResponses();
       foreach ($responses as $response) {
+        /** @var \Drupal\quiz_maker\Entity\Question $question */
         $question = $response->getQuestion();
 
         $form[$question->id()] = [
@@ -204,15 +205,17 @@ class QuizResultReviewForm extends FormBase {
     $responses = $this->quizResult->getResponses();
     // Update all responses.
     foreach ($responses as $response) {
-      /** @var \Drupal\quiz_maker\QuestionResponseInterface $response */
+      /** @var \Drupal\quiz_maker\Entity\Question $question */
       $question = $response->getQuestion();
       $is_correct = $form_state->getValue($question->id() . '_is_correct');
       $score = $form_state->getValue($question->id() . '_score');
       try {
+        /** @var \Drupal\quiz_maker\Entity\QuestionResponse $response */
         $response
           ->setCorrect($is_correct)
-          ->setScore($question, $is_correct, $score)
-          ->save();
+          ->setScore($question, $is_correct, $score);
+
+        $response->save();
       }
       catch (EntityStorageException $e) {
         $this->logger->error($e->getMessage());

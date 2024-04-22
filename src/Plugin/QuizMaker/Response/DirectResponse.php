@@ -2,7 +2,7 @@
 
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Response;
 
-use Drupal\quiz_maker\Entity\QuestionResponse;
+use Drupal\quiz_maker\Plugin\QuizMaker\QuestionResponsePluginBase;
 use Drupal\quiz_maker\QuestionResponseInterface;
 
 /**
@@ -14,13 +14,13 @@ use Drupal\quiz_maker\QuestionResponseInterface;
  *    description = @Translation("Direct response.")
  * )
  */
-class DirectResponse extends QuestionResponse {
+class DirectResponse extends QuestionResponsePluginBase {
 
   /**
    * {@inheritDoc}
    */
   public function setResponseData(array $data): QuestionResponseInterface {
-    $this->set('field_user_response', reset($data));
+    $this->entity->set('field_user_response', reset($data));
     return $this;
   }
 
@@ -39,7 +39,7 @@ class DirectResponse extends QuestionResponse {
    *   The response.
    */
   public function getUserResponse(): ?string {
-    return $this->get('field_user_response')->value;
+    return $this->entity->get('field_user_response')->value;
   }
 
 }

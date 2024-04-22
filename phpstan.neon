@@ -17,3 +17,4 @@ parameters:
         - '#Class PHPUnit\\Framework\\TestCase not found#'
         - '#Reflection error: PHPUnit\\Framework\\TestCase not found#'
     reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false

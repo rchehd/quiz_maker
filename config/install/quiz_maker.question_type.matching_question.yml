@@ -5,3 +5,6 @@ _core:
   default_config_hash: yQ5GP0rW56pVKp766Y2VQ4S9FKdAr8dv_aYlmtWc-WE
 id: matching_question
 label: 'Matching question'
+plugin: matching_question
+answer_type: multiple_choice_answer
+response_type: matching_choice_response

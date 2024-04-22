@@ -5,10 +5,28 @@
  * Install, update and uninstall functions for the Quiz Maker module.
  */
 
+use Drupal\taxonomy\Entity\Vocabulary;
+
 /**
  * Implements hook_install().
  */
 function quiz_maker_install($is_syncing): void {
   // Rebuild routes after view config importing, because menus are based on view routes.
   \Drupal::service('router.builder')->rebuild();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function quiz_maker_uninstall($is_syncing) {
+  // Delete all terms and vocabulary related to this module.
+  $vid = 'questions_tags';
+  $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['vid' => $vid]);
+
+  foreach ($terms as $term) {
+    $term->delete();
+  }
+
+  $vocabulary = Vocabulary::load($vid);
+  $vocabulary->delete();
 }
