@@ -93,21 +93,6 @@ class QuestionAnswer extends ContentEntityBase implements QuestionAnswerInterfac
   const NEUTRAL = 'neutral';
 
   /**
-   * The plugin instance.
-   *
-   * @var ?\Drupal\quiz_maker\Plugin\QuizMaker\QuestionAnswerPluginInterface
-   */
-  protected ?QuestionAnswerPluginInterface $instance;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = []) {
-    parent::__construct($values, $entity_type, $bundle, $translations);
-    $this->instance = $this->getPluginInstance();
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage): void {
@@ -220,49 +205,49 @@ class QuestionAnswer extends ContentEntityBase implements QuestionAnswerInterfac
    * {@inheritDoc}
    */
   public function isCorrect(): bool {
-    return $this->instance->isCorrect();
+    return $this->getPluginInstance()->isCorrect();
   }
 
   /**
    * {@inheritDoc}
    */
   public function setCorrect(bool $value): void {
-    $this->instance->setCorrect($value);
+    $this->getPluginInstance()->setCorrect($value);
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAnswer(QuestionResponseInterface $response = NULL): ?string {
-    return $this->instance->getAnswer($response);
+    return $this->getPluginInstance()->getAnswer($response);
   }
 
   /**
    * {@inheritDoc}
    */
   public function isAlwaysCorrect(): bool {
-    return $this->instance->isAlwaysCorrect();
+    return $this->getPluginInstance()->isAlwaysCorrect();
   }
 
   /**
    * {@inheritDoc}
    */
   public function isAlwaysInCorrect(): bool {
-    return $this->instance->isAlwaysInCorrect();
+    return $this->getPluginInstance()->isAlwaysInCorrect();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getViewHtmlTag(): string {
-    return $this->instance->getViewHtmlTag();
+    return $this->getPluginInstance()->getViewHtmlTag();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getResponseStatus(QuestionResponseInterface $response): string {
-    return $this->instance->getResponseStatus($response);
+    return $this->getPluginInstance()->getResponseStatus($response);
   }
 
   /**
@@ -272,12 +257,12 @@ class QuestionAnswer extends ContentEntityBase implements QuestionAnswerInterfac
    *   The plugin instance.
    */
   protected function getPluginInstance(): ?QuestionAnswerPluginInterface {
-    $answer_type = $this->getEntityType();
+    $answer_type = QuestionAnswerType::load($this->bundle());
     if ($answer_type instanceof QuestionAnswerType) {
       /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
       $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question_answer');
       try {
-        $answer_instance = $plugin_manager->createInstance($answer_type->getPluginId(), ['answer_id' => $this->id()]);
+        $answer_instance = $plugin_manager->createInstance($answer_type->getPluginId(), ['answer' => $this->id()]);
         return $answer_instance instanceof QuestionAnswerPluginInterface ? $answer_instance : NULL;
       }
       catch (PluginException $e) {

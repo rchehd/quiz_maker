@@ -98,21 +98,6 @@ class Question extends RevisionableContentEntityBase implements QuestionInterfac
   use EntityOwnerTrait;
 
   /**
-   * The plugin instance.
-   *
-   * @var \Drupal\quiz_maker\Plugin\QuizMaker\QuestionPluginInterface|null
-   */
-  private ?QuestionPluginInterface $instance;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = []) {
-    parent::__construct($values, $entity_type, $bundle, $translations);
-    $this->instance = $this->getPluginInstance();
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage): void {
@@ -297,84 +282,84 @@ class Question extends RevisionableContentEntityBase implements QuestionInterfac
    * {@inheritDoc}
    */
   public function getQuestion(): ?string {
-    return $this->instance->getQuestion();
+    return $this->getPluginInstance()->getQuestion();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAnswers(): ?array {
-    return $this->instance->getAnswers();
+    return $this->getPluginInstance()->getAnswers();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getCorrectAnswers(): array {
-    return $this->instance->getCorrectAnswers();
+    return $this->getPluginInstance()->getCorrectAnswers();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getMaxScore(): int {
-    return $this->instance->getMaxScore();
+    return $this->getPluginInstance()->getMaxScore();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getTag(): ?TermInterface {
-    return $this->instance->getTag();
+    return $this->getPluginInstance()->getTag();
   }
 
   /**
    * {@inheritDoc}
    */
   public function addAnswer(QuestionAnswerInterface $answer): void {
-    $this->instance->addAnswer($answer);
+    $this->getPluginInstance()->addAnswer($answer);
   }
 
   /**
    * {@inheritDoc}
    */
   public function isEnabled(): bool {
-    return $this->instance->isEnabled();
+    return $this->getPluginInstance()->isEnabled();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getResponseType(): ?string {
-    return $this->instance->getResponseType();
+    return $this->getPluginInstance()->getResponseType();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAnswerType(): ?string {
-    return $this->instance->getAnswerType();
+    return $this->getPluginInstance()->getAnswerType();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getQuestionAnswerWrapperId(): string {
-    return $this->instance->getQuestionAnswerWrapperId();
+    return $this->getPluginInstance()->getQuestionAnswerWrapperId();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getAnsweringForm(QuestionResponseInterface $question_response = NULL, bool $allow_change_response = TRUE): array {
-    return $this->instance->getAnsweringForm($question_response, $allow_change_response);
+    return $this->getPluginInstance()->getAnsweringForm($question_response, $allow_change_response);
   }
 
   /**
    * {@inheritDoc}
    */
   public function validateAnsweringForm(array &$form, FormStateInterface $form_state): void {
-    $this->instance->validateAnsweringForm($form, $form_state);
+    $this->getPluginInstance()->validateAnsweringForm($form, $form_state);
   }
 
   /**
@@ -388,21 +373,21 @@ class Question extends RevisionableContentEntityBase implements QuestionInterfac
    * {@inheritDoc}
    */
   public function isResponseCorrect(array $answers_ids): bool {
-    return $this->instance->isResponseCorrect($answers_ids);
+    return $this->getPluginInstance()->isResponseCorrect($answers_ids);
   }
 
   /**
    * {@inheritDoc}
    */
   public function getDefaultAnswersData(): array {
-    return $this->instance->getDefaultAnswersData();
+    return $this->getPluginInstance()->getDefaultAnswersData();
   }
 
   /**
    * {@inheritDoc}
    */
   public function getResponseView(QuestionResponseInterface $response, int $mark_mode = 0): array {
-    return $this->instance->getResponseView($response, $mark_mode);
+    return $this->getPluginInstance()->getResponseView($response, $mark_mode);
   }
 
   /**
@@ -412,12 +397,12 @@ class Question extends RevisionableContentEntityBase implements QuestionInterfac
    *   The plugin instance.
    */
   protected function getPluginInstance(): ?QuestionPluginInterface {
-    $question_type = $this->getEntityType();
+    $question_type = QuestionType::load($this->bundle());
     if ($question_type instanceof QuestionType) {
       /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
       $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question');
       try {
-        $question_instance = $plugin_manager->createInstance($question_type->getPluginId(), ['question_id' => $this->id()]);
+        $question_instance = $plugin_manager->createInstance($question_type->getPluginId(), ['question' => $this]);
         return $question_instance instanceof QuestionPluginInterface ? $question_instance : NULL;
       }
       catch (PluginException $e) {

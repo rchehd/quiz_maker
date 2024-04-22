@@ -22,9 +22,9 @@ abstract class QuestionResponsePluginBase extends PluginBase implements Question
   /**
    * The response entity.
    *
-   * @var \Drupal\quiz_maker\Entity\QuestionResponse
+   * @var ?\Drupal\quiz_maker\Entity\QuestionResponse
    */
-  protected QuestionResponse $entity;
+  protected ?QuestionResponse $entity;
 
   /**
    * Constructs a new Question.
@@ -50,11 +50,13 @@ abstract class QuestionResponsePluginBase extends PluginBase implements Question
     protected LanguageManagerInterface $languageManager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    if (!isset($this->configuration['response_id'])) {
-      throw new PluginException($this->t('Question response id wasn\'t found in plugin configuration'));
-    }
 
-    $this->entity = QuestionResponse::load($this->configuration['response_id']);
+    if (is_string($this->configuration['response'])) {
+      $this->entity = QuestionResponse::load($this->configuration['response']);
+    }
+    else {
+      $this->entity = $this->configuration['response'] ?? NULL;
+    }
   }
 
   /**

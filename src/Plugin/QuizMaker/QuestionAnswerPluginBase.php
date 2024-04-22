@@ -21,9 +21,9 @@ abstract class QuestionAnswerPluginBase extends PluginBase implements QuestionAn
   /**
    * The answer.
    *
-   * @var \Drupal\quiz_maker\Entity\QuestionAnswer
+   * @var ?\Drupal\quiz_maker\Entity\QuestionAnswer
    */
-  protected QuestionAnswer $entity;
+  protected ?QuestionAnswer $entity;
 
   /**
    * Constructs a new Answer.
@@ -40,8 +40,6 @@ abstract class QuestionAnswerPluginBase extends PluginBase implements QuestionAn
    *   The language manager.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
   public function __construct(
     array $configuration,
@@ -53,11 +51,13 @@ abstract class QuestionAnswerPluginBase extends PluginBase implements QuestionAn
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    if (!isset($this->configuration['answer_id'])) {
-      throw new PluginException($this->t('Answer id wasn\'t found in plugin configuration'));
+    if (is_string($this->configuration['answer'])) {
+      $this->entity = QuestionAnswer::load($this->configuration['answer']);
+    }
+    else {
+      $this->entity = $this->configuration['answer'] ?? NULL;
     }
 
-    $this->entity = QuestionAnswer::load($this->configuration['answer_id']);
   }
 
   /**

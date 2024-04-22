@@ -16,6 +16,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\quiz_maker\Entity\QuestionAnswerType;
+use Drupal\quiz_maker\Entity\QuestionType;
 use Drupal\quiz_maker\Entity\QuizResultType;
 use Drupal\quiz_maker\QuestionAnswerInterface;
 use Drupal\quiz_maker\QuestionInterface;
@@ -102,7 +104,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
-      /** @var \Drupal\quiz_maker\QuestionInterface $question */
+      /** @var \Drupal\quiz_maker\Entity\Question $question */
       foreach ($storage->loadMultiple($question_ids) as $question) {
         $question->set('status', FALSE)->save();
       }
@@ -114,7 +116,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
-      /** @var \Drupal\quiz_maker\QuestionAnswerInterface $question_answer */
+      /** @var \Drupal\quiz_maker\Entity\QuestionAnswer $question_answer */
       foreach ($storage->loadMultiple($question_answer_ids) as $question_answer) {
         $question_answer->set('status', FALSE)->save();
       }
@@ -138,7 +140,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('status', 1)
         ->accessCheck(FALSE)
         ->execute();
-      /** @var \Drupal\quiz_maker\QuestionResponseInterface $question_response */
+      /** @var \Drupal\quiz_maker\Entity\QuestionResponse $question_response */
       foreach ($storage->loadMultiple($question_response_ids) as $question_response) {
         $question_response->set('status', FALSE)->save();
       }
@@ -162,7 +164,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
-      /** @var \Drupal\quiz_maker\QuestionInterface $question */
+      /** @var \Drupal\quiz_maker\Entity\Question $question */
       foreach ($storage->loadMultiple($question_ids) as $question) {
         $question->setOwnerId(0)->save();
       }
@@ -173,7 +175,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
-      /** @var \Drupal\quiz_maker\QuestionAnswerInterface $question_answer */
+      /** @var \Drupal\quiz_maker\Entity\QuestionAnswer $question_answer */
       foreach ($storage->loadMultiple($question_answer_ids) as $question_answer) {
         $question_answer->setOwnerId(0)->save();
       }
@@ -195,7 +197,7 @@ function quiz_maker_user_cancel($edit, UserInterface $account, $method): void {
         ->condition('uid', $account->id())
         ->accessCheck(FALSE)
         ->execute();
-      /** @var \Drupal\quiz_maker\QuestionResponseInterface $question_response */
+      /** @var \Drupal\quiz_maker\Entity\QuestionResponse $question_response */
       foreach ($storage->loadMultiple($question_response_ids) as $question_response) {
         $question_response->setOwnerId(0)->save();
       }
@@ -446,16 +448,16 @@ function quiz_maker_get_quiz_link(QuizInterface $quiz, string $label): array {
 function quiz_maker_entity_presave(EntityInterface $entity): void {
   // Add default answers to question if it has.
   if ($entity instanceof QuestionInterface) {
-    $entity_instance = $entity->getInstance();
-    if (!$entity->getAnswers()) {
-      /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
-      $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
-      $bundles_info = $entity_type_bundle_info->getBundleInfo($entity->getEntityType()->id());
-      $bundle = $bundles_info[$entity->bundle()]['answer_bundle'];
-      $default_answers_data = $entity_instance->getDefaultAnswersData();
+    /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
+    $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question');
+    $question_type = QuestionType::load($entity->bundle());
+    $question_instance = $plugin_manager->createInstance($question_type->getPluginId(), ['question' => $entity]);
+    if (!$question_instance->getAnswers()) {
+      $bundle = $question_type->getAnswerType();
+      $default_answers_data = $entity->getDefaultAnswersData();
       foreach ($default_answers_data as $answer_data) {
         try {
-          /** @var \Drupal\quiz_maker\QuestionAnswerInterface $answer */
+          /** @var \Drupal\quiz_maker\Entity\QuestionAnswer $answer */
           $answer = \Drupal::entityTypeManager()->getStorage('question_answer')->create(
             [
               'bundle' => $bundle,
@@ -484,11 +486,15 @@ function quiz_maker_entity_presave(EntityInterface $entity): void {
   }
 
   if ($entity instanceof QuestionAnswerInterface) {
-    if ($entity->isAlwaysCorrect()) {
-      $entity->setCorrect(TRUE);
+    /** @var \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager */
+    $plugin_manager = \Drupal::service('plugin.manager.quiz_maker.question_answer');
+    $answer_type = QuestionAnswerType::load($entity->bundle());
+    $answer_instance = $plugin_manager->createInstance($answer_type->getPluginId(), ['answer' => $entity]);
+    if ($answer_instance->isAlwaysCorrect()) {
+      $answer_instance->setCorrect(TRUE);
     }
-    if ($entity->isAlwaysInCorrect()) {
-      $entity->setCorrect(FALSE);
+    if ($answer_instance->isAlwaysInCorrect()) {
+      $answer_instance->setCorrect(FALSE);
     }
   }
 }
@@ -515,17 +521,15 @@ function quiz_maker_form_alter(&$form, FormStateInterface $form_state, $form_id)
       return;
     }
     $entity_bundle = $form_object->getEntity()->bundle();
+    $entity_type = QuestionType::load($entity_bundle);
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
     $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
     $bundles_info = $entity_type_bundle_info->getBundleInfo('question');
     if (isset($bundles_info[$entity_bundle])) {
-      $answer_type = $bundles_info[$entity_bundle]['answer_bundle'];
-      if ($answer_type) {
-        $form['answers']['widget']['actions']['bundle'] = [
-          '#type' => 'hidden',
-          '#value' => $answer_type,
-        ];
-      }
+      $form['answers']['widget']['actions']['bundle'] = [
+        '#type' => 'hidden',
+        '#value' => $entity_type->getAnswerType(),
+      ];
     }
   }
 }
@@ -536,17 +540,15 @@ function quiz_maker_form_alter(&$form, FormStateInterface $form_state, $form_id)
 function quiz_maker_inline_entity_form_entity_form_alter(array &$entity_form, FormStateInterface &$form_state) {
   if ($entity_form['#entity_type'] === 'question') {
     $entity_bundle = $entity_form['#bundle'];
+    $entity_type = QuestionType::load($entity_bundle);
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info */
     $entity_type_bundle_info = \Drupal::service('entity_type.bundle.info');
     $bundles_info = $entity_type_bundle_info->getBundleInfo('question');
     if (isset($bundles_info[$entity_bundle])) {
-      $answer_type = $bundles_info[$entity_bundle]['answer_bundle'];
-      if ($answer_type) {
-        $entity_form['answers']['widget']['actions']['bundle'] = [
-          '#type' => 'hidden',
-          '#value' => $answer_type,
-        ];
-      }
+      $entity_form['answers']['widget']['actions']['bundle'] = [
+        '#type' => 'hidden',
+        '#value' => $entity_type->getAnswerType(),
+      ];
     }
   }
 }
@@ -618,7 +620,7 @@ function quiz_maker_entity_operation_alter(array &$operations, EntityInterface $
  */
 function quiz_maker_theme_suggestions_question_answer_alter(array &$suggestions, array $variables) {
   if (isset($variables['elements']['#question_answer'])) {
-    /** @var \Drupal\quiz_maker\QuestionAnswerInterface $question_answer */
+    /** @var \Drupal\quiz_maker\Entity\QuestionAnswer $question_answer */
     $question_answer = $variables['elements']['#question_answer'];
     if (isset($variables['elements']['#view_mode'])) {
       $suggestions[] = 'question_answer__' . $variables['elements']['#view_mode'];
@@ -633,7 +635,7 @@ function quiz_maker_theme_suggestions_question_answer_alter(array &$suggestions,
  */
 function quiz_maker_theme_suggestions_question_alter(array &$suggestions, array $variables) {
   if (isset($variables['elements']['#question_answer'])) {
-    /** @var \Drupal\quiz_maker\QuestionInterface $question */
+    /** @var \Drupal\quiz_maker\Entity\Question $question */
     $question = $variables['elements']['#question'];
     if (isset($variables['elements']['#view_mode'])) {
       $suggestions[] = 'question__' . $variables['elements']['#view_mode'];
@@ -648,7 +650,7 @@ function quiz_maker_theme_suggestions_question_alter(array &$suggestions, array 
  */
 function quiz_maker_theme_suggestions_question_response_alter(array &$suggestions, array $variables) {
   if (isset($variables['elements']['#question_response'])) {
-    /** @var \Drupal\quiz_maker\QuestionResponseInterface $question_response */
+    /** @var \Drupal\quiz_maker\Entity\QuestionResponse $question_response */
     $question_response = $variables['elements']['#question_response'];
     if (isset($variables['elements']['#view_mode'])) {
       $suggestions[] = 'question_response__' . $variables['elements']['#view_mode'];
