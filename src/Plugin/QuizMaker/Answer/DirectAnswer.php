@@ -3,6 +3,7 @@
 namespace Drupal\quiz_maker\Plugin\QuizMaker\Answer;
 
 use Drupal\quiz_maker\Entity\QuestionAnswer;
+use Drupal\quiz_maker\Entity\QuestionResponse;
 use Drupal\quiz_maker\Plugin\QuizMaker\QuestionAnswerPluginBase;
 use Drupal\quiz_maker\Plugin\QuizMaker\Response\DirectResponse;
 use Drupal\quiz_maker\QuestionResponseInterface;
@@ -22,8 +23,8 @@ class DirectAnswer extends QuestionAnswerPluginBase {
    * {@inheritDoc}
    */
   public function getAnswer(QuestionResponseInterface $response = NULL): ?string {
-    if ($response instanceof DirectResponse) {
-      return $response->getUserResponse() ?? t('Empty answer');
+    if ($response instanceof QuestionResponse && $response->getPluginInstance() instanceof DirectResponse) {
+      return $response->getPluginInstance()->getUserResponse() ?? t('Empty answer');
     }
     return parent::getAnswer();
   }

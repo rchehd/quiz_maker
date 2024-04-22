@@ -119,9 +119,12 @@ class QuizTakeForm extends FormBase {
 
       // Set data from user input.
       $user_input = $form_state->getUserInput();
-      if ($user_input) {
+      if ($user_input && isset($user_input['question_navigation'])) {
         $question_number = $user_input['question_navigation'];
         $this->quizSession->setCurrentQuestionNumber($quiz, $question_number);
+      }
+      else {
+        $this->quizSession->setCurrentQuestionNumber($quiz, 0);
       }
 
       $current_question = $this->quizSession->getCurrentQuestion($quiz);
@@ -149,7 +152,7 @@ class QuizTakeForm extends FormBase {
           'wrapper' => 'question',
           'progress' => 'none',
         ],
-        '#disabled' => !$quiz->allowJumping(),
+        '#disabled' => !$quiz->allowJumping() || !$quiz->allowBackwardNavigation(),
       ];
 
       if (!$quiz->requireManualAssessment()) {
@@ -200,7 +203,7 @@ class QuizTakeForm extends FormBase {
             'progress' => [
               'type' => 'throbber',
               'message' => $this->t('Go to the next question...'),
-            ],
+            ]
           ],
           '#limit_validation_errors' => [],
         ];
